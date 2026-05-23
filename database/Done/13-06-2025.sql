@@ -1,0 +1,1 @@
+DELETE FROM tblpdf_settings WHERE `tblpdf_settings`.`id` = 4

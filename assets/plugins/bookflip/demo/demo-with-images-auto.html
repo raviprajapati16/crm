@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<!-- css -->
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<link rel="stylesheet" type="text/css" href="../min_version/ipages.min.css">
+	<!-- /end css -->
+</head>
+<body>
+<p>This is just a simple example to show you how the plugin works with images</p>
+
+<!-- flipbook markup -->
+<div id="flipbook"></div>
+<!-- /end flipbook markup -->
+
+<!-- scripts-section -->
+<script type="text/javascript" src="assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="../min_version/pdf.min.js"></script>
+<script type="text/javascript" src="../min_version/jquery.ipages.min.js"></script>
+<script>
+$(document).ready(function() {
+	var options = {
+		pageImagesUrl:'assets/images/page-{{xx}}.jpg',
+		pageImagesCount:16
+	}
+	$('#flipbook').ipages(options);
+});
+</script>
+<!-- /end scripts-section -->
+</body>
+</html>

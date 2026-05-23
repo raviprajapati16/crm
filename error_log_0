@@ -1,0 +1,710 @@
+[27-Dec-2020 11:17:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[28-Dec-2020 07:11:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[28-Dec-2020 07:12:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[28-Dec-2020 07:13:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[28-Dec-2020 12:44:36 Asia/Kolkata] PHP Fatal error:  Call to a member function result() on boolean in /home/advanceb/public_html/application/libraries/App_modules.php on line 634
+[28-Dec-2020 07:15:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[28-Dec-2020 07:16:04 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[01-Jan-2021 03:25:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[01-Jan-2021 03:26:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[01-Jan-2021 12:33:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[01-Jan-2021 12:34:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[01-Jan-2021 12:35:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[01-Jan-2021 12:36:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[01-Jan-2021 12:37:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[01-Jan-2021 12:38:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[01-Jan-2021 12:39:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[04-Jan-2021 11:55:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[04-Jan-2021 11:55:12 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[04-Jan-2021 11:55:12 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[04-Jan-2021 11:55:34 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[04-Jan-2021 11:55:34 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[04-Jan-2021 11:55:37 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[04-Jan-2021 11:55:38 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[04-Jan-2021 11:55:49 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[04-Jan-2021 11:55:50 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[04-Jan-2021 11:55:56 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[04-Jan-2021 11:56:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-Jan-2021 11:26:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-Jan-2021 11:27:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-Jan-2021 11:28:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-Jan-2021 11:28:53 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-Jan-2021 11:29:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-Jan-2021 11:29:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-Jan-2021 19:26:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-Jan-2021 19:27:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-Jan-2021 07:14:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Jan-2021 04:42:43 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Jan-2021 04:43:32 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Jan-2021 04:44:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Jan-2021 04:45:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[28-Jan-2021 08:33:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:34:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:35:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:36:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:37:01 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:38:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:39:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:40:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:41:01 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:42:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:43:01 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:44:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:45:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:46:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:47:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:48:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:49:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:49:26 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:50:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:51:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:52:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:53:06 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:54:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:55:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:56:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:57:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:58:05 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 08:59:09 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:00:12 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:01:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:02:04 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:03:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:04:08 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:05:10 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:06:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:07:05 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:07:17 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:08:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:09:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:10:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:11:01 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:12:09 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:13:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:14:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:15:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:16:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:17:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:18:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:19:08 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:20:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:21:06 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:22:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:23:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:24:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:25:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:26:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:27:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:28:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:29:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:30:04 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:31:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:32:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:33:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:34:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:35:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:36:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:37:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:38:09 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:39:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:40:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:41:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:42:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:43:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:44:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:45:10 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:46:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:47:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:48:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:49:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:50:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:51:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:52:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:53:09 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:54:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:55:03 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:56:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:57:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:58:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 09:59:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 10:00:01 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 10:01:01 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 10:02:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 10:03:02 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 10:04:01 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[28-Jan-2021 10:05:04 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[28-Jan-2021 10:06:11 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[28-Jan-2021 10:07:04 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[04-Feb-2021 16:42:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[04-Feb-2021 16:43:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[10-Feb-2021 16:45:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[10-Feb-2021 16:46:44 UTC] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/system/database/DB_driver.php on line 1319
+[16-Mar-2021 07:03:42 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[16-Mar-2021 07:03:42 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[16-Mar-2021 07:04:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[16-Mar-2021 07:05:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[16-Mar-2021 07:06:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[16-Mar-2021 07:07:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[16-Mar-2021 07:08:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[22-Mar-2021 17:34:10 Asia/Kolkata] PHP Parse error:  syntax error, unexpected end of file in /home/advanceb/public_html/application/language/english/custom_lang.php on line 1
+[22-Mar-2021 17:34:12 Asia/Kolkata] PHP Parse error:  syntax error, unexpected end of file in /home/advanceb/public_html/application/language/english/custom_lang.php on line 1
+[22-Mar-2021 17:34:13 Asia/Kolkata] PHP Parse error:  syntax error, unexpected end of file in /home/advanceb/public_html/application/language/english/custom_lang.php on line 1
+[22-Mar-2021 17:34:13 Asia/Kolkata] PHP Parse error:  syntax error, unexpected end of file in /home/advanceb/public_html/application/language/english/custom_lang.php on line 1
+[22-Mar-2021 17:34:14 Asia/Kolkata] PHP Parse error:  syntax error, unexpected end of file in /home/advanceb/public_html/application/language/english/custom_lang.php on line 1
+[22-Mar-2021 17:34:17 Asia/Kolkata] PHP Parse error:  syntax error, unexpected end of file in /home/advanceb/public_html/application/language/english/custom_lang.php on line 1
+[22-Mar-2021 17:34:18 Asia/Kolkata] PHP Parse error:  syntax error, unexpected end of file in /home/advanceb/public_html/application/language/english/custom_lang.php on line 1
+[24-Mar-2021 23:30:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[24-Mar-2021 23:31:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[24-Mar-2021 23:33:05 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[24-Mar-2021 23:34:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[24-Mar-2021 23:35:04 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[25-Mar-2021 15:06:15 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[03-Apr-2021 07:05:30 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[03-Apr-2021 07:05:31 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[03-Apr-2021 07:05:31 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[03-Apr-2021 07:05:31 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[03-Apr-2021 07:05:31 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-Apr-2021 07:54:17 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-Apr-2021 07:54:24 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-Apr-2021 07:54:25 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-Apr-2021 07:54:25 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-Apr-2021 07:54:25 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-Apr-2021 07:54:25 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-Apr-2021 07:54:29 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-Apr-2021 07:54:57 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-Apr-2021 07:54:58 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-Apr-2021 07:54:59 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-Apr-2021 07:55:04 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Apr-2021 12:36:28 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Apr-2021 12:36:29 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Apr-2021 12:36:34 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Apr-2021 12:36:42 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Apr-2021 12:37:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[14-Apr-2021 15:35:30 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/helpers/datatables_helper.php on line 221
+[14-Apr-2021 16:01:45 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/helpers/datatables_helper.php on line 221
+[21-Apr-2021 16:40:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[21-Apr-2021 16:41:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[04-May-2021 08:31:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[04-May-2021 08:32:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[04-May-2021 08:33:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-May-2021 06:43:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-May-2021 06:44:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-May-2021 06:44:40 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-May-2021 06:45:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-May-2021 06:45:05 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-May-2021 06:45:21 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-May-2021 06:45:24 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-May-2021 06:45:58 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-May-2021 06:46:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-May-2021 06:46:07 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-May-2021 06:46:19 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[05-May-2021 06:47:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-May-2021 21:00:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-May-2021 21:01:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-May-2021 21:02:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-May-2021 21:03:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-May-2021 21:04:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-May-2021 21:05:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-May-2021 21:08:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-May-2021 21:12:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[06-May-2021 21:13:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[09-Jun-2021 01:50:48 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[09-Jun-2021 01:50:50 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[09-Jun-2021 07:21:00 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/libraries/App.php on line 110
+[09-Jun-2021 01:51:02 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[24-Jun-2021 00:12:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[23-Nov-2021 07:01:51 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[23-Nov-2021 07:01:52 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[23-Nov-2021 07:01:52 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[23-Nov-2021 07:01:54 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[23-Nov-2021 07:02:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[23-Nov-2021 07:02:01 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[23-Nov-2021 07:02:04 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[24-Nov-2021 13:31:00 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 90783202 bytes) in /home/advanceb/public_html/application/libraries/App.php on line 215
+[24-Nov-2021 14:20:41 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Staff_model.php on line 359
+[24-Nov-2021 14:20:47 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Staff_model.php on line 359
+[24-Nov-2021 14:21:07 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Staff_model.php on line 359
+[24-Nov-2021 14:21:15 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Staff_model.php on line 359
+[24-Nov-2021 16:32:28 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Staff_model.php on line 359
+[24-Nov-2021 18:12:07 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/helpers/datatables_helper.php on line 226
+[24-Nov-2021 18:14:30 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/helpers/datatables_helper.php on line 226
+[24-Nov-2021 18:16:01 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/helpers/datatables_helper.php on line 226
+[24-Nov-2021 18:16:12 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/helpers/datatables_helper.php on line 226
+[30-Nov-2021 18:38:14 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[20-Dec-2021 11:55:14 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[21-Dec-2021 13:51:16 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[21-Dec-2021 13:53:40 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 08:10:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 08:17:02 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 08:23:02 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 08:28:31 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 08:33:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 08:39:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 08:45:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 08:50:08 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/modules/indiamart/models/Indiamart_model.php on line 54
+[22-Dec-2021 08:51:31 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 08:57:31 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 09:04:02 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 09:09:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 09:15:32 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Cron_model.php on line 99
+[22-Dec-2021 09:44:45 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/modules/indiamart/models/Indiamart_model.php on line 54
+[22-Dec-2021 09:49:32 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Cron_model.php on line 99
+[22-Dec-2021 10:00:41 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/modules/indiamart/models/Indiamart_model.php on line 54
+[22-Dec-2021 10:06:32 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Cron_model.php on line 99
+[22-Dec-2021 10:33:03 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 10:37:34 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 10:45:29 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 10:47:45 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/libraries/App_tags.php on line 114
+[22-Dec-2021 10:48:15 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Staff_model.php on line 329
+[22-Dec-2021 10:48:45 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Staff_model.php on line 329
+[22-Dec-2021 10:49:12 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 10:49:16 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Staff_model.php on line 329
+[22-Dec-2021 10:49:46 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Staff_model.php on line 329
+[22-Dec-2021 10:50:16 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Staff_model.php on line 329
+[22-Dec-2021 10:50:46 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Staff_model.php on line 329
+[22-Dec-2021 10:51:16 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Staff_model.php on line 329
+[22-Dec-2021 10:52:31 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 10:57:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 10:59:16 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/libraries/App_tags.php on line 114
+[22-Dec-2021 10:59:46 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Staff_model.php on line 329
+[22-Dec-2021 11:03:31 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 11:09:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 11:16:02 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 11:20:03 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 11:21:31 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 11:27:31 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[22-Dec-2021 11:29:36 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 11:36:31 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 11:43:34 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 11:46:20 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 11:49:54 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 11:53:35 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 11:57:21 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 12:02:12 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 12:05:38 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 12:08:01 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 12:10:22 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 12:14:45 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 12:17:44 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 12:23:15 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 12:28:05 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 14:49:59 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 14:56:04 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 15:14:22 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 15:19:25 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 15:20:48 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 15:25:25 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 15:28:52 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 15:33:34 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 15:35:56 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 15:38:35 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 15:43:21 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 15:50:34 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 15:52:03 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 15:58:40 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 16:02:02 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 16:18:03 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 16:21:44 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 16:26:34 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 16:31:47 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 16:35:40 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 16:40:51 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 16:45:01 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 16:51:56 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 16:59:27 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 17:08:10 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 17:10:41 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 17:13:30 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 17:24:07 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 17:25:24 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 17:28:28 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 17:34:38 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 17:41:31 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 17:45:43 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 17:49:22 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 17:55:12 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 17:57:30 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 18:01:55 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 18:06:19 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 18:08:51 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 18:13:30 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 18:21:18 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 18:22:49 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[22-Dec-2021 18:26:26 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 00:05:33 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/helpers/staff_helper.php on line 295
+[23-Dec-2021 13:15:42 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/modules/indiamart/models/Indiamart_model.php on line 54
+[23-Dec-2021 13:16:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 13:22:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 13:28:31 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 13:31:44 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/modules/indiamart/models/Indiamart_model.php on line 54
+[23-Dec-2021 13:35:01 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 13:39:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 13:45:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 13:51:31 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 13:57:31 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 13:57:46 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/modules/indiamart/models/Indiamart_model.php on line 54
+[23-Dec-2021 14:02:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 14:08:31 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 14:13:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 14:19:31 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 14:24:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 14:30:33 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 14:37:01 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 14:41:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 14:47:31 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 14:52:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 14:58:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 15:04:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 15:10:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 15:16:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 15:22:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 15:28:31 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 15:33:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 15:36:40 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 15:39:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 15:45:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[23-Dec-2021 15:51:32 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Cron_model.php on line 99
+[23-Dec-2021 15:59:45 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 16:11:29 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 17:15:44 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 17:20:40 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 17:21:04 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 17:22:23 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 17:23:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 17:24:33 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 17:26:17 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 17:28:42 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 17:36:48 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 17:49:49 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 17:56:28 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 18:09:15 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 18:11:04 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 18:13:22 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 18:16:37 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 18:18:18 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 18:19:20 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 21:04:34 Asia/Kolkata] PHP Fatal error:  Call to a member function num_rows() on boolean in /home/advanceb/public_html/system/database/DB_query_builder.php on line 1429
+[23-Dec-2021 21:09:33 Asia/Kolkata] PHP Fatal error:  Call to a member function num_rows() on boolean in /home/advanceb/public_html/system/database/DB_query_builder.php on line 1429
+[23-Dec-2021 21:15:33 Asia/Kolkata] PHP Fatal error:  Call to a member function num_rows() on boolean in /home/advanceb/public_html/system/database/DB_query_builder.php on line 1429
+[23-Dec-2021 21:41:26 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 21:43:30 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 21:44:52 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 21:46:23 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 21:49:44 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 21:51:51 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 21:53:06 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[23-Dec-2021 22:04:26 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/modules/indiamart/models/Indiamart_model.php on line 54
+[23-Dec-2021 22:06:32 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Cron_model.php on line 99
+[24-Dec-2021 00:01:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/helpers/staff_helper.php on line 295
+[24-Dec-2021 07:24:49 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/libraries/App_tags.php on line 114
+[24-Dec-2021 09:55:10 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 09:57:23 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 09:59:44 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 10:01:41 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 10:09:37 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 10:13:09 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 10:15:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[24-Dec-2021 10:17:06 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 10:18:49 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 10:20:33 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Cron_model.php on line 99
+[24-Dec-2021 10:25:32 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 10:55:11 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/modules/indiamart/models/Indiamart_model.php on line 54
+[24-Dec-2021 10:55:32 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Cron_model.php on line 99
+[24-Dec-2021 11:05:02 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 11:10:44 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/modules/indiamart/models/Indiamart_model.php on line 54
+[24-Dec-2021 11:16:54 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 11:17:59 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 11:23:45 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 11:27:54 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 11:28:12 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 11:30:33 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[24-Dec-2021 11:32:50 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 11:38:36 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 11:44:02 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 11:46:00 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 11:49:19 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 11:52:44 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 11:55:33 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 11:59:01 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 12:00:33 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/models/Leads_model.php on line 27
+[24-Dec-2021 12:04:05 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 12:06:29 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 12:07:35 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Staff_model.php on line 329
+[24-Dec-2021 12:08:45 Asia/Kolkata] PHP Fatal error:  Call to a member function result_array() on boolean in /home/advanceb/public_html/application/models/Staff_model.php on line 329
+[24-Dec-2021 12:10:00 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[24-Dec-2021 12:17:55 Asia/Kolkata] PHP Fatal error:  Call to a member function row() on boolean in /home/advanceb/public_html/application/controllers/admin/Leads.php on line 86
+[29-Dec-2021 07:57:47 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/advanceb/public_html/application/views/admin/tables/my_leads.php on line 207
+[20-Jan-2022 15:00:15 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in /home/advanceb/public_html/application/helpers/general_helper.php on line 424
+[20-Jan-2022 15:00:24 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 23072768 bytes) in /home/advanceb/public_html/application/libraries/App.php on line 215
+[20-Jan-2022 15:01:15 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/advanceb/public_html/application/views/admin/tables/my_leads.php on line 207
+[20-Jan-2022 15:01:27 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/advanceb/public_html/application/views/admin/tables/my_leads.php on line 207
+[20-Jan-2022 15:01:50 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/advanceb/public_html/application/views/admin/tables/my_leads.php on line 207
+[20-Jan-2022 15:01:58 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/advanceb/public_html/application/views/admin/tables/my_leads.php on line 207
+[20-Jan-2022 15:02:02 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/advanceb/public_html/application/views/admin/tables/my_leads.php on line 207
+[20-Jan-2022 15:02:20 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/advanceb/public_html/application/views/admin/tables/my_leads.php on line 207
+[20-Jan-2022 15:02:24 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/advanceb/public_html/application/views/admin/tables/my_leads.php on line 207
+[21-Jan-2022 11:10:34 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/advanceb/public_html/application/vendor/phpmailer/phpmailer/class.smtp.php on line 999
+[21-Jan-2022 16:27:34 Asia/Kolkata] PHP Fatal error:  Maximum execution time of 30 seconds exceeded in /home/advanceb/public_html/application/vendor/phpmailer/phpmailer/class.smtp.php on line 999
+[09-Feb-2022 00:30:08 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[21-Apr-2022 00:38:35 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in /home/advanceb/public_html/application/services/utilities/Date.php on line 76
+[21-Apr-2022 00:39:32 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in /home/advanceb/public_html/application/services/utilities/Date.php on line 76
+[21-Apr-2022 00:39:51 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/advanceb/public_html/application/views/admin/tables/my_leads.php on line 251
+[21-Apr-2022 00:39:56 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 16384 bytes) in /home/advanceb/public_html/system/database/drivers/mysqli/mysqli_driver.php on line 307
+[21-Apr-2022 01:15:17 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in /home/advanceb/public_html/application/services/utilities/Date.php on line 82
+[07-May-2022 19:02:45 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in /home/advanceb/public_html/application/services/utilities/Date.php on line 76
+[07-Aug-2022 15:30:04 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 15:30:07 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 16:00:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 16:00:10 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 16:30:04 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 16:30:17 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 17:00:05 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 17:00:14 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 17:30:04 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 17:30:17 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 17:45:14 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 17:45:16 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 17:45:18 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 17:45:19 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 17:45:29 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 17:45:30 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 17:46:06 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 17:46:13 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 18:00:04 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 18:00:16 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 19:30:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 19:30:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 22:00:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 22:00:04 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 22:30:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 22:30:06 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 23:00:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 23:00:07 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 23:30:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[07-Aug-2022 23:30:11 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 00:00:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 00:00:16 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 00:30:04 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 00:30:18 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 01:00:04 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 01:00:15 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 01:26:29 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 01:30:04 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 01:30:07 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 03:00:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 03:00:05 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 03:15:28 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 03:30:05 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 03:30:21 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 03:30:23 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 03:30:30 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Aug-2022 03:31:35 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[11-Aug-2022 19:00:03 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[11-Aug-2022 19:00:04 UTC] PHP Fatal error:  session_start(): Failed to initialize storage module: user (path: sessions) in /home/advanceb/public_html/system/libraries/Session/Session.php on line 143
+[08-Sep-2022 13:56:51 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 528384 bytes) in /home/advanceb/public_html/application/views/admin/tables/my_leads.php on line 299
+[30-Sep-2022 14:30:18 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/advanceb/public_html/application/views/admin/tables/my_leads.php on line 252
+[30-Sep-2022 14:30:41 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 48238592 bytes) in /home/advanceb/public_html/application/libraries/App.php on line 215
+[30-Sep-2022 14:31:17 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/advanceb/public_html/application/views/admin/tables/my_leads.php on line 252
+[30-Sep-2022 14:31:25 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 48238592 bytes) in /home/advanceb/public_html/application/libraries/App.php on line 215
+[30-Sep-2022 14:32:05 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/advanceb/public_html/application/views/admin/tables/my_leads.php on line 252
+[30-Sep-2022 14:32:16 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 48238592 bytes) in /home/advanceb/public_html/application/libraries/App.php on line 215
+[30-Sep-2022 14:32:49 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/advanceb/public_html/application/views/admin/tables/my_leads.php on line 252
+[30-Sep-2022 14:33:16 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/advanceb/public_html/application/views/admin/tables/my_leads.php on line 252
+[30-Sep-2022 14:33:41 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/advanceb/public_html/application/views/admin/tables/my_leads.php on line 252
+[30-Sep-2022 14:34:04 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 23072768 bytes) in /home/advanceb/public_html/application/libraries/App.php on line 215
+[30-Sep-2022 14:34:17 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 48238592 bytes) in /home/advanceb/public_html/application/libraries/App.php on line 215
+[01-Oct-2022 21:37:11 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 65536 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[03-Oct-2022 14:09:53 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 176128 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[03-Oct-2022 15:41:01 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 57344 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[04-Oct-2022 14:39:42 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 53248 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[04-Oct-2022 18:11:40 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 180224 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[05-Oct-2022 12:10:39 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 221184 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[05-Oct-2022 13:34:35 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 221184 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[05-Oct-2022 16:40:44 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 167936 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[06-Oct-2022 11:11:04 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 188416 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[06-Oct-2022 12:04:27 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 188416 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[06-Oct-2022 16:05:50 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 61440 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[06-Oct-2022 17:41:15 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 81920 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[07-Oct-2022 11:11:14 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 192512 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[07-Oct-2022 13:34:48 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 16384 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[07-Oct-2022 17:42:28 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/advanceb/public_html/application/third_party/simple_html_dom.php on line 2306
+[07-Oct-2022 18:40:57 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 180224 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[08-Oct-2022 17:41:37 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 126976 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[10-Oct-2022 13:41:16 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 73728 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[10-Oct-2022 15:41:26 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[10-Oct-2022 16:41:06 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 65536 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[10-Oct-2022 17:40:02 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 221184 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[10-Oct-2022 19:10:16 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 188416 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[11-Oct-2022 11:11:54 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 28672 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[11-Oct-2022 12:11:42 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 98304 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[11-Oct-2022 13:40:15 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 192512 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[11-Oct-2022 15:10:13 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 188416 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[11-Oct-2022 17:39:59 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 188416 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[12-Oct-2022 13:03:04 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 28672 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[12-Oct-2022 14:05:07 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 102400 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[12-Oct-2022 15:09:33 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 36864 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[12-Oct-2022 16:11:15 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 73728 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[12-Oct-2022 17:40:57 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 73728 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[12-Oct-2022 20:42:12 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 53248 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[13-Oct-2022 12:11:24 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[13-Oct-2022 13:40:48 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 188416 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[13-Oct-2022 17:11:32 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 73728 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[14-Oct-2022 12:14:13 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 65536 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[14-Oct-2022 13:41:39 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 81920 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[14-Oct-2022 15:40:55 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 221184 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[14-Oct-2022 17:12:28 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 53248 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[14-Oct-2022 18:40:11 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 196608 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[15-Oct-2022 12:11:38 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[15-Oct-2022 13:42:06 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 24576 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[17-Oct-2022 12:10:19 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 167936 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[17-Oct-2022 14:11:22 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 221184 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[18-Oct-2022 10:12:18 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 61440 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[18-Oct-2022 14:13:22 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 81920 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[18-Oct-2022 15:42:43 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 53248 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[18-Oct-2022 17:11:37 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[18-Oct-2022 21:11:46 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 122880 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[19-Oct-2022 11:42:04 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 122880 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[19-Oct-2022 13:14:18 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 53248 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 932
+[19-Oct-2022 15:12:35 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 159744 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[19-Oct-2022 20:13:03 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 49152 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[20-Oct-2022 12:13:45 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 49152 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[20-Oct-2022 14:00:45 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 95551488 bytes) in /home/advanceb/public_html/application/vendor/studio-42/elfinder/php/elFinderVolumeDriver.class.php on line 6264
+[20-Oct-2022 14:42:14 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 81920 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[21-Oct-2022 00:10:14 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[21-Oct-2022 11:10:41 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[21-Oct-2022 12:43:31 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 932
+[21-Oct-2022 15:10:36 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 49152 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[21-Oct-2022 16:11:16 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 40960 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[21-Oct-2022 20:12:20 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 122880 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[23-Oct-2022 17:09:33 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 102400 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 932
+[28-Oct-2022 19:13:02 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 95551488 bytes) in /home/advanceb/public_html/application/vendor/studio-42/elfinder/php/elFinderVolumeDriver.class.php on line 6264
+[28-Oct-2022 19:19:37 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 28672 bytes) in /home/advanceb/public_html/system/libraries/Image_lib.php on line 1474
+[28-Oct-2022 19:20:27 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 28672 bytes) in /home/advanceb/public_html/system/libraries/Image_lib.php on line 1466
+[19-Nov-2022 13:07:01 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/advanceb/public_html/application/third_party/simple_html_dom.php on line 2597
+[21-Nov-2022 14:34:02 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3023240 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[21-Nov-2022 15:38:21 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3023240 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[21-Nov-2022 17:02:37 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3023240 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[22-Nov-2022 12:03:20 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3023240 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[22-Nov-2022 18:08:35 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3023240 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[22-Nov-2022 19:32:33 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3023240 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[23-Nov-2022 11:02:44 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3023240 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[23-Nov-2022 12:02:25 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3023240 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[23-Nov-2022 14:03:01 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3023272 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 932
+[23-Nov-2022 15:32:56 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3023272 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 932
+[23-Nov-2022 18:32:44 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 3023240 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[24-Nov-2022 11:04:15 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 65536 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[24-Nov-2022 15:10:01 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 180224 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[25-Nov-2022 11:05:03 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 135168 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[25-Nov-2022 12:03:53 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 356352 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[25-Nov-2022 13:38:36 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 57344 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 932
+[25-Nov-2022 16:39:50 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 49152 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[26-Nov-2022 13:09:02 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 356352 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[26-Nov-2022 17:03:22 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[28-Nov-2022 11:04:50 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 114688 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 932
+[28-Nov-2022 14:09:33 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[28-Nov-2022 17:02:58 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[28-Nov-2022 18:10:40 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 155648 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[28-Nov-2022 22:07:27 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 440
+[29-Nov-2022 12:05:16 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[29-Nov-2022 13:40:08 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 139264 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[29-Nov-2022 16:33:33 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[29-Nov-2022 18:10:47 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 356352 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[30-Nov-2022 11:38:36 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 372736 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[30-Nov-2022 12:45:30 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 139264 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[30-Nov-2022 13:39:18 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[30-Nov-2022 18:07:43 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[01-Dec-2022 11:42:57 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 57344 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[01-Dec-2022 12:42:18 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 356352 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[01-Dec-2022 13:40:00 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 106496 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[01-Dec-2022 14:51:45 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 139264 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[01-Dec-2022 16:07:18 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 180224 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[01-Dec-2022 17:16:44 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 180224 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[01-Dec-2022 18:25:43 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 57344 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[02-Dec-2022 06:01:10 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) in /home/advanceb/public_html/system/database/drivers/mysqli/mysqli_result.php on line 229
+[02-Dec-2022 10:41:07 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[02-Dec-2022 11:39:07 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 180224 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[02-Dec-2022 12:41:16 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 106496 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[02-Dec-2022 15:42:38 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 163840 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[02-Dec-2022 16:33:58 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 356352 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[02-Dec-2022 18:39:32 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 61440 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[03-Dec-2022 12:33:00 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 356352 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[03-Dec-2022 17:32:01 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 356352 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[04-Dec-2022 14:11:01 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[05-Dec-2022 12:41:34 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[06-Dec-2022 12:39:29 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[06-Dec-2022 16:09:07 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 356352 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[06-Dec-2022 18:12:35 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[07-Dec-2022 11:43:18 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 356352 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[07-Dec-2022 13:34:04 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 49152 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[08-Dec-2022 11:10:42 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 180224 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[08-Dec-2022 14:33:17 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 139264 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[08-Dec-2022 16:40:39 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 356352 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[08-Dec-2022 17:39:47 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 40960 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[08-Dec-2022 19:04:06 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[08-Dec-2022 20:03:21 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 65536 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[09-Dec-2022 12:11:27 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 28672 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[09-Dec-2022 13:42:03 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 356352 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[09-Dec-2022 16:05:49 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 155648 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[09-Dec-2022 18:34:46 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 139264 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[10-Dec-2022 13:09:19 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 356352 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[12-Dec-2022 13:10:23 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 356352 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[12-Dec-2022 17:35:47 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 139264 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[13-Dec-2022 12:39:53 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 172032 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[13-Dec-2022 14:12:09 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 40960 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[13-Dec-2022 17:40:50 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 147456 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[13-Dec-2022 23:10:12 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 69632 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[14-Dec-2022 11:07:09 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[14-Dec-2022 14:04:04 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 90112 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[14-Dec-2022 16:10:38 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 356352 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[14-Dec-2022 17:09:51 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[15-Dec-2022 00:03:11 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 40960 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[15-Dec-2022 13:33:48 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[15-Dec-2022 18:03:09 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[16-Dec-2022 11:33:01 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 147456 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[16-Dec-2022 13:09:07 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 40960 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[16-Dec-2022 14:02:12 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 356352 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[17-Dec-2022 12:01:48 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 126976 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[17-Dec-2022 13:34:32 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 110592 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 932
+[19-Dec-2022 11:41:43 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 163840 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[19-Dec-2022 17:21:36 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 110592 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 932
+[20-Dec-2022 12:07:21 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 40960 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[20-Dec-2022 13:12:36 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 86016 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 932
+[20-Dec-2022 17:33:54 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 126976 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[21-Dec-2022 11:34:05 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 163840 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[21-Dec-2022 14:03:33 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[21-Dec-2022 16:12:18 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 147456 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[21-Dec-2022 17:42:02 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 90112 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[21-Dec-2022 18:33:46 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[22-Dec-2022 11:07:01 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 40960 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 932
+[22-Dec-2022 16:34:03 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 40960 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 932
+[22-Dec-2022 17:36:38 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 163840 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[23-Dec-2022 03:08:14 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 163840 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[23-Dec-2022 11:33:00 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 45056 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[23-Dec-2022 12:33:04 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 147456 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[23-Dec-2022 17:02:58 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 40960 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[24-Dec-2022 14:42:18 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 81920 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[26-Dec-2022 10:34:24 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 28672 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[26-Dec-2022 12:06:38 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[26-Dec-2022 13:13:41 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 122880 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 932
+[27-Dec-2022 14:13:07 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 57344 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[27-Dec-2022 16:12:20 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 32768 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[27-Dec-2022 17:14:24 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 86016 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[28-Dec-2022 15:43:21 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 28672 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[28-Dec-2022 17:15:15 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 126976 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[29-Dec-2022 11:05:25 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 73728 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[29-Dec-2022 12:34:34 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 81920 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[29-Dec-2022 14:41:40 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 53248 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 932
+[29-Dec-2022 16:34:07 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 86016 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[29-Dec-2022 17:42:27 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 61440 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 932
+[30-Dec-2022 13:03:26 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 81920 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[30-Dec-2022 15:03:22 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 53248 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 932
+[30-Dec-2022 17:03:21 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 24576 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 973
+[30-Dec-2022 18:05:31 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 86016 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[31-Dec-2022 01:24:57 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in /home/advanceb/public_html/system/database/drivers/mysqli/mysqli_result.php on line 229
+[31-Dec-2022 01:25:07 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 27275264 bytes) in /home/advanceb/public_html/modules/indiamart/views/leads_history.php on line 65
+[31-Dec-2022 01:26:53 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 8192 bytes) in /home/advanceb/public_html/system/database/drivers/mysqli/mysqli_result.php on line 229
+[31-Dec-2022 11:04:03 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in /home/advanceb/public_html/application/third_party/php-imap/Imap.php on line 976
+[29-Mar-2023 12:35:45 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 98570240 bytes) in /home/advanceb/public_html/application/libraries/App.php on line 215
+[31-Mar-2023 07:01:16 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 100647108 bytes) in /home/advanceb/public_html/application/libraries/App.php on line 215
+[31-Mar-2023 07:02:48 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 100647108 bytes) in /home/advanceb/public_html/application/libraries/App.php on line 215
+[06-Apr-2023 16:00:35 Asia/Kolkata] PHP Fatal error:  Allowed memory size of 536870912 bytes exhausted (tried to allocate 98570240 bytes) in /home/advanceb/public_html/application/libraries/App.php on line 215

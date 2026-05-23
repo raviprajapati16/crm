@@ -1,0 +1,1 @@
+ALTER TABLE `tblpurchase_status` ADD `static` INT NOT NULL DEFAULT '0' AFTER `statusorder`;

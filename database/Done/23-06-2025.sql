@@ -1,0 +1,3 @@
+ALTER TABLE `tblcontracts` ADD `prefix` VARCHAR(200) NULL DEFAULT NULL AFTER `id`, ADD `number` INT NULL DEFAULT NULL AFTER `prefix`;
+
+ALTER TABLE `tblcontracts` CHANGE `number` `number` VARCHAR(150) NULL DEFAULT NULL;

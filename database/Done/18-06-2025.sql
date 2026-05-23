@@ -1,0 +1,48 @@
+CREATE TABLE `tblpurchase` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `purchase_number_prefix` varchar(500) DEFAULT NULL,
+  `purchase_number` varchar(300) DEFAULT NULL,
+  `subject` varchar(191) DEFAULT NULL,
+  `content` longtext,
+  `addedfrom` int NOT NULL,
+  `datecreated` datetime NOT NULL,
+  `total` decimal(15,2) DEFAULT NULL,
+  `taxable_amount` decimal(15,2) NOT NULL DEFAULT '0.00',
+  `subtotal` decimal(15,2) NOT NULL,
+  `total_tax` decimal(15,2) NOT NULL DEFAULT '0.00',
+  `adjustment` decimal(15,2) DEFAULT NULL,
+  `discount_percent` decimal(15,2) NOT NULL,
+  `discount_total` decimal(15,2) NOT NULL,
+  `discount_type` varchar(30) DEFAULT NULL,
+  `show_quantity_as` int NOT NULL DEFAULT '1',
+  `currency` int NOT NULL,
+  `date` date NOT NULL,
+  `vendor_id` int DEFAULT NULL,
+  `assigned` int DEFAULT NULL,
+  `hash` varchar(32) NOT NULL,
+  `purchase_to` varchar(200) DEFAULT NULL,
+  `country` int NOT NULL DEFAULT '0',
+  `zip` varchar(50) DEFAULT NULL,
+  `state` varchar(100) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `address` varchar(200) DEFAULT NULL,
+  `email` varchar(150) DEFAULT NULL,
+  `phone` varchar(50) DEFAULT NULL,
+  `status` int NOT NULL,
+  `loading_place` varchar(250) DEFAULT NULL,
+  `discharge_place` varchar(250) DEFAULT NULL,
+  `payment_term` text,
+  `shipment_term` text,
+  `delivery_term` text,
+  `notes` text,
+  `updated_by` int DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_by` varchar(100) DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+ALTER TABLE `tblextra_amount` CHANGE `rel_type` `rel_type` VARCHAR(250) NULL DEFAULT NULL;
+
+
+INSERT INTO `tblemailtemplates` (`emailtemplateid`, `type`, `slug`, `language`, `name`, `subject`, `message`, `fromname`, `fromemail`, `plaintext`, `active`, `order`) VALUES (NULL, 'purchase', 'purchase-email-send-to-vendor', 'english', 'Purchase Email Send To Vendor', 'Purchase Order ', '<p data-start=\"165\" data-end=\"184\">Dear <strong>{purchase_to}</strong>,</p>\r\n<p data-start=\"186\" data-end=\"256\">Please find attached the Purchase Order #<strong>{purchase_number}</strong> for your reference.<br /><br /><span>{email_signature}</span></p>', '{companyname}', '', '0', '1', '0');

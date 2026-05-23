@@ -1,0 +1,185 @@
+.callout {
+  padding: 20px;
+  margin: 0 0 20px 0;
+  border: 1px solid #e3e3e3;
+  border-left-width: 5px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 2px;
+  background: #fff;
+}
+.callout p:last-child {
+  margin-bottom: 0;
+}
+.callout code {
+  border-radius: 4px;
+}
+/* right-bordered callout */
+.callout.callout-right {
+  border: 1px solid #e3e3e3;
+  border-right-width: 5px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 4px;
+}
+.callout + .callout {
+  margin-top: -5px;
+}
+.callout-default {
+  border-left-color: #777777;
+}
+.callout-default h1,
+.callout-default h2,
+.callout-default h3,
+.callout-default h4,
+.callout-default h5,
+.callout-default h6 {
+  color: #777777;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.callout-default.callout-right {
+  border-right-color: #777777;
+}
+.callout-default.callout-right h1,
+.callout-default.callout-right h2,
+.callout-default.callout-right h3,
+.callout-default.callout-right h4,
+.callout-default.callout-right h5,
+.callout-default.callout-right h6 {
+  color: #777777;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.callout-primary {
+  border-left-color: #380982;
+}
+.callout-primary h1,
+.callout-primary h2,
+.callout-primary h3,
+.callout-primary h4,
+.callout-primary h5,
+.callout-primary h6 {
+  color: #380982;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.callout-primary.callout-right {
+  border-right-color: #380982;
+}
+.callout-primary.callout-right h1,
+.callout-primary.callout-right h2,
+.callout-primary.callout-right h3,
+.callout-primary.callout-right h4,
+.callout-primary.callout-right h5,
+.callout-primary.callout-right h6 {
+  color: #380982;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.callout-success {
+  border-left-color: #5cb85c;
+}
+.callout-success h1,
+.callout-success h2,
+.callout-success h3,
+.callout-success h4,
+.callout-success h5,
+.callout-success h6 {
+  color: #5cb85c;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.callout-success.callout-right {
+  border-right-color: #5cb85c;
+}
+.callout-success.callout-right h1,
+.callout-success.callout-right h2,
+.callout-success.callout-right h3,
+.callout-success.callout-right h4,
+.callout-success.callout-right h5,
+.callout-success.callout-right h6 {
+  color: #5cb85c;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.callout-info {
+  border-left-color: #5bc0de;
+}
+.callout-info h1,
+.callout-info h2,
+.callout-info h3,
+.callout-info h4,
+.callout-info h5,
+.callout-info h6 {
+  color: #5bc0de;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.callout-info.callout-right {
+  border-right-color: #5bc0de;
+}
+.callout-info.callout-right h1,
+.callout-info.callout-right h2,
+.callout-info.callout-right h3,
+.callout-info.callout-right h4,
+.callout-info.callout-right h5,
+.callout-info.callout-right h6 {
+  color: #5bc0de;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.callout-warning {
+  border-left-color: #f0ad4e;
+}
+.callout-warning h1,
+.callout-warning h2,
+.callout-warning h3,
+.callout-warning h4,
+.callout-warning h5,
+.callout-warning h6 {
+  color: #f0ad4e;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.callout-warning.callout-right {
+  border-right-color: #f0ad4e;
+}
+.callout-warning.callout-right h1,
+.callout-warning.callout-right h2,
+.callout-warning.callout-right h3,
+.callout-warning.callout-right h4,
+.callout-warning.callout-right h5,
+.callout-warning.callout-right h6 {
+  color: #f0ad4e;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.callout-danger {
+  border-left-color: #d9534f;
+}
+.callout-danger h1,
+.callout-danger h2,
+.callout-danger h3,
+.callout-danger h4,
+.callout-danger h5,
+.callout-danger h6 {
+  color: #d9534f;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.callout-danger.callout-right {
+  border-right-color: #d9534f;
+}
+.callout-danger.callout-right h1,
+.callout-danger.callout-right h2,
+.callout-danger.callout-right h3,
+.callout-danger.callout-right h4,
+.callout-danger.callout-right h5,
+.callout-danger.callout-right h6 {
+  color: #d9534f;
+  margin-top: 0;
+  margin-bottom: 5px;
+}

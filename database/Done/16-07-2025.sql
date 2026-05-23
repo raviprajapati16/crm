@@ -1,0 +1,1 @@
+ALTER TABLE `tblitems` ADD `total_purchase` INT NOT NULL DEFAULT '0' AFTER `gross_weight`;

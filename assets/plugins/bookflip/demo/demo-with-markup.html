@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<!-- css -->
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	<link rel="stylesheet" type="text/css" href="../min_version/ipages.min.css">
+	<style>
+		.ipgs {
+			width:100%;
+			margin:0 auto;
+		}
+		.ipgs-page .ipgs-data {
+			display:flex;
+			align-items:center;
+			justify-content:center;
+			overflow:hidden;
+			background:#2f4c50;
+			color:#fff;
+			text-shadow:1px 1px 0 #000;
+			border:2px solid rgba(0,0,0,0.7);
+		}
+		.ipgs-page.ipgs-first .ipgs-data {
+			background-image:url(assets/images/book-cover-bg.jpg);
+			background-size:cover;
+		}
+		.ipgs-page.ipgs-first .ipgs-data a {
+			color:#fff;
+			text-shadow:1px 1px 0 #000;
+			text-decoration:none;
+		}
+		.ipgs-page.ipgs-left .ipgs-data:before,
+		.ipgs-page.ipgs-right .ipgs-data:before {
+			content:'';
+			position:absolute;
+			width:35px;
+			height:100%;
+			pointer-event:none;
+		}
+		.ipgs-page.ipgs-left .ipgs-data:before {
+			right:0;
+			background-image:linear-gradient(to left, rgba(0,0,0,0.3), transparent);
+		}
+		.ipgs-page.ipgs-right .ipgs-data:before {
+			left:0;
+			background-image:linear-gradient(to right, rgba(0,0,0,0.3), transparent);
+		}
+		
+		.ipgs-page .ipgs-data > div {
+			padding:20px;
+			font-family:georgia, serif;
+			font-size:18px;
+			text-align:left;
+		}
+		.ipgs-page .ipgs-data > div.txt-center {
+			text-align:center;
+		}
+	</style>
+	<!-- /end css -->
+</head>
+<body>
+<p>This is just a simple example to show you how the plugin works with HTML markup</p>
+
+<!-- flipbook markup -->
+<div id="flipbook" style="display:none">
+	<div class="txt-center">
+		<p><h1>iPages Flipbook</h1><p>Demonstration</p></p>
+		<a href="http://avirtum.com" target="_blank">avirtum.com</a>
+	</div>
+	<div class="txt-center">
+		<p>The Tale of Peter Rabbit<br/>by<br/>Beatrix Potter</p>
+		<img width="50%" src="assets/images/peter-rabbit.png" alt=""/>
+	</div>
+	<div><p>Once upon a time there were four little Rabbits, and their names were: Flopsy, Mopsy, Cotton-tail, and Peter.<br/>They lived with their Mother in a sand-bank, underneath the root of a very big fir-tree.</p></div>
+	<div><p>"Now, my dears," said old Mrs. Rabbit one morning, "you may go into the fields or down the lane, but don't go into Mr. McGregor's garden: your Father had an accident there; he was put in a pie by Mrs. McGregor."</div>
+	<div><p>"Now run along, and don't get into mischief. I am going out."<br/>Then old Mrs. Rabbit took a basket and her umbrella, and went through the wood to the baker's.<br/>She bought a loaf of brown bread and five currant buns.</p></div>
+	<div><p>Flopsy, Mopsy, and Cotton-tail, who were good little bunnies, went down the lane to gather blackberries;<br/>But Peter, who was very naughty, ran straight away to Mr. McGregor's garden, and squeezed under the gate!</p></div>
+	<div><p>First he ate some lettuces and some French beans; and then he ate some radishes;<br/>And then, feeling rather sick, he went to look for some parsley.</p></div>
+	<div><p>But round the end of a cucumber frame, whom should he meet but Mr. McGregor!<br/>Mr. McGregor was on his hands and knees planting out young cabbages, but he jumped up and ran after Peter, waving a rake and calling out, "Stop thief."</p></div>
+	<div><p>Peter was most dreadfully frightened; he rushed all over the garden, for he had forgotten the way back to the gate.<br/>He lost one of his shoes among the cabbages, and the other shoe amongst the potatoes.</p></div>
+	<div><p>After losing them, he ran on four legs and went faster, so that I think he might have got away altogether if he had not unfortunately run into a gooseberry net, and got caught by the large buttons on his jacket.<br/>It was a blue jacket with brass buttons, quite new.</p></div>
+	<div><p>Peter gave himself up for lost, and shed big tears; but his sobs were overheard by some friendly sparrows, who flew to him in great excitement, and implored him to exert himself.</p></div>
+	<div><p>Mr. McGregor came up with a sieve, which he intended to pop upon the top of Peter; but Peter wriggled out just in time, leaving his jacket behind him.<br/>And rushed into the toolshed, and jumped into a can. It would have been a beautiful thing to hide in, if it had not had so much water in it.</p></div>
+	<div><p>Mr. McGregor was quite sure that Peter was somewhere in the toolshed, perhaps hidden underneath a flower-pot. He began to turn them over carefully, looking under each.</p></div>
+	<div><p>Presently Peter sneezed - "Kertyschoo!" Mr. McGregor was after him in no time,<br/>And tried to put his foot upon Peter, who jumped out of a window, upsetting three plants. The window was too small for Mr. McGregor, and he was tired of running after Peter. He went back to his work.</p></div>
+	<div><p>Peter sat down to rest; he was out of breath and trembling with fright, and he had not the least idea which way to go. Also he was very damp with sitting in that can.</p></div>
+	<div><p>After a time he began to wander about, going lippity--lippity--not very fast, and looking all around.<br/>He found a door in a wall; but it was locked, and there was no room for a fat little rabbit to squeeze underneath.</p></div>
+	<div><p>An old mouse was running in and out over the stone doorstep, carrying peas and beans to her family in the wood. Peter asked her the way to the gate, but she had such a large pea in her mouth that she could not answer. She only shook her head at him. Peter began to cry.</p></div>
+	<div><p>Then he tried to find his way straight across the garden, but he became more and more puzzled. Presently, he came to a pond where Mr. McGregor filled his water-cans. A white cat was staring at some goldfish; she sat very, very still, but now and then the tip of her tail twitched as if it were alive.<br/>Peter thought it best to go away without speaking to her; he has heard about cats from his cousin, little Benjamin Bunny.</p></div>
+	<div><p>He went back towards the toolshed, but suddenly, quite close to him, he heard the noise of a hoe—scr-r-ritch, scratch, scratch, scritch. Peter scuttered underneath the bushes. But presently, as nothing happened, he came out, and climbed upon a wheelbarrow, and peeped over.<br/>The first thing he saw was Mr. McGregor hoeing onions. His back was turned towards Peter, and beyond him was the gate!</p></div>
+	<div><p>Peter got down very quietly off the wheelbarrow, and started running as fast as he could go, along a straight walk behind some black-currant bushes.<br/>Mr. McGregor caught sight of him at the corner, but Peter did not care. He slipped underneath the gate, and was safe at last in the wood outside the garden.</p></div>
+	<div><p>Mr. McGregor hung up the little jacket and the shoes for a scare-crow to frighten the blackbirds.<br/>Peter never stopped running or looked behind him till he got home to the big fir-tree.</p></div>
+	<div><p>He was so tired that he flopped down upon the nice soft sand on the floor of the rabbit-hole, and shut his eyes. His mother was busy cooking; she wondered what he had done with his clothes. It was the second little jacket and pair of shoes that Peter had lost in a fortnight!<br/>I am sorry to say that Peter was not very well during the evening.</p></div>
+	<div><p>His mother put him to bed, and made some camomile tea; and she gave a dose of it to Peter!<br/>"One table-spoonful to be taken at bed-time."<br/><br/>But Flopsy, Mopsy, and Cotton-tail had bread and milk and blackberries for supper.</p></div>
+	<div><p>The End</p></div>
+</div>
+<!-- /end flipbook markup -->
+
+<!-- scripts-section -->
+<script type="text/javascript" src="assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="../min_version/pdf.min.js"></script>
+<script type="text/javascript" src="../min_version/jquery.ipages.min.js"></script>
+<script>
+$(document).ready(function() {
+	var options = {
+		bookEngine: 'TwoPageFlip',
+		responsive: true,
+		autoFit: false,
+		autoHeight: true,
+		
+		padding:{top:10,right:10,bottom:70,left:10},
+		
+		pageNumbersHidden:[1,-1],
+		
+		toolbarControls: [
+			{type:'share',        active:true},
+			{type:'outline',      active:false},
+			{type:'thumbnails',   active:false},
+			{type:'gotofirst',    active:true},
+			{type:'prev',         active:true},
+			{type:'pagenumber',   active:true},
+			{type:'next',         active:true},
+			{type:'gotolast',     active:true},
+			{type:'zoom-in',      active:false},
+			{type:'zoom-out',     active:false},
+			{type:'zoom-default', active:false},
+			{type:'optional',     active:false},
+			{type:'download',     active:false},
+			{type:'fullscreen',   active:true, optional:false}
+		]
+	};
+	
+	$('#flipbook').ipages(options);
+});
+</script>
+<!-- /end scripts-section -->
+</body>
+</html>

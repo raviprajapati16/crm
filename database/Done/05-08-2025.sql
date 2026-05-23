@@ -1,0 +1,1 @@
+ALTER TABLE `tblcontracts` ADD `other_content` LONGTEXT NULL DEFAULT NULL AFTER `content`;

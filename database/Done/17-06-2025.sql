@@ -1,0 +1,3 @@
+CREATE TABLE `tblpurchase_status` (`id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(250) NULL DEFAULT NULL , `color` VARCHAR(250) NULL DEFAULT NULL , `created_by` INT NULL DEFAULT NULL , `created_at` TIMESTAMP NULL DEFAULT NULL , PRIMARY KEY (`id`));
+
+ALTER TABLE `tblpurchase_status` ADD `statusorder` INT NULL DEFAULT NULL AFTER `color`, ADD `isdefault` INT NOT NULL DEFAULT '0' AFTER `statusorder`;

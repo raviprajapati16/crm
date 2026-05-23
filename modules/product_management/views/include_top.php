@@ -1,0 +1,1 @@
+<link rel="stylesheet" type="text/css" href="<?= base_url('modules/product_management/assets/style.css'); ?>">  

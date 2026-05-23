@@ -1,0 +1,1 @@
+ALTER TABLE `tblcontracts` CHANGE `contract_status` `contract_status` ENUM('draft','sent','in review','verified','cancelled') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL;

@@ -1,0 +1,1 @@
+ALTER TABLE `tblitemable` ADD `item_id` INT NULL DEFAULT NULL AFTER `rel_type`;
