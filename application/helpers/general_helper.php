@@ -2473,7 +2473,7 @@ function replace_dynamic_prefix($input)
 //     return $highest_number + 1;
 // }
 
-function get_next_number($type, $prefix = '')
+function get_next_number($type, $prefix = '', $gst_number = '')
 {
     $CI = &get_instance();
     $prefix = trim($prefix);
@@ -2484,12 +2484,18 @@ function get_next_number($type, $prefix = '')
         case 'proposal':
             $CI->db->select('MAX(proposal_number) as max_number');
             $CI->db->where('proposal_number_prefix', $prefix);
+            if ($gst_number !== '') {
+                $CI->db->where('proposal_gst_number', $gst_number);
+            }
             $result = $CI->db->get(db_prefix() . 'proposals')->row();
         break;
 
         case 'invoice':
             $CI->db->select('MAX(number) as max_number');
             $CI->db->where('prefix', $prefix);
+            if ($gst_number !== '') {
+                $CI->db->where('gst_number', $gst_number);
+            }
             $result = $CI->db->get(db_prefix() . 'invoices')->row();
         break;
 

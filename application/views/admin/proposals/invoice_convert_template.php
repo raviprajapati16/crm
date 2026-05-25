@@ -103,6 +103,7 @@
                 type: 'invoice',
                 number: $('#number').val(),
                 prefix: $('#invoice_prefix').text(),
+                gst: $('#selected_gst_number').val(),
                 id: ""
             },
             dataType: 'json',

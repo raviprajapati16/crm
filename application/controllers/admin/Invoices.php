@@ -140,6 +140,21 @@ class Invoices extends AdminController
         die;
     }
 
+    /**
+     * AJAX: return next invoice number for a given prefix (used by branch/GST dropdown)
+     */
+    public function get_next_invoice_number_for_prefix()
+    {
+        if (!$this->input->is_ajax_request() && !$this->input->post('prefix')) {
+            show_404();
+        }
+        $prefix      = $this->input->post('prefix', true);
+        $gst         = $this->input->post('gst', true) ?: '';
+        $next_number = get_next_number('invoice', $prefix, $gst);
+        echo json_encode(['next_number' => $next_number]);
+        die;
+    }
+
     public function validate_invoice_number()
     {
         $isedit = $this->input->post('isedit');
@@ -328,8 +343,29 @@ class Invoices extends AdminController
                 if (!has_permission('invoices', '', 'create')) {
                     access_denied('invoices');
                 }
-                $invoice_number_prefix = invoice_number_prefix();
-                if (total_rows(db_prefix() . 'invoices', ["prefix" => $invoice_number_prefix, "number" => (int) $invoice_data['number']]) > 0) {
+                // Use the branch prefix chosen from the dropdown; fall back to global default
+                $raw_prefix            = !empty($invoice_data['selected_branch_prefix_raw'])
+                                         ? $invoice_data['selected_branch_prefix_raw']
+                                         : get_option('invoice_prefix');
+                $invoice_number_prefix = replace_dynamic_prefix($raw_prefix);
+
+                // Map selected GST number to the DB column name
+                $invoice_data['gst_number'] = isset($invoice_data['selected_gst_number'])
+                                              ? $invoice_data['selected_gst_number']
+                                              : '';
+
+                // Clean up UI-only fields before saving
+                unset(
+                    $invoice_data['selected_branch_prefix_raw'],
+                    $invoice_data['selected_gst_number'],
+                    $invoice_data['branch_gst_select']
+                );
+
+                if (total_rows(db_prefix() . 'invoices', [
+                    "prefix" => $invoice_number_prefix,
+                    "number" => (int) $invoice_data['number'],
+                    "gst_number" => $invoice_data['gst_number']
+                ]) > 0) {
                     set_alert('warning', "Invoice number " . $invoice_number_prefix . $invoice_data['number'] . " already used.");
                     redirect(admin_url('invoices/invoice'));
                 }
@@ -356,10 +392,36 @@ class Invoices extends AdminController
                     access_denied('invoices');
                 }
                 $invoice = $this->invoices_model->get($id);
-                if (total_rows(db_prefix() . 'invoices', ["prefix" => $invoice->prefix, "number" => (int) $invoice_data['number'], "id !=" => $id]) > 0) {
-                    set_alert('warning', "Invoice number " . $invoice->prefix . $invoice_data['number'] . " already used.");
+
+                // Determine new prefix if selected, else fall back to existing
+                $raw_prefix = !empty($invoice_data['selected_branch_prefix_raw'])
+                              ? $invoice_data['selected_branch_prefix_raw']
+                              : $invoice->prefix;
+                $invoice_number_prefix = replace_dynamic_prefix($raw_prefix);
+
+                // Map selected GST number to the DB column name
+                $invoice_data['gst_number'] = isset($invoice_data['selected_gst_number'])
+                                              ? $invoice_data['selected_gst_number']
+                                              : '';
+
+                // Clean up UI-only fields before saving
+                unset(
+                    $invoice_data['selected_branch_prefix_raw'],
+                    $invoice_data['selected_gst_number'],
+                    $invoice_data['branch_gst_select']
+                );
+
+                if (total_rows(db_prefix() . 'invoices', [
+                    "prefix" => $invoice_number_prefix,
+                    "number" => (int) $invoice_data['number'],
+                    "id !=" => $id,
+                    "gst_number" => $invoice_data['gst_number']
+                ]) > 0) {
+                    set_alert('warning', "Invoice number " . $invoice_number_prefix . $invoice_data['number'] . " already used.");
                     redirect(admin_url('invoices/invoice/' . $id));
                 }
+                $invoice_data['prefix'] = $invoice_number_prefix;
+
                 $success = $this->invoices_model->update($invoice_data, $id);
                 if ($success) {
                     if (!empty($tax_id)) {

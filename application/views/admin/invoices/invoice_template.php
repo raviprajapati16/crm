@@ -45,16 +45,201 @@
                </div>
             <?php } ?>
             <?php
-            $isedit = isset($invoice) ? 'true' : 'false';
+            // ── Load branch rows from Invoice Settings ──────────────────────
+            $branch_rows_json = get_option('branch_rows');
+            $branch_rows      = $branch_rows_json ? json_decode($branch_rows_json, true) : [];
+            if (!is_array($branch_rows)) {
+                $branch_rows = [];
+            }
+
+            // On edit, identify which branch matches the invoice's prefix and gst_number
+            $matched_branch_id = null;
+            if (isset($invoice)) {
+                foreach ($branch_rows as $br) {
+                    $resolved_pref = replace_dynamic_prefix($br['invoice_prefix'] ?? '');
+                    $br_gst = trim($br['gst_number'] ?? '');
+                    $inv_gst = trim($invoice->gst_number ?? '');
+                    if ($resolved_pref === $invoice->prefix && $br_gst === $inv_gst) {
+                        $matched_branch_id = $br['id'] ?? null;
+                        break;
+                    }
+                }
+                // Fallback
+                if (empty($matched_branch_id)) {
+                    foreach ($branch_rows as $br) {
+                        $resolved_pref = replace_dynamic_prefix($br['invoice_prefix'] ?? '');
+                        if ($resolved_pref === $invoice->prefix) {
+                            $matched_branch_id = $br['id'] ?? null;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Filter active branches, or the currently matched one if editing
+            $active_branch_rows = [];
+            foreach ($branch_rows as $br) {
+                $is_deleted = !empty($br['deleted']);
+                $is_matched = (isset($br['id']) && $matched_branch_id !== null && $br['id'] === $matched_branch_id);
+                if (!$is_deleted || $is_matched) {
+                    $active_branch_rows[] = $br;
+                }
+            }
+
+            if (empty($active_branch_rows)) {
+                // Fallback: build a single entry from the legacy option
+                $active_branch_rows = [[
+                    'id'             => '',
+                    'branch_name'    => 'Default',
+                    'invoice_prefix' => get_option('invoice_prefix') ?: 'INV-',
+                    'gst_number'     => '',
+                ]];
+            }
+
+            // Resolve dynamic variables for each branch prefix (for matching on edit)
+            $branch_rows_resolved = [];
+            foreach ($active_branch_rows as $br) {
+                $br['resolved_prefix'] = replace_dynamic_prefix($br['invoice_prefix'] ?? '');
+                $branch_rows_resolved[] = $br;
+            }
+
+            // On edit or conversion: find which branch index is currently selected
+            $selected_branch_index = 0;
+            if (isset($invoice)) {
+                $is_conversion = isset($invoice->proposal_number_prefix);
+                $search_prefix = $is_conversion ? $invoice->proposal_number_prefix : ($invoice->prefix ?? '');
+                $search_gst = $is_conversion ? ($invoice->proposal_gst_number ?? '') : ($invoice->gst_number ?? '');
+
+                foreach ($branch_rows_resolved as $bidx => $br) {
+                    $br_gst = trim($br['gst_number'] ?? '');
+                    $comp_gst = trim($search_gst);
+                    $br_pref = $is_conversion ? replace_dynamic_prefix($br['proposal_prefix'] ?? '') : $br['resolved_prefix'];
+
+                    if ($br_pref === $search_prefix && $br_gst === $comp_gst) {
+                        $selected_branch_index = $bidx;
+                        break;
+                    }
+                }
+                // Fallback if no exact match (e.g. legacy records with only prefix)
+                if ($selected_branch_index === 0) {
+                    foreach ($branch_rows_resolved as $bidx => $br) {
+                        $br_pref = $is_conversion ? replace_dynamic_prefix($br['proposal_prefix'] ?? '') : $br['resolved_prefix'];
+                        if ($br_pref === $search_prefix) {
+                            $selected_branch_index = $bidx;
+                            break;
+                        }
+                    }
+                }
+            }
+            $selected_branch = $branch_rows_resolved[$selected_branch_index];
             ?>
+
+            <!-- Branch / GST Dropdown -->
+            <div class="form-group">
+               <label for="branch_gst_select">Branch / GST</label>
+               <select id="branch_gst_select" name="branch_gst_select" class="form-control" onchange="applyBranchGst(this.value)">
+                  <?php foreach ($branch_rows_resolved as $bidx => $br): ?>
+                  <option value="<?= $bidx ?>"
+                     data-prefix="<?= htmlspecialchars($br['resolved_prefix']) ?>"
+                     data-gst="<?= htmlspecialchars($br['gst_number'] ?? '') ?>"
+                     data-raw-prefix="<?= htmlspecialchars($br['invoice_prefix'] ?? '') ?>"
+                     <?= ($bidx === $selected_branch_index) ? 'selected' : '' ?>>
+                     <?= htmlspecialchars($br['branch_name']) ?>
+                     <?php if (!empty($br['gst_number'])): ?>
+                        (<?= htmlspecialchars($br['gst_number']) ?>)
+                     <?php endif; ?>
+                  </option>
+                  <?php endforeach; ?>
+               </select>
+               <!-- Hidden: store selected GST number for form submission -->
+               <input type="hidden" id="selected_gst_number" name="selected_gst_number"
+                      value="<?= htmlspecialchars($selected_branch['gst_number'] ?? '') ?>">
+               <input type="hidden" id="selected_branch_prefix_raw" name="selected_branch_prefix_raw"
+                      value="<?= htmlspecialchars($selected_branch['invoice_prefix'] ?? '') ?>">
+            </div>
+
             <div class="form-group">
                <label for="number"><?php echo _l('invoice_add_edit_number'); ?></label>
 
                <div class="input-group">
-                  <span class="input-group-addon" id="invoice_prefix"><?= (isset($invoice) && $invoice->prefix) ? $invoice->prefix : invoice_number_prefix() ?></span>
-                  <input type="number" id="number" name="number" class="form-control" value="<?= (isset($invoice) && $invoice->number) ? $invoice->number : get_next_number("invoice",invoice_number_prefix()) ?>">
+                  <span class="input-group-addon" id="invoice_prefix"><?= htmlspecialchars($selected_branch['resolved_prefix']) ?></span>
+                  <input type="number" id="number" name="number" class="form-control"
+                         value="<?= (isset($invoice) && $invoice->number) ? $invoice->number : get_next_number('invoice', $selected_branch['resolved_prefix'], $selected_branch['gst_number'] ?? '') ?>">
                </div>
             </div>
+
+            <script>
+               // Branch data baked in by PHP — keyed by option value (index)
+               var _branchMap = {};
+               <?php foreach ($branch_rows_resolved as $bidx => $br): ?>
+               _branchMap[<?= $bidx ?>] = {
+                  prefix    : <?= json_encode($br['resolved_prefix']) ?>,
+                  rawPrefix : <?= json_encode($br['invoice_prefix'] ?? '') ?>,
+                  gst       : <?= json_encode($br['gst_number'] ?? '') ?>
+               };
+               <?php endforeach; ?>
+
+               var _isEdit = <?= (isset($invoice) && !isset($convert_invoice)) ? 'true' : 'false' ?>;
+               var _initialBranchIndex = <?= isset($selected_branch_index) ? $selected_branch_index : 0 ?>;
+               var _initialInvoiceNumber = <?= (isset($invoice) && !isset($convert_invoice) && isset($invoice->number)) ? json_encode($invoice->number) : '""' ?>;
+
+               // Called by inline onchange AND by jQuery .on('change')
+               function applyBranchGst(idx) {
+                  idx = parseInt(idx, 10);
+                  var branch = _branchMap[idx];
+                  if (!branch) return;
+
+                  // Update the prefix addon span immediately
+                  document.getElementById('invoice_prefix').textContent = branch.prefix;
+
+                  // Update hidden inputs for form submission
+                  document.getElementById('selected_gst_number').value      = branch.gst;
+                  document.getElementById('selected_branch_prefix_raw').value = branch.rawPrefix;
+
+                  // Auto-fill next invoice number
+                  if (!_isEdit) {
+                     $.post(
+                        '<?= admin_url('invoices/get_next_invoice_number_for_prefix') ?>',
+                        { prefix: branch.prefix, gst: branch.gst },
+                        function(res) {
+                           try {
+                              var d = (typeof res === 'string') ? JSON.parse(res) : res;
+                              if (d && d.next_number) {
+                                 document.getElementById('number').value = d.next_number;
+                              }
+                           } catch(e) {}
+                        }
+                     );
+                  } else {
+                     // Edit mode: restore original number if switching back to the initial branch
+                     if (idx === _initialBranchIndex) {
+                        document.getElementById('number').value = _initialInvoiceNumber;
+                     } else {
+                        // Otherwise, fetch the next number for the new prefix to prevent duplicate number errors
+                        $.post(
+                           '<?= admin_url('invoices/get_next_invoice_number_for_prefix') ?>',
+                           { prefix: branch.prefix, gst: branch.gst },
+                           function(res) {
+                              try {
+                                 var d = (typeof res === 'string') ? JSON.parse(res) : res;
+                                 if (d && d.next_number) {
+                                    document.getElementById('number').value = d.next_number;
+                                 }
+                              } catch(e) {}
+                           }
+                        );
+                     }
+                  }
+               }
+
+               // Also bind via jQuery as a belt-and-suspenders fallback
+               $(function() {
+                  $('#branch_gst_select').on('change', function() {
+                     applyBranchGst(this.value);
+                  });
+               });
+            </script>
+
             <div class="row">
                <div class="col-md-12">
                <hr class="hr-10" />

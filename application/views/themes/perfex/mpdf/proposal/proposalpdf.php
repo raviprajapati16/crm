@@ -143,7 +143,17 @@ $getTax = get_tax_by_relation($proposal->id, "proposal");
         </tr>
         <tr class="info-row">
             <td class="info-cell" colspan="2">
-                <?= format_organization_info(); ?>
+                <?php
+                    // Show the proposal-specific GST number in the Seller block
+                    // format_organization_info() always inserts company_vat; override it here
+                    $seller_info = format_organization_info();
+                    if (!empty($proposal->proposal_gst_number) && !empty(get_option('company_vat'))) {
+                        $seller_info = str_replace(get_option('company_vat'), $proposal->proposal_gst_number, $seller_info);
+                    } elseif (!empty($proposal->proposal_gst_number) && empty(get_option('company_vat'))) {
+                        $seller_info .= '<br/>GST Number: ' . $proposal->proposal_gst_number;
+                    }
+                    echo $seller_info;
+                ?>
             </td>
             <td class="info-cell" colspan="2">
                 <?= format_proposal_info($proposal, 'pdf'); ?>
@@ -305,7 +315,7 @@ $getTax = get_tax_by_relation($proposal->id, "proposal");
             <td class="bank-cell" width="25%">Name:</td>
             <td class="bank-cell" width="25%"><?= $proposal->bank_ac_name ?></td>
             <td class="bank-cell" width="25%">GST Number:</td>
-            <td class="bank-cell" width="25%"><?= get_option('company_vat') ?></td>
+            <td class="bank-cell" width="25%"><?= !empty($proposal->proposal_gst_number) ? $proposal->proposal_gst_number : get_option('company_vat') ?></td>
         </tr>
         <tr>
             <td class="bank-cell">Account No.:</td>

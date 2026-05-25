@@ -150,10 +150,39 @@ class Proposals extends AdminController
         }
     }
 
+    /**
+     * AJAX: return next proposal number for a given prefix (used by branch/GST dropdown)
+     */
+    public function get_next_proposal_number_for_prefix()
+    {
+        if (!$this->input->is_ajax_request() && !$this->input->post('prefix')) {
+            show_404();
+        }
+        $prefix      = $this->input->post('prefix', true);
+        $gst         = $this->input->post('gst', true) ?: '';
+        $next_number = get_next_number('proposal', $prefix, $gst);
+        echo json_encode(['next_number' => $next_number]);
+        die;
+    }
+
     public function proposal($id = '')
     {
         if ($this->input->post()) {
             $proposal_data = $this->input->post();
+            
+            // Extract selected prefix and GST number
+            $selected_gst = isset($proposal_data['selected_proposal_gst_number']) ? $proposal_data['selected_proposal_gst_number'] : '';
+            $selected_prefix_raw = isset($proposal_data['selected_proposal_branch_prefix_raw']) ? $proposal_data['selected_proposal_branch_prefix_raw'] : '';
+
+            // Clean up UI-only fields
+            unset(
+                $proposal_data['selected_proposal_branch_prefix_raw'],
+                $proposal_data['selected_proposal_gst_number'],
+                $proposal_data['proposal_branch_gst_select']
+            );
+
+            $proposal_data['proposal_gst_number'] = $selected_gst;
+
             $dynamic_amount_fields = [];
             if (isset($proposal_data['dynamic_fields'])) {
                 $dynamic_amount_fields = $proposal_data['dynamic_fields'];
@@ -174,8 +203,16 @@ class Proposals extends AdminController
                 if (!has_permission('proposals', '', 'create')) {
                     access_denied('proposals');
                 }
-                $proposal_number_prefix = proposal_number_prefix();
-                if (total_rows(db_prefix() . 'proposals', ["proposal_number_prefix" => $proposal_number_prefix, "proposal_number" => (int) $proposal_data['proposal_number']]) > 0) {
+                
+                // Use the branch prefix chosen from the dropdown, falling back to global default
+                $raw_prefix            = !empty($selected_prefix_raw) ? $selected_prefix_raw : get_option('proposal_number_prefix');
+                $proposal_number_prefix = replace_dynamic_prefix($raw_prefix);
+
+                if (total_rows(db_prefix() . 'proposals', [
+                    "proposal_number_prefix" => $proposal_number_prefix,
+                    "proposal_number" => (int) $proposal_data['proposal_number'],
+                    "proposal_gst_number" => $proposal_data['proposal_gst_number']
+                ]) > 0) {
                     set_alert('warning', "Proposal number " . $proposal_number_prefix . $proposal_data['proposal_number'] . " already used.");
                     redirect(admin_url('proposals/proposal'));
                 }
@@ -207,10 +244,21 @@ class Proposals extends AdminController
                 }
 
                 $proposal = $this->proposals_model->get($id);
-                if (total_rows(db_prefix() . 'proposals', ["proposal_number_prefix" => $proposal->proposal_number_prefix, "proposal_number" => (int) $proposal_data['proposal_number'], "id !=" => $id]) > 0) {
-                    set_alert('warning', "Proposal number " . $proposal->proposal_number_prefix . $proposal_data['proposal_number'] . " already used.");
+                
+                // Determine new prefix if selected, else fall back to existing
+                $raw_prefix = !empty($selected_prefix_raw) ? $selected_prefix_raw : $proposal->proposal_number_prefix;
+                $proposal_number_prefix = replace_dynamic_prefix($raw_prefix);
+
+                if (total_rows(db_prefix() . 'proposals', [
+                    "proposal_number_prefix" => $proposal_number_prefix,
+                    "proposal_number" => (int) $proposal_data['proposal_number'],
+                    "id !=" => $id,
+                    "proposal_gst_number" => $proposal_data['proposal_gst_number']
+                ]) > 0) {
+                    set_alert('warning', "Proposal number " . $proposal_number_prefix . $proposal_data['proposal_number'] . " already used.");
                     redirect(admin_url('proposals/proposal/' . $id));
                 }
+                $proposal_data['proposal_number_prefix'] = $proposal_number_prefix;
 
                 $rel_id = $this->input->post('rel_id');
                 $rel_type = $this->input->post('rel_type');
@@ -470,8 +518,30 @@ class Proposals extends AdminController
                 $dynamic_amount_fields = $post_data['dynamic_fields'];
                 unset($post_data['dynamic_fields']);
             }
-            $invoice_number_prefix = invoice_number_prefix();
-            if (total_rows(db_prefix() . 'invoices', ["prefix" => $invoice_number_prefix, "number" => (int) $post_data['number']]) > 0) {
+
+            // Use the branch prefix chosen from the dropdown; fall back to global default
+            $raw_prefix            = !empty($post_data['selected_branch_prefix_raw'])
+                                     ? $post_data['selected_branch_prefix_raw']
+                                     : get_option('invoice_prefix');
+            $invoice_number_prefix = replace_dynamic_prefix($raw_prefix);
+
+            // Map selected GST number to the DB column name
+            $post_data['gst_number'] = isset($post_data['selected_gst_number'])
+                                          ? $post_data['selected_gst_number']
+                                          : '';
+
+            // Clean up UI-only fields before saving
+            unset(
+                $post_data['selected_branch_prefix_raw'],
+                $post_data['selected_gst_number'],
+                $post_data['branch_gst_select']
+            );
+
+            if (total_rows(db_prefix() . 'invoices', [
+                "prefix" => $invoice_number_prefix,
+                "number" => (int) $post_data['number'],
+                "gst_number" => $post_data['gst_number']
+            ]) > 0) {
                 set_alert('warning', "Invoice number " . $invoice_number_prefix . $post_data['number'] . " already used.");
                 redirect(admin_url('proposals#' . $id));
             }

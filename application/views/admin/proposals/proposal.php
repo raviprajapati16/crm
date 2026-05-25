@@ -33,14 +33,120 @@
                             <hr />
                             <?php } ?>
                             <div class="col-md-6 border-right">
+                                <?php
+                                 // ── Load branch rows from unified branch_rows ──────────────────────
+                                 $branches_json = get_option('branch_rows');
+                                 $all_branches  = $branches_json ? json_decode($branches_json, true) : [];
+                                 if (!is_array($all_branches)) {
+                                     $all_branches = [];
+                                 }
+
+                                 // On edit, identify which branch matches the proposal's prefix and gst_number
+                                 $matched_branch_id = null;
+                                 if (isset($proposal)) {
+                                     foreach ($all_branches as $br) {
+                                         $resolved_pref = replace_dynamic_prefix($br['proposal_prefix'] ?? '');
+                                         $br_gst = trim($br['gst_number'] ?? '');
+                                         $prop_gst = trim($proposal->proposal_gst_number ?? '');
+                                         if ($resolved_pref === $proposal->proposal_number_prefix && $br_gst === $prop_gst) {
+                                             $matched_branch_id = $br['id'] ?? null;
+                                             break;
+                                         }
+                                     }
+                                     // Fallback
+                                     if (empty($matched_branch_id)) {
+                                         foreach ($all_branches as $br) {
+                                             $resolved_pref = replace_dynamic_prefix($br['proposal_prefix'] ?? '');
+                                             if ($resolved_pref === $proposal->proposal_number_prefix) {
+                                                 $matched_branch_id = $br['id'] ?? null;
+                                                 break;
+                                             }
+                                         }
+                                     }
+                                 }
+
+                                 // Filter active branches, or the currently matched one if editing
+                                 $proposal_branches = [];
+                                 foreach ($all_branches as $br) {
+                                     $is_deleted = !empty($br['deleted']);
+                                     $is_matched = (isset($br['id']) && $matched_branch_id !== null && $br['id'] === $matched_branch_id);
+                                     if (!$is_deleted || $is_matched) {
+                                         $proposal_branches[] = $br;
+                                     }
+                                 }
+
+                                 if (empty($proposal_branches)) {
+                                     $proposal_branches = [[
+                                         'id'              => '',
+                                         'branch_name'     => 'Default',
+                                         'proposal_prefix' => get_option('proposal_number_prefix') ?: 'PROP-',
+                                         'gst_number'      => '',
+                                     ]];
+                                 }
+
+                                 // Resolve dynamic variables for each branch prefix (for matching on edit)
+                                 $proposal_branches_resolved = [];
+                                 foreach ($proposal_branches as $br) {
+                                     $br['resolved_prefix'] = replace_dynamic_prefix($br['proposal_prefix'] ?? '');
+                                     $proposal_branches_resolved[] = $br;
+                                 }
+
+                                 // On edit: find which branch index in our resolved list is currently selected
+                                 $selected_branch_index = 0;
+                                 if (isset($proposal)) {
+                                     foreach ($proposal_branches_resolved as $bidx => $br) {
+                                         $br_gst = trim($br['gst_number'] ?? '');
+                                         $prop_gst = trim($proposal->proposal_gst_number ?? '');
+                                         if ($br['resolved_prefix'] === $proposal->proposal_number_prefix && $br_gst === $prop_gst) {
+                                             $selected_branch_index = $bidx;
+                                             break;
+                                         }
+                                     }
+                                     // Fallback
+                                     if ($selected_branch_index === 0) {
+                                         foreach ($proposal_branches_resolved as $bidx => $br) {
+                                             if ($br['resolved_prefix'] === $proposal->proposal_number_prefix) {
+                                                 $selected_branch_index = $bidx;
+                                                 break;
+                                             }
+                                         }
+                                     }
+                                 }
+                                 $selected_branch = $proposal_branches_resolved[$selected_branch_index];
+                                 ?>
+
+                                 <!-- Proposal Branch / GST Dropdown -->
+                                 <div class="form-group">
+                                     <label for="proposal_branch_gst_select">Proposal Branch / GST</label>
+                                     <select id="proposal_branch_gst_select" name="proposal_branch_gst_select" class="form-control" onchange="applyProposalBranchGst(this.value)">
+                                         <?php foreach ($proposal_branches_resolved as $bidx => $br): ?>
+                                         <option value="<?= $bidx ?>"
+                                             data-prefix="<?= htmlspecialchars($br['resolved_prefix']) ?>"
+                                             data-gst="<?= htmlspecialchars($br['gst_number'] ?? '') ?>"
+                                             data-raw-prefix="<?= htmlspecialchars($br['proposal_prefix'] ?? '') ?>"
+                                             <?= ($bidx === $selected_branch_index) ? 'selected' : '' ?>>
+                                             <?= htmlspecialchars($br['branch_name']) ?>
+                                             <?php if (!empty($br['gst_number'])): ?>
+                                                 (<?= htmlspecialchars($br['gst_number']) ?>)
+                                             <?php endif; ?>
+                                         </option>
+                                         <?php endforeach; ?>
+                                     </select>
+                                     <!-- Hidden: store selected GST number for form submission -->
+                                     <input type="hidden" id="selected_proposal_gst_number" name="selected_proposal_gst_number"
+                                            value="<?= htmlspecialchars($selected_branch['gst_number'] ?? '') ?>">
+                                     <input type="hidden" id="selected_proposal_branch_prefix_raw" name="selected_proposal_branch_prefix_raw"
+                                            value="<?= htmlspecialchars($selected_branch['proposal_prefix'] ?? '') ?>">
+                                 </div>
+
                                 <div class="form-group">
                                     <label for="proposal_number">Proposal Number</label>
                                     <div class="input-group">
                                         <span class="input-group-addon"
-                                            id="proposal_prefix"><?= (isset($proposal) && $proposal->proposal_number_prefix) ? $proposal->proposal_number_prefix : proposal_number_prefix() ?></span>
+                                            id="proposal_prefix"><?= htmlspecialchars($selected_branch['resolved_prefix']) ?></span>
                                         <input type="number" id="proposal_number" name="proposal_number"
                                             class="form-control"
-                                            value="<?= (isset($proposal) && $proposal->proposal_number) ? $proposal->proposal_number : get_next_number("proposal",proposal_number_prefix()) ?>">
+                                            value="<?= (isset($proposal) && $proposal->proposal_number) ? $proposal->proposal_number : get_next_number("proposal", $selected_branch['resolved_prefix'], $selected_branch['gst_number'] ?? '') ?>">
                                     </div>
                                 </div>
                                 <?php $value = (isset($proposal) ? $proposal->subject : ''); ?>
@@ -582,6 +688,7 @@ function check_proposal_number() {
             type: 'proposal',
             number: $('#proposal_number').val(),
             prefix: $('#proposal_prefix').text(),
+            gst: $('#selected_proposal_gst_number').val(),
             id: "<?= isset($proposal) ? $proposal->id : "" ?>"
         },
         dataType: 'json',
@@ -593,6 +700,73 @@ function check_proposal_number() {
         }
     });
 }
+// Branch data baked in by PHP — keyed by option value (index)
+var _proposalBranchMap = {};
+<?php foreach ($proposal_branches_resolved as $bidx => $br): ?>
+_proposalBranchMap[<?= $bidx ?>] = {
+   prefix    : <?= json_encode($br['resolved_prefix']) ?>,
+   rawPrefix : <?= json_encode($br['proposal_prefix'] ?? '') ?>,
+   gst       : <?= json_encode($br['gst_number'] ?? '') ?>
+};
+<?php endforeach; ?>
+
+var _isProposalEdit = <?= isset($proposal) ? 'true' : 'false' ?>;
+var _initialBranchIndex = <?= isset($selected_branch_index) ? $selected_branch_index : 0 ?>;
+var _initialProposalNumber = <?= isset($proposal) ? json_encode($proposal->proposal_number) : '""' ?>;
+
+function applyProposalBranchGst(idx) {
+   idx = parseInt(idx, 10);
+   var branch = _proposalBranchMap[idx];
+   if (!branch) return;
+
+   // Update the prefix addon span immediately
+   document.getElementById('proposal_prefix').textContent = branch.prefix;
+
+   // Update hidden inputs for form submission
+   document.getElementById('selected_proposal_gst_number').value      = branch.gst;
+   document.getElementById('selected_proposal_branch_prefix_raw').value = branch.rawPrefix;
+
+   // Auto-fill next proposal number
+   if (!_isProposalEdit) {
+      $.post(
+         '<?= admin_url('proposals/get_next_proposal_number_for_prefix') ?>',
+         { prefix: branch.prefix, gst: branch.gst },
+         function(res) {
+            try {
+               var d = (typeof res === 'string') ? JSON.parse(res) : res;
+               if (d && d.next_number) {
+                  document.getElementById('proposal_number').value = d.next_number;
+               }
+            } catch(e) {}
+         }
+      );
+   } else {
+      // Edit mode: restore original number if switching back to the initial branch
+      if (idx === _initialBranchIndex) {
+         document.getElementById('proposal_number').value = _initialProposalNumber;
+      } else {
+         // Otherwise, fetch the next number for the new prefix to prevent duplicate number errors
+         $.post(
+            '<?= admin_url('proposals/get_next_proposal_number_for_prefix') ?>',
+            { prefix: branch.prefix, gst: branch.gst },
+            function(res) {
+               try {
+                  var d = (typeof res === 'string') ? JSON.parse(res) : res;
+                  if (d && d.next_number) {
+                     document.getElementById('proposal_number').value = d.next_number;
+                  }
+               } catch(e) {}
+            }
+         );
+      }
+   }
+}
+
+$(function() {
+   $('#proposal_branch_gst_select').on('change', function() {
+      applyProposalBranchGst(this.value);
+   });
+});
 </script>
 <?php
 $this->load->view('admin/item_calculation_js');

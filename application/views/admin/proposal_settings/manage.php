@@ -213,15 +213,135 @@
                             </div>
                         </div>
 
+                        <!-- Branch Proposal Settings Section -->
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="proposal_number_prefix">Proposal Number Prefix</label>
-                                    <input type="text" class="form-control" id="proposal_number_prefix" name="proposal_number_prefix" value="<?= get_option('proposal_number_prefix') ?>" required>
-                                    <small class="text-muted">Use variables above to create dynamic prefixes. Example: PROP-{current_full_year}-</small>
-                                </div>
+                            <div class="col-md-12">
+                                <h5 class="bold" style="margin-top:20px; font-size:15px; display:inline-block; border-bottom:2px solid #03a9f4; padding-bottom:4px;">
+                                    <i class="fa fa-building-o"></i> Branch Proposal Settings
+                                </h5>
+                                <p class="text-muted" style="margin-bottom:15px; font-size:13px;">
+                                    Add one entry per branch. Each branch can have its own proposal prefix and GST number.
+                                </p>
                             </div>
                         </div>
+
+                        <div id="proposal-branch-rows-container">
+
+                            <?php
+                            // Load ALL branches from the unified JSON option
+                            $all_branches = get_option('branch_rows');
+                            $all_branches = $all_branches ? json_decode($all_branches, true) : [];
+                            if (!is_array($all_branches)) {
+                                $all_branches = [];
+                            }
+                            $active_branches = array_filter($all_branches, function($branch) {
+                                return empty($branch['deleted']);
+                            });
+                            $active_branches = array_values($active_branches);
+                            if (empty($active_branches)) {
+                                // Fallback/default: load legacy proposal_number_prefix or use a default empty row
+                                $legacy_prefix = get_option('proposal_number_prefix') ?: 'PROP-';
+                                $active_branches = [['branch_name' => '', 'proposal_prefix' => $legacy_prefix, 'gst_number' => '', 'id' => '']];
+                            }
+
+                            foreach ($active_branches as $idx => $branch):
+                                $is_primary = ($idx === 0);
+                            ?>
+                            <div class="proposal-branch-row" data-index="<?= $idx ?>"
+                                 style="background:#f9f9f9; border:1px solid #e3e3e3; border-radius:6px; padding:15px 15px 5px; margin-bottom:12px; position:relative;">
+                                <input type="hidden" name="branch_id[]" value="<?= htmlspecialchars($branch['id'] ?? '') ?>">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Branch Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control branch-name-input"
+                                                   name="branch_name[]"
+                                                   placeholder="<?= $is_primary ? 'e.g. Head Office' : 'e.g. Branch Office' ?>"
+                                                   value="<?= htmlspecialchars($branch['branch_name'] ?? '') ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Proposal Prefix <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control proposal-prefix-input"
+                                                   name="proposal_prefix[]"
+                                                   placeholder="e.g. PROP-{financial_year_short}-"
+                                                   value="<?= htmlspecialchars($branch['proposal_prefix'] ?? '') ?>" required>
+                                            <small class="text-muted" style="font-size:11px;">Click a variable above then click inside this field to insert.</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>GST Number</label>
+                                            <input type="text" class="form-control gst-number-input"
+                                                   name="gst_number[]"
+                                                   placeholder="e.g. 22AAAAA0000A1Z5"
+                                                   value="<?= htmlspecialchars($branch['gst_number'] ?? '') ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1" style="padding-top:25px; text-align:center;">
+                                        <?php if ($is_primary): ?>
+                                            <span class="label label-default" style="font-size:11px; padding:4px 7px;"
+                                                  title="Primary row cannot be removed">Primary</span>
+                                        <?php else: ?>
+                                            <button type="button" class="btn btn-danger btn-sm remove-proposal-branch-row"
+                                                    title="Remove this row">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+
+                        </div><!-- /#proposal-branch-rows-container -->
+
+                        <!-- Add More Button -->
+                        <div class="row" style="margin-bottom:20px;">
+                            <div class="col-md-12">
+                                <button type="button" id="add-proposal-branch-row" class="btn btn-success btn-sm">
+                                    <i class="fa fa-plus-circle"></i> Add More Proposal Branch
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Hidden template for JS cloning (not submitted) -->
+                        <template id="proposal-branch-row-template">
+                            <div class="proposal-branch-row" style="background:#f9f9f9; border:1px solid #e3e3e3; border-radius:6px; padding:15px 15px 5px; margin-bottom:12px; position:relative;">
+                                <input type="hidden" name="branch_id[]" value="">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Branch Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control branch-name-input"
+                                                   name="branch_name[]" placeholder="e.g. Branch Office" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Proposal Prefix <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control proposal-prefix-input"
+                                                   name="proposal_prefix[]" placeholder="e.g. PROP-{financial_year_short}-" required>
+                                            <small class="text-muted" style="font-size:11px;">Click a variable above then click inside this field to insert.</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>GST Number</label>
+                                            <input type="text" class="form-control gst-number-input"
+                                                   name="gst_number[]" placeholder="e.g. 22AAAAA0000A1Z5">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1" style="padding-top:25px; text-align:center;">
+                                        <button type="button" class="btn btn-danger btn-sm remove-proposal-branch-row"
+                                                title="Remove this row">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+
 
                         <!-- Domestic Section -->
                         <div class="row">
@@ -434,13 +554,23 @@
             init_editor('textarea[name="proposal_international_terms"]');
             init_editor('textarea[name="proposal_domestic_terms"]');
 
+            // Track the last focused proposal prefix input
+            var $lastFocusedProposalPrefix = null;
+            $(document).on('focus', '.proposal-prefix-input', function() {
+                $lastFocusedProposalPrefix = $(this);
+            });
+
             // Handle variable insertion for prefix
             $(document).on('click', '.variable-insert', function() {
                 var variable = $(this).data('variable');
-                var target = $(this).data('target');
-                var inputField = document.getElementById(target);
+                
+                // Use last focused proposal prefix input, or fall back to the first one
+                var $target = ($lastFocusedProposalPrefix && $lastFocusedProposalPrefix.length)
+                    ? $lastFocusedProposalPrefix
+                    : $('.proposal-prefix-input').first();
 
-                if (inputField) {
+                if ($target && $target.length) {
+                    var inputField = $target[0];
                     var cursorPos = inputField.selectionStart;
                     var textBefore = inputField.value.substring(0, cursorPos);
                     var textAfter = inputField.value.substring(cursorPos);
@@ -448,6 +578,12 @@
                     inputField.value = textBefore + variable + textAfter;
                     inputField.focus();
                     inputField.setSelectionRange(cursorPos + variable.length, cursorPos + variable.length);
+
+                    // Highlight the target row briefly
+                    $target.closest('.proposal-branch-row').css('border-color', '#5cb85c');
+                    setTimeout(function() {
+                        $target.closest('.proposal-branch-row').css('border-color', '#e3e3e3');
+                    }, 800);
 
                     // Show success message
                     $(this).removeClass('btn-primary').addClass('btn-success');
@@ -459,6 +595,25 @@
                         $(this).html('<i class="fa fa-plus"></i> Insert');
                     }, 1000);
                 }
+            });
+
+            // ── Add More Proposal Branch Row ────────────────────────────
+            $('#add-proposal-branch-row').on('click', function() {
+                var template = document.getElementById('proposal-branch-row-template');
+                var clone    = document.importNode(template.content, true);
+                var $clone   = $(clone);
+
+                // Animate entry
+                $clone.find('.proposal-branch-row').css({ opacity: 0, marginTop: '-10px' });
+                $('#proposal-branch-rows-container').append($clone);
+                $('#proposal-branch-rows-container .proposal-branch-row').last()
+                    .animate({ opacity: 1, marginTop: '0px' }, 300);
+            });
+
+            // ── Remove Proposal Branch Row ──────────────────────────────
+            $(document).on('click', '.remove-proposal-branch-row', function() {
+                var $row = $(this).closest('.proposal-branch-row');
+                $row.fadeOut(250, function() { $(this).remove(); });
             });
 
             // Handle merge field insertion
@@ -501,9 +656,6 @@
 
             $('#proposalSettingForm').appFormValidator({
                 rules: {
-                    // Prefix validation
-                    proposal_number_prefix: 'required',
-
                     // Domestic section validation rules
                     proposal_domestic_account_name: 'required',
                     proposal_domestic_account_no: 'required',

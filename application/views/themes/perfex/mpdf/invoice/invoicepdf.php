@@ -151,7 +151,19 @@ $invoice_total = $invoice->total - $applied_credits;
         </tr>
         <tr class="info-row">
             <td class="info-cell" colspan="2">
-                <?= format_organization_info(); ?>
+            <?php
+                // Show the invoice-specific GST number in the Seller block
+                // format_organization_info() always inserts company_vat; override it here
+                $seller_info = format_organization_info();
+                if (!empty($invoice->gst_number) && !empty(get_option('company_vat'))) {
+                    // Swap the global GST with the invoice-specific one in the rendered string
+                    $seller_info = str_replace(get_option('company_vat'), $invoice->gst_number, $seller_info);
+                } elseif (!empty($invoice->gst_number) && empty(get_option('company_vat'))) {
+                    // company_vat was empty so {vat_number_with_label} was stripped; append GST manually
+                    $seller_info .= '<br/>GST Number: ' . $invoice->gst_number;
+                }
+                echo $seller_info;
+            ?>
             </td>
             <td class="info-cell" colspan="2">
                 <?= format_customer_info($invoice, 'invoice', 'billing'); ?>
@@ -373,7 +385,7 @@ $invoice_total = $invoice->total - $applied_credits;
             <td class="bank-cell" width="25%">Name:</td>
             <td class="bank-cell" width="25%"><?= $invoice->bank_ac_name ?></td>
             <td class="bank-cell" width="25%">GST Number:</td>
-            <td class="bank-cell" width="25%"><?= get_option('company_vat') ?></td>
+            <td class="bank-cell" width="25%"><?= !empty($invoice->gst_number) ? $invoice->gst_number : get_option('company_vat') ?></td>
         </tr>
         <tr>
             <td class="bank-cell">Account No.:</td>

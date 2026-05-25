@@ -968,7 +968,8 @@ class Misc extends AdminController
         $number = $this->input->post('number');
         $prefix = $this->input->post('prefix');
         $type   = $this->input->post('type');
-        $id   = $this->input->post('id');
+        $id     = $this->input->post('id');
+        $gst    = $this->input->post('gst');
 
         if (empty($number)) {
             echo json_encode(['success' => false, 'message' => ucfirst($type) . ' number is required.']);
@@ -978,6 +979,7 @@ class Misc extends AdminController
         if ($type == "proposal") {
             $this->db->where('proposal_number', (int) $number);
             $this->db->where('proposal_number_prefix', trim($prefix));
+            $this->db->where('proposal_gst_number', trim($gst ?: ''));
             if (!empty($id)) {
                 $this->db->where('id !=', $id);
             }
@@ -985,6 +987,7 @@ class Misc extends AdminController
         } else if ($type == "invoice") {
             $this->db->where('number', (int) $number);
             $this->db->where('prefix', trim($prefix));
+            $this->db->where('gst_number', trim($gst ?: ''));
             if (!empty($id)) {
                 $this->db->where('id !=', $id);
             }

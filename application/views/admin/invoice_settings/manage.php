@@ -213,15 +213,133 @@
                             </div>
                         </div>
 
+                        <!-- Branch / Prefix / GST Multi-row Section -->
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="invoice_prefix">Invoice Number Prefix</label>
-                                    <input type="text" class="form-control" id="invoice_prefix" name="invoice_prefix" value="<?= get_option('invoice_prefix') ?>" required>
-                                    <small class="text-muted">Use variables above to create dynamic prefixes. Example: INV-{current_full_year}-</small>
-                                </div>
+                            <div class="col-md-12">
+                                <h5 class="section-subtitle" style="margin-bottom:10px; font-weight:600; color:#555;">
+                                    <i class="fa fa-building-o"></i> Branch Invoice Settings
+                                </h5>
+                                <p class="text-muted" style="margin-bottom:15px; font-size:13px;">
+                                    Add one entry per branch. Each branch can have its own invoice prefix and GST number.
+                                </p>
                             </div>
                         </div>
+
+                        <div id="branch-rows-container">
+
+                            <?php
+                            // Load ALL branches from the single JSON option
+                            $all_branches = get_option('branch_rows');
+                            $all_branches = $all_branches ? json_decode($all_branches, true) : [];
+                            if (!is_array($all_branches)) {
+                                $all_branches = [];
+                            }
+                            $active_branches = array_filter($all_branches, function($branch) {
+                                return empty($branch['deleted']);
+                            });
+                            $active_branches = array_values($active_branches);
+                            if (empty($active_branches)) {
+                                // Default: one empty primary row if nothing saved yet
+                                $active_branches = [['branch_name' => '', 'invoice_prefix' => '', 'gst_number' => '', 'id' => '']];
+                            }
+
+                            foreach ($active_branches as $idx => $branch):
+                                $is_primary = ($idx === 0);
+                            ?>
+                            <div class="branch-row" data-index="<?= $idx ?>"
+                                 style="background:#f9f9f9; border:1px solid #e3e3e3; border-radius:6px; padding:15px 15px 5px; margin-bottom:12px; position:relative;">
+                                <input type="hidden" name="branch_id[]" value="<?= htmlspecialchars($branch['id'] ?? '') ?>">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Branch Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control branch-name-input"
+                                                   name="branch_name[]"
+                                                   placeholder="<?= $is_primary ? 'e.g. Head Office' : 'e.g. Branch Office' ?>"
+                                                   value="<?= htmlspecialchars($branch['branch_name'] ?? '') ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Invoice Prefix <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control invoice-prefix-input"
+                                                   name="invoice_prefix[]"
+                                                   placeholder="e.g. INV-{financial_year_short}-"
+                                                   value="<?= htmlspecialchars($branch['invoice_prefix'] ?? '') ?>" required>
+                                            <small class="text-muted" style="font-size:11px;">Click a variable above then click inside this field to insert.</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>GST Number</label>
+                                            <input type="text" class="form-control gst-number-input"
+                                                   name="gst_number[]"
+                                                   placeholder="e.g. 22AAAAA0000A1Z5"
+                                                   value="<?= htmlspecialchars($branch['gst_number'] ?? '') ?>">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1" style="padding-top:25px; text-align:center;">
+                                        <?php if ($is_primary): ?>
+                                            <span class="label label-default" style="font-size:11px; padding:4px 7px;"
+                                                  title="Primary row cannot be removed">Primary</span>
+                                        <?php else: ?>
+                                            <button type="button" class="btn btn-danger btn-sm remove-branch-row"
+                                                    title="Remove this row">
+                                                 <i class="fa fa-trash"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+
+                        </div><!-- /#branch-rows-container -->
+
+                        <!-- Add More Button -->
+                        <div class="row" style="margin-bottom:20px;">
+                            <div class="col-md-12">
+                                <button type="button" id="add-branch-row" class="btn btn-success btn-sm">
+                                    <i class="fa fa-plus-circle"></i> Add More Branch
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Hidden template for JS cloning (not submitted) -->
+                        <template id="branch-row-template">
+                            <div class="branch-row" style="background:#f9f9f9; border:1px solid #e3e3e3; border-radius:6px; padding:15px 15px 5px; margin-bottom:12px; position:relative;">
+                                <input type="hidden" name="branch_id[]" value="">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Branch Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control branch-name-input"
+                                                   name="branch_name[]" placeholder="e.g. Branch Office" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Invoice Prefix <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control invoice-prefix-input"
+                                                   name="invoice_prefix[]" placeholder="e.g. BR-{financial_year_short}-" required>
+                                            <small class="text-muted" style="font-size:11px;">Click a variable above then click inside this field to insert.</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>GST Number</label>
+                                            <input type="text" class="form-control gst-number-input"
+                                                   name="gst_number[]" placeholder="e.g. 22AAAAA0000A1Z5">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1" style="padding-top:25px; text-align:center;">
+                                        <button type="button" class="btn btn-danger btn-sm remove-branch-row"
+                                                title="Remove this row">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
 
                         <div class="row">
                             <div class="col-md-12">
@@ -252,34 +370,48 @@
     <script>
         $(function() {
             $(window).off('beforeunload');
-            
+
             init_editor('textarea[name="invoice_terms_and_condition"]');
 
-            // Handle variable insertion for prefix
+            // Track the last focused invoice prefix input
+            var $lastFocusedPrefix = null;
+            $(document).on('focus', '.invoice-prefix-input', function() {
+                $lastFocusedPrefix = $(this);
+            });
+
+            // Handle variable insertion into the last focused prefix input (or fallback to first)
             $(document).on('click', '.variable-insert', function() {
                 var variable = $(this).data('variable');
-                var target = $(this).data('target');
-                var inputField = document.getElementById(target);
 
-                if (inputField) {
+                // Use last focused prefix, or fall back to the first prefix input
+                var $target = ($lastFocusedPrefix && $lastFocusedPrefix.length)
+                    ? $lastFocusedPrefix
+                    : $('.invoice-prefix-input').first();
+
+                if ($target && $target.length) {
+                    var inputField = $target[0];
                     var cursorPos = inputField.selectionStart;
                     var textBefore = inputField.value.substring(0, cursorPos);
-                    var textAfter = inputField.value.substring(cursorPos);
+                    var textAfter  = inputField.value.substring(cursorPos);
 
                     inputField.value = textBefore + variable + textAfter;
                     inputField.focus();
                     inputField.setSelectionRange(cursorPos + variable.length, cursorPos + variable.length);
 
-                    // Show success message
-                    $(this).removeClass('btn-primary').addClass('btn-success');
-                    $(this).html('<i class="fa fa-check"></i> Inserted');
-
-                    // Reset button after 1 second
-                    setTimeout(() => {
-                        $(this).removeClass('btn-success').addClass('btn-primary');
-                        $(this).html('<i class="fa fa-plus"></i> Insert');
-                    }, 1000);
+                    // Highlight the target row briefly
+                    $target.closest('.branch-row').css('border-color', '#5cb85c');
+                    setTimeout(function() {
+                        $target.closest('.branch-row').css('border-color', '#e3e3e3');
+                    }, 800);
                 }
+
+                // Visual feedback on insert button
+                $(this).removeClass('btn-primary').addClass('btn-success');
+                $(this).html('<i class="fa fa-check"></i> Inserted');
+                setTimeout(() => {
+                    $(this).removeClass('btn-success').addClass('btn-primary');
+                    $(this).html('<i class="fa fa-plus"></i> Insert');
+                }, 1000);
             });
 
             // Toggle collapse icon
@@ -292,14 +424,32 @@
                 }
             });
 
+            // ── Add More Branch Row ──────────────────────────────────────
+            $('#add-branch-row').on('click', function() {
+                var template = document.getElementById('branch-row-template');
+                var clone    = document.importNode(template.content, true);
+                var $clone   = $(clone);
+
+                // Animate entry
+                $clone.find('.branch-row').css({ opacity: 0, marginTop: '-10px' });
+                $('#branch-rows-container').append($clone);
+                $('#branch-rows-container .branch-row').last()
+                    .animate({ opacity: 1, marginTop: '0px' }, 300);
+            });
+
+            // ── Remove Branch Row ────────────────────────────────────────
+            $(document).on('click', '.remove-branch-row', function() {
+                var $row = $(this).closest('.branch-row');
+                $row.fadeOut(250, function() { $(this).remove(); });
+            });
+
+            // ── Form Validator ───────────────────────────────────────────
             $('#invoiceSettingForm').appFormValidator({
                 rules: {
-                    invoice_prefix: 'required',
                     invoice_terms_and_condition: 'required'
                 },
                 errorPlacement: function(error, element) {
-                    var formGroup = $(element).closest('.form-group');
-                    formGroup.append(error);
+                    $(element).closest('.form-group').append(error);
                 }
             });
         });

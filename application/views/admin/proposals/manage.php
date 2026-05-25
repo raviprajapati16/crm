@@ -77,6 +77,21 @@
                                  </ul>
                               </li>
                            <?php } ?>
+                           <?php //if (count($proposals_sale_agents)) { ?>
+                              <div class="clearfix"></div>
+                              <li class="divider"></li>
+                              <li class="dropdown-submenu pull-left">
+                                 <a href="#" tabindex="-1"><?php echo _l('sale_agent_string'); ?></a>
+                                 <ul class="dropdown-menu dropdown-menu-left">
+                                    <?php foreach ($proposals_sale_agents as $agent) { ?>
+                                       <li>
+                                          <a href="#" data-cview="sale_agent_<?php echo $agent['sale_agent']; ?>" onclick="dt_custom_view('sale_agent_<?php echo $agent['sale_agent']; ?>','.table-proposals','sale_agent_<?php echo $agent['sale_agent']; ?>'); return false;"><?php echo get_staff_full_name($agent['sale_agent']); ?>
+                                          </a>
+                                       </li>
+                                    <?php } ?>
+                                 </ul>
+                              </li>
+                           <?php //} ?>
                            <div class="clearfix"></div>
                            <li class="divider"></li>
                            <li>
