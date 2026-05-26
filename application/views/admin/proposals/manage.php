@@ -18,6 +18,9 @@
             foreach ($proposals_sale_agents as $agent) {
                echo form_hidden('sale_agent_' . $agent['sale_agent']);
             }
+            foreach ($proposals_branches_gst as $branch) {
+               echo form_hidden('branch_gst_' . md5($branch['gst_number']));
+            }
             echo form_hidden('leads_related');
             echo form_hidden('customers_related');
             echo form_hidden('expired');
@@ -77,21 +80,23 @@
                                  </ul>
                               </li>
                            <?php } ?>
-                           <?php //if (count($proposals_sale_agents)) { ?>
-                              <div class="clearfix"></div>
-                              <li class="divider"></li>
-                              <li class="dropdown-submenu pull-left">
-                                 <a href="#" tabindex="-1"><?php echo _l('sale_agent_string'); ?></a>
-                                 <ul class="dropdown-menu dropdown-menu-left">
-                                    <?php foreach ($proposals_sale_agents as $agent) { ?>
-                                       <li>
-                                          <a href="#" data-cview="sale_agent_<?php echo $agent['sale_agent']; ?>" onclick="dt_custom_view('sale_agent_<?php echo $agent['sale_agent']; ?>','.table-proposals','sale_agent_<?php echo $agent['sale_agent']; ?>'); return false;"><?php echo get_staff_full_name($agent['sale_agent']); ?>
-                                          </a>
-                                       </li>
-                                    <?php } ?>
-                                 </ul>
-                              </li>
-                           <?php //} ?>
+                           <?php if (count($proposals_branches_gst) > 0) { ?>
+                               <div class="clearfix"></div>
+                               <li class="divider"></li>
+                               <li class="dropdown-submenu pull-left">
+                                  <a href="#" tabindex="-1">Branch / GST</a>
+                                  <ul class="dropdown-menu dropdown-menu-left">
+                                     <?php foreach ($proposals_branches_gst as $branch) {
+                                        $gst_key = md5($branch['gst_number']);
+                                        $label   = $branch['branch_name'] . ' (' . $branch['gst_number'] . ')';
+                                     ?>
+                                        <li>
+                                           <a href="#" data-cview="branch_gst_<?php echo $gst_key; ?>" onclick="dt_custom_view('branch_gst_<?php echo $gst_key; ?>','.table-proposals','branch_gst_<?php echo $gst_key; ?>'); return false;"><?php echo htmlspecialchars($label); ?></a>
+                                        </li>
+                                     <?php } ?>
+                                  </ul>
+                               </li>
+                            <?php } ?>
                            <div class="clearfix"></div>
                            <li class="divider"></li>
                            <li>

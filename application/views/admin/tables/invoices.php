@@ -91,6 +91,20 @@ if (count($yearArray) > 0) {
     array_push($where, 'AND YEAR(date) IN (' . implode(', ', $yearArray) . ')');
 }
 
+// Branch / GST filter
+$this->ci->load->model('proposals_model');
+$branches_gst  = $this->ci->proposals_model->get_proposals_branches_gst();
+$gstFilterVals = [];
+foreach ($branches_gst as $branch) {
+    $gst_key = md5($branch['gst_number']);
+    if ($this->ci->input->post('branch_gst_' . $gst_key)) {
+        array_push($gstFilterVals, $this->ci->db->escape($branch['gst_number']));
+    }
+}
+if (count($gstFilterVals) > 0) {
+    array_push($where, 'AND ' . db_prefix() . 'invoices.gst_number IN (' . implode(', ', $gstFilterVals) . ')');
+}
+
 if (count($filter) > 0) {
     array_push($where, 'AND (' . prepare_dt_filter($filter) . ')');
 }

@@ -36,6 +36,38 @@ class Proposals_model extends App_Model
         return $this->db->query('SELECT DISTINCT(YEAR(date)) as year FROM ' . db_prefix() . 'proposals')->result_array();
     }
 
+    /**
+     * Return active branches from the tbloptions branch_rows JSON setting.
+     * Used to build the Branch / GST filter dropdown on the manage page.
+     * Source: get_option('branch_rows') — same as proposal form & settings pages.
+     */
+    public function get_proposals_branches_gst()
+    {
+        $branches_json = get_option('branch_rows');
+        $all_branches  = $branches_json ? json_decode($branches_json, true) : [];
+        if (!is_array($all_branches)) {
+            $all_branches = [];
+        }
+
+        $result = [];
+        foreach ($all_branches as $br) {
+            // Skip soft-deleted branches
+            if (!empty($br['deleted'])) {
+                continue;
+            }
+            // Skip branches without a GST number (nothing meaningful to filter on)
+            if (empty(trim($br['gst_number'] ?? ''))) {
+                continue;
+            }
+            $result[] = [
+                'branch_name' => trim($br['branch_name'] ?? ''),
+                'gst_number'  => trim($br['gst_number']),
+            ];
+        }
+
+        return $result;
+    }
+
 public function get_proposals_templates()
 {
     return $this->db->where('type', 'proposalterms')

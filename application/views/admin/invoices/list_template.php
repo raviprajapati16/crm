@@ -68,6 +68,23 @@
                      </ul>
                   </li>
                   <?php } ?>
+                  <?php if(count($invoices_branches_gst) > 0){ ?>
+                  <div class="clearfix"></div>
+                  <li class="divider"></li>
+                  <li class="dropdown-submenu pull-left">
+                     <a href="#" tabindex="-1">Branch / GST</a>
+                     <ul class="dropdown-menu dropdown-menu-left">
+                        <?php foreach($invoices_branches_gst as $branch) {
+                           $gst_key = md5($branch['gst_number']);
+                           $label   = $branch['branch_name'] . ' (' . $branch['gst_number'] . ')';
+                        ?>
+                        <li>
+                           <a href="#" data-cview="branch_gst_<?php echo $gst_key; ?>" onclick="dt_custom_view('branch_gst_<?php echo $gst_key; ?>','.table-invoices','branch_gst_<?php echo $gst_key; ?>'); return false;"><?php echo htmlspecialchars($label); ?></a>
+                        </li>
+                        <?php } ?>
+                     </ul>
+                  </li>
+                  <?php } ?>
                   <div class="clearfix"></div>
                   <?php if(count($payment_modes) > 0){ ?>
                   <li class="divider"></li>

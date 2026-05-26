@@ -4,6 +4,9 @@
     foreach($invoices_sale_agents as $agent){
         echo form_hidden('sale_agent_'.$agent['sale_agent']);
     }
+    foreach($invoices_branches_gst as $branch){
+        echo form_hidden('branch_gst_' . md5($branch['gst_number']));
+    }
     foreach($invoices_statuses as $_status){
         $val = '';
         if($_status == $this->input->get('status')){

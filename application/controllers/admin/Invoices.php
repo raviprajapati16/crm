@@ -12,6 +12,7 @@ class Invoices extends AdminController
         parent::__construct();
         $this->load->model('invoices_model');
         $this->load->model('credit_notes_model');
+        $this->load->model('proposals_model');
     }
 
     /* Get all invoices in case user go on index page */
@@ -40,6 +41,7 @@ class Invoices extends AdminController
         $data['invoices_years'] = $this->invoices_model->get_invoices_years();
         $data['invoices_sale_agents'] = $this->invoices_model->get_sale_agents();
         $data['invoices_statuses'] = $this->invoices_model->get_statuses();
+        $data['invoices_branches_gst'] = $this->proposals_model->get_proposals_branches_gst();
         $data['bodyclass'] = 'invoices-total-manual';
         $this->load->view('admin/invoices/manage', $data);
     }

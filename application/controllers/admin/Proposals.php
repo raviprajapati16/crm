@@ -68,6 +68,7 @@ class Proposals extends AdminController
             $data['statuses'] = $this->proposals_model->get_statuses();
             $data['proposals_sale_agents'] = $this->proposals_model->get_sale_agents();
             $data['years'] = $this->proposals_model->get_proposals_years();
+            $data['proposals_branches_gst'] = $this->proposals_model->get_proposals_branches_gst();
             $this->load->view('admin/proposals/manage', $data);
         }
     }
