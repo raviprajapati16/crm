@@ -111,6 +111,9 @@ class Reports extends AdminController
         $data['proposals_sale_agents'] = $this->proposals_model->get_sale_agents();
         $data['proposals_statuses']    = $this->proposals_model->get_statuses();
 
+        // Branch / GST filter list — shared between invoice list and report
+        $data['invoices_branches_gst'] = $this->proposals_model->get_proposals_branches_gst();
+
         $data['invoice_taxes']     = $this->distinct_taxes('invoice');
         $data['estimate_taxes']    = $this->distinct_taxes('estimate');
         $data['proposal_taxes']    = $this->distinct_taxes('proposal');
@@ -590,6 +593,23 @@ class Reports extends AdminController
                 }
             }
 
+            // Branch / GST filter
+            if ($this->input->post('proposal_gst_numbers')) {
+                $posted_gst_values = $this->input->post('proposal_gst_numbers');
+                $_gst_vals = [];
+                if (is_array($posted_gst_values)) {
+                    foreach ($posted_gst_values as $gst) {
+                        $gst = trim($gst);
+                        if ($gst !== '') {
+                            array_push($_gst_vals, $this->db->escape($gst));
+                        }
+                    }
+                }
+                if (count($_gst_vals) > 0) {
+                    array_push($where, 'AND ' . db_prefix() . 'proposals.proposal_gst_number IN (' . implode(', ', $_gst_vals) . ')');
+                }
+            }
+
 
             $by_currency = $this->input->post('report_currency');
             if ($by_currency) {
@@ -889,6 +909,19 @@ class Reports extends AdminController
                     date('Y-m-d', strtotime(date(date('Y', strtotime('last year')) . '-01-01'))) .
                     '" AND "' .
                     date('Y-m-d', strtotime(date(date('Y', strtotime('last year')) . '-12-31'))) . '")';
+            } elseif (in_array($months_report, ['fy_q1', 'fy_q2', 'fy_q3', 'fy_q4'])) {
+                // Indian Financial Year quarters: FY runs Apr 1 – Mar 31
+                $fy_start = (int)date('n') >= 4 ? (int)date('Y') : (int)date('Y') - 1;
+                $fy_end   = $fy_start + 1;
+                $quarter_ranges = [
+                    'fy_q1' => [$fy_start . '-04-01', $fy_start . '-06-30'],
+                    'fy_q2' => [$fy_start . '-07-01', $fy_start . '-09-30'],
+                    'fy_q3' => [$fy_start . '-10-01', $fy_start . '-12-31'],
+                    'fy_q4' => [$fy_end   . '-01-01', $fy_end   . '-03-31'],
+                ];
+                $custom_date_select = 'AND (' . $field . ' BETWEEN "' .
+                    $quarter_ranges[$months_report][0] . '" AND "' .
+                    $quarter_ranges[$months_report][1] . '")';
             } elseif ($months_report == 'custom') {
                 $from_date = to_sql_date($this->input->post('report_from'));
                 $to_date   = to_sql_date($this->input->post('report_to'));
@@ -1210,6 +1243,24 @@ class Reports extends AdminController
                 }
                 if (count($_agents) > 0) {
                     array_push($where, 'AND sale_agent IN (' . implode(', ', $_agents) . ')');
+                }
+            }
+
+            // Branch / GST filter
+            if ($this->input->post('invoice_gst_numbers')) {
+                $this->load->model('proposals_model');
+                $posted_gst_values = $this->input->post('invoice_gst_numbers');
+                $_gst_vals = [];
+                if (is_array($posted_gst_values)) {
+                    foreach ($posted_gst_values as $gst) {
+                        $gst = trim($gst);
+                        if ($gst !== '') {
+                            array_push($_gst_vals, $this->db->escape($gst));
+                        }
+                    }
+                }
+                if (count($_gst_vals) > 0) {
+                    array_push($where, 'AND ' . db_prefix() . 'invoices.gst_number IN (' . implode(', ', $_gst_vals) . ')');
                 }
             }
 

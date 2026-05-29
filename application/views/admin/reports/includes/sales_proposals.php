@@ -23,6 +23,20 @@
       </div>
    </div>
    <?php } ?>
+   <?php if(count($invoices_branches_gst) > 0) { ?>
+   <div class="col-md-4">
+      <div class="form-group">
+         <label for="proposal_gst_numbers">Branch / GST Number</label>
+         <select name="proposal_gst_numbers" class="selectpicker" multiple data-width="100%" data-none-selected-text="<?php echo _l('invoice_status_report_all'); ?>">
+            <?php foreach($invoices_branches_gst as $branch) { ?>
+               <option value="<?php echo htmlspecialchars($branch['gst_number']); ?>">
+                  <?php echo htmlspecialchars($branch['branch_name'] . ' (' . $branch['gst_number'] . ')'); ?>
+               </option>
+            <?php } ?>
+         </select>
+      </div>
+   </div>
+   <?php } ?>
 </div>
    <table class="table table-proposals-report scroll-responsive">
       <thead>

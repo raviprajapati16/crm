@@ -29,9 +29,11 @@
    "proposals_sale_agents": '[name="proposals_sale_agents"]',
    "proposal_status": '[name="proposal_status"]',
    "credit_note_status": '[name="credit_note_status"]',
+   "invoice_gst_numbers": '[name="invoice_gst_numbers"]',
+   "proposal_gst_numbers": '[name="proposal_gst_numbers"]',
  }
  $(function() {
-   $('select[name="currency"],select[name="invoice_status"],select[name="estimate_status"],select[name="sale_agent_invoices"],select[name="sale_agent_items"],select[name="sale_agent_estimates"],select[name="payments_years"],select[name="proposals_sale_agents"],select[name="proposal_status"],select[name="credit_note_status"]').on('change', function() {
+   $('select[name="currency"],select[name="invoice_status"],select[name="estimate_status"],select[name="sale_agent_invoices"],select[name="sale_agent_items"],select[name="sale_agent_estimates"],select[name="payments_years"],select[name="proposals_sale_agents"],select[name="proposal_status"],select[name="credit_note_status"],select[name="invoice_gst_numbers"],select[name="proposal_gst_numbers"]').on('change', function() {
      gen_reports();
    });
 
@@ -145,6 +147,8 @@
    if (report_wrapper.hasClass('hide')) {
         report_wrapper.removeClass('hide');
    }
+   
+   $('#report-filters').removeClass('hide');
 
    $('head title').html($(e).text());
    $('.customers-group-gen').addClass('hide');
