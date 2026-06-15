@@ -161,7 +161,7 @@
                   <?php $value = (isset($client) ? $client->address : ''); ?>
                   <?php echo render_textarea('address', 'client_address', $value); ?>
                   <?php $value = (isset($client) ? $client->city : ''); ?>
-                  <?php echo render_input('city', 'City (District)', $value); ?>
+                  <?php echo render_input('city', 'District', $value); ?>
                   <?php $value = (isset($client) ? $client->state : ''); ?>
                   <?php echo render_input('state', 'client_state', $value); ?>
                   <?php $value = (isset($client) ? $client->zip : ''); ?>
@@ -228,7 +228,7 @@
                         <?php $value = (isset($client) ? $client->billing_street : ''); ?>
                         <?php echo render_textarea('billing_street', 'billing_street', $value); ?>
                         <?php $value = (isset($client) ? $client->billing_city : ''); ?>
-                        <?php echo render_input('billing_city', 'billing_city', $value); ?>
+                        <?php echo render_input('billing_city', 'District', $value); ?>
                         <?php $value = (isset($client) ? $client->billing_state : ''); ?>
                         <?php echo render_input('billing_state', 'billing_state', $value); ?>
                         <?php $value = (isset($client) ? $client->billing_zip : ''); ?>
@@ -248,7 +248,7 @@
                         <?php $value = (isset($client) ? $client->shipping_street : ''); ?>
                         <?php echo render_textarea('shipping_street', 'shipping_street', $value); ?>
                         <?php $value = (isset($client) ? $client->shipping_city : ''); ?>
-                        <?php echo render_input('shipping_city', 'shipping_city', $value); ?>
+                        <?php echo render_input('shipping_city', 'District', $value); ?>
                         <?php $value = (isset($client) ? $client->shipping_state : ''); ?>
                         <?php echo render_input('shipping_state', 'shipping_state', $value); ?>
                         <?php $value = (isset($client) ? $client->shipping_zip : ''); ?>

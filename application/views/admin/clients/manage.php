@@ -64,6 +64,9 @@
                             <a href="<?php echo admin_url('clients/all_contacts'); ?>"
                                 class="btn btn-info pull-left display-block mright5">
                                 <?php echo _l('customer_contacts'); ?></a>
+                            <a href="<?php echo admin_url('client_map'); ?>"
+                                class="btn btn-primary pull-left display-block mright5">
+                                <i class="fa fa-map-marker"></i> Customer Map View</a>
                             <div class="visible-xs">
                                 <div class="clearfix"></div>
                             </div>

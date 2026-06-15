@@ -36,7 +36,12 @@
                         <p>
                            <a href="#" class="font-medium" onclick="init_report(this,'customers-report'); return false;"><i class="fa fa-caret-down" aria-hidden="true"></i> <?php echo _l('report_sales_type_customer'); ?></a>
                         </p>
-
+                        <hr class="hr-10" />
+                        <p>
+                           <a href="<?php echo admin_url('invoice_map'); ?>" class="font-medium">
+                              <i class="fa fa-map" aria-hidden="true"></i> Invoice Map View
+                           </a>
+                        </p>
                         <?php if(total_rows(db_prefix().'invoices',array('status'=>5)) > 0){ ?>
                         <hr class="hr-10" />
                         <p class="text-danger">
@@ -85,13 +90,13 @@
                                  <label for="months-report"><?php echo _l('period_datepicker'); ?></label><br />
                                  <select class="selectpicker" name="months-report" data-width="100%" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
                                     <option value=""><?php echo _l('report_sales_months_all_time'); ?></option>
-                                    <option value="this_month"><?php echo _l('this_month'); ?></option>
-                                    <option value="1"><?php echo _l('last_month'); ?></option>
+                                    <!-- <option value="this_month"><?php echo _l('this_month'); ?></option> -->
+                                    <!-- <option value="1"><?php echo _l('last_month'); ?></option>
                                     <option value="this_year"><?php echo _l('this_year'); ?></option>
                                     <option value="last_year"><?php echo _l('last_year'); ?></option>
                                     <option value="3" data-subtext="<?php echo _d(date('Y-m-01', strtotime("-2 MONTH"))); ?> - <?php echo _d(date('Y-m-t')); ?>"><?php echo _l('report_sales_months_three_months'); ?></option>
                                     <option value="6" data-subtext="<?php echo _d(date('Y-m-01', strtotime("-5 MONTH"))); ?> - <?php echo _d(date('Y-m-t')); ?>"><?php echo _l('report_sales_months_six_months'); ?></option>
-                                    <option value="12" data-subtext="<?php echo _d(date('Y-m-01', strtotime("-11 MONTH"))); ?> - <?php echo _d(date('Y-m-t')); ?>"><?php echo _l('report_sales_months_twelve_months'); ?></option>
+                                    <option value="12" data-subtext="<?php echo _d(date('Y-m-01', strtotime("-11 MONTH"))); ?> - <?php echo _d(date('Y-m-t')); ?>"><?php echo _l('report_sales_months_twelve_months'); ?></option> -->
                                     <?php
                                        // Indian Financial Year quarters
                                        // FY runs Apr 1 – Mar 31

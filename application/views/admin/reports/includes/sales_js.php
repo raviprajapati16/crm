@@ -169,7 +169,7 @@
 
    report_from_choose.addClass('hide');
 
-   $('select[name="months-report"]').selectpicker('val', 'this_month');
+   $('select[name="months-report"]').selectpicker('val', '');
    // Clear custom date picker
        report_to.val('');
        report_from.val('');
@@ -315,10 +315,17 @@
      if ($.fn.DataTable.isDataTable('.table-invoices-report')) {
        $('.table-invoices-report').DataTable().destroy();
      }
-     initDataTable('.table-invoices-report', admin_url + 'reports/invoices_report', false, false, fnServerParams, [
+     var table = initDataTable('.table-invoices-report', admin_url + 'reports/invoices_report', false, false, fnServerParams, [
        [2, 'desc'],
        [0, 'desc']
-       ]).column(2).visible(false, false).columns.adjust();
+       ]);
+     table.column(2).visible(false, false);
+     <?php
+     $taxColStart = 8;
+     foreach ($invoice_taxes as $key => $tax) { ?>
+       table.column(<?php echo $taxColStart + $key; ?>).visible(false, false);
+     <?php } ?>
+     table.columns.adjust();
    }
 
    function credit_notes_report(){
