@@ -33,13 +33,43 @@
            <?php echo render_input('phonenumber','lead_convert_to_client_phone',$lead->phonenumber); ?>
            <?php echo render_input('website','client_website',$lead->website); ?>
            <?php echo render_textarea('address','client_address',$lead->address); ?>
-           <?php echo render_input('city','client_city',$lead->city); ?>
-           <?php echo render_input('state','client_state',$lead->state); ?>
            <?php
-           $countries= get_all_countries();
+           $countries                = get_all_countries();
            $customer_default_country = get_option('customer_default_country');
-           $selected =($lead->country != 0 ? $lead->country : $customer_default_country);
-           echo render_select( 'country',$countries,array( 'country_id',array( 'short_name')), 'clients_country',$selected,array('data-none-selected-text'=>_l('dropdown_non_selected_tex')));
+           $selected_country         = ($lead->country != 0 ? $lead->country : $customer_default_country);
+           echo render_select('country', $countries, ['country_id', ['short_name']], 'clients_country', $selected_country, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]);
+
+           $state_options = isset($initial_states) ? $initial_states : [];
+           if (!empty($lead->state)) {
+               $state_found = false;
+               foreach ($state_options as $state_row) {
+                   if ($state_row['state'] === $lead->state) {
+                       $state_found = true;
+                       break;
+                   }
+               }
+               if (!$state_found) {
+                   $state_options[] = ['state' => $lead->state];
+               }
+           }
+           $state_wrapper_class = !empty($selected_country) ? 'convert-state-wrapper' : 'convert-state-wrapper hide';
+           echo render_select('state', $state_options, ['state', 'state'], 'client_state', $lead->state, ['data-none-selected-text' => _l('dropdown_non_selected_tex')], [], $state_wrapper_class);
+
+           $city_options = isset($initial_cities) ? $initial_cities : [];
+           if (!empty($lead->city)) {
+               $city_found = false;
+               foreach ($city_options as $city_row) {
+                   if ($city_row['city'] === $lead->city) {
+                       $city_found = true;
+                       break;
+                   }
+               }
+               if (!$city_found) {
+                   $city_options[] = ['city' => $lead->city];
+               }
+           }
+           $city_wrapper_class = (!empty($selected_country) && !empty($lead->state)) ? 'convert-city-wrapper' : 'convert-city-wrapper hide';
+           echo render_select('city', $city_options, ['city', 'city'], 'client_city', $lead->city, ['data-none-selected-text' => _l('dropdown_non_selected_tex')], [], $city_wrapper_class);
            ?>
            <?php echo render_input('zip','clients_zip',$lead->zip); ?>
            <?php
@@ -185,4 +215,113 @@
 <script>
    validate_lead_convert_to_client_form();
    init_selectpicker();
+
+   (function() {
+      var $form = $('#lead_to_client_form');
+
+      function toggleConvertLocationFields() {
+         var countryId = $form.find('select[name="country"]').val();
+         var stateVal  = $form.find('select[name="state"]').val();
+         $form.find('.convert-state-wrapper').toggleClass('hide', !countryId);
+         $form.find('.convert-city-wrapper').toggleClass('hide', !countryId || !stateVal);
+      }
+
+      function appendLocationOption($select, value) {
+         if (!value) {
+            return;
+         }
+         if ($select.find('option').filter(function() { return $(this).val() === value; }).length === 0) {
+            $select.append($('<option>', { value: value, text: value }));
+         }
+      }
+
+      function refreshConvertLocation(type, preselectState, preselectCity) {
+         var countryId = $form.find('select[name="country"]').val();
+         var $state    = $form.find('select[name="state"]');
+         var $city     = $form.find('select[name="city"]');
+
+         if (type === 'state') {
+            toggleConvertLocationFields();
+            $state.empty().append('<option value=""></option>');
+            $city.empty().append('<option value=""></option>');
+            $state.selectpicker('refresh');
+            $city.selectpicker('refresh');
+         } else {
+            toggleConvertLocationFields();
+            $city.empty().append('<option value=""></option>');
+            $city.selectpicker('refresh');
+         }
+
+         if (!countryId) {
+            toggleConvertLocationFields();
+            return;
+         }
+
+         var postData = {
+            type: type,
+            country_id: countryId
+         };
+
+         if (typeof csrfData !== 'undefined') {
+            postData[csrfData.token_name] = csrfData.hash;
+         }
+
+         if (type === 'city') {
+            postData.state = $state.val();
+            if (!postData.state) {
+               toggleConvertLocationFields();
+               return;
+            }
+         }
+
+         $.ajax({
+            url: admin_url + 'leads/get_state_city',
+            method: 'POST',
+            data: postData,
+            dataType: 'json'
+         }).done(function(result) {
+            if (!result || !result.success) {
+               toggleConvertLocationFields();
+               return;
+            }
+
+            var $target = (type === 'state') ? $state : $city;
+            var key     = (type === 'state') ? 'state' : 'city';
+            var pre     = (type === 'state') ? preselectState : preselectCity;
+
+            $.each(result.data, function(i, item) {
+               if (item[key]) {
+                  $target.append(new Option(item[key], item[key]));
+               }
+            });
+
+            if (pre) {
+               appendLocationOption($target, pre);
+               $target.selectpicker('val', pre);
+            }
+
+            $target.selectpicker('refresh');
+
+            if (type === 'state' && preselectState) {
+               refreshConvertLocation('city', null, preselectCity);
+            } else {
+               toggleConvertLocationFields();
+            }
+         }).fail(function() {
+            toggleConvertLocationFields();
+         });
+      }
+
+      $(document).off('changed.bs.select.convertLocation', '#lead_to_client_form select[name="country"]');
+      $(document).on('changed.bs.select.convertLocation', '#lead_to_client_form select[name="country"]', function() {
+         refreshConvertLocation('state');
+      });
+
+      $(document).off('changed.bs.select.convertLocation', '#lead_to_client_form select[name="state"]');
+      $(document).on('changed.bs.select.convertLocation', '#lead_to_client_form select[name="state"]', function() {
+         refreshConvertLocation('city');
+      });
+
+      toggleConvertLocationFields();
+   })();
 </script>

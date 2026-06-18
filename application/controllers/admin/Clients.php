@@ -264,6 +264,20 @@ class Clients extends AdminController
         $data['bodyclass'] = 'customer-profile dynamic-create-groups';
         $data['title']     = $title;
 
+        if ($group == 'profile') {
+            if (isset($client)) {
+                $profile_country = $client->country ?: get_option('customer_default_country');
+                $data['profile_location']  = $this->_build_location_dropdown_data($profile_country, $client->state, $client->city);
+                $data['billing_location']  = $this->_build_location_dropdown_data($client->billing_country, $client->billing_state, $client->billing_city);
+                $data['shipping_location'] = $this->_build_location_dropdown_data($client->shipping_country, $client->shipping_state, $client->shipping_city);
+            } else {
+                $default_country = get_option('customer_default_country');
+                $data['profile_location']  = $this->_build_location_dropdown_data($default_country);
+                $data['billing_location']  = ['states' => [], 'cities' => []];
+                $data['shipping_location'] = ['states' => [], 'cities' => []];
+            }
+        }
+
         $this->load->view('admin/clients/client', $data);
     }
 
@@ -1083,5 +1097,56 @@ class Clients extends AdminController
         $viewData['html'] = $this->load->view('admin/clients/groups/_statement', $data, true);
 
         echo json_encode($viewData);
+    }
+
+    /**
+     * @param int|string $country_id
+     * @param string     $state
+     * @param string     $city
+     * @return array{states: array, cities: array}
+     */
+    private function _build_location_dropdown_data($country_id, $state = '', $city = '')
+    {
+        $data = [
+            'states' => [],
+            'cities' => [],
+        ];
+
+        if (empty($country_id)) {
+            return $data;
+        }
+
+        $this->load->model('leadsnew_model');
+
+        $country_code = get_country_short_name($country_id);
+        if (!$country_code) {
+            return $data;
+        }
+
+        $data['states'] = $this->leadsnew_model->get_states(['country_code' => $country_code]);
+        if (empty($data['states'])) {
+            $country_name = get_country_name($country_id);
+            if ($country_name) {
+                $data['states'] = $this->leadsnew_model->get_states(['country' => $country_name]);
+            }
+        }
+
+        if (!empty($state)) {
+            $data['cities'] = $this->leadsnew_model->get_cities([
+                'country_code' => $country_code,
+                'state'        => $state,
+            ]);
+            if (empty($data['cities'])) {
+                $country_name = get_country_name($country_id);
+                if ($country_name) {
+                    $data['cities'] = $this->leadsnew_model->get_cities([
+                        'country' => $country_name,
+                        'state'   => $state,
+                    ]);
+                }
+            }
+        }
+
+        return $data;
     }
 }

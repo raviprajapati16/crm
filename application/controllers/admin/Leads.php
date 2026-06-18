@@ -388,7 +388,101 @@ class Leads extends AdminController
             $data['purposes'] = $this->gdpr_model->get_consent_purposes($id, 'lead');
         }
         $data['lead'] = $this->leads_model->get($id);
+        $customer_default_country = get_option('customer_default_country');
+        $country_id               = ($data['lead']->country != 0 ? $data['lead']->country : $customer_default_country);
+        $data['initial_states']   = [];
+        $data['initial_cities']   = [];
+
+        if ($country_id) {
+            $country_code = get_country_short_name($country_id);
+            if ($country_code) {
+                $data['initial_states'] = $this->leadsnew_model->get_states(['country_code' => $country_code]);
+                if (empty($data['initial_states'])) {
+                    $country_name = get_country_name($country_id);
+                    if ($country_name) {
+                        $data['initial_states'] = $this->leadsnew_model->get_states(['country' => $country_name]);
+                    }
+                }
+                if (!empty($data['lead']->state)) {
+                    $data['initial_cities'] = $this->leadsnew_model->get_cities([
+                        'country_code' => $country_code,
+                        'state'        => $data['lead']->state,
+                    ]);
+                    if (empty($data['initial_cities'])) {
+                        $country_name = get_country_name($country_id);
+                        if ($country_name) {
+                            $data['initial_cities'] = $this->leadsnew_model->get_cities([
+                                'country' => $country_name,
+                                'state'   => $data['lead']->state,
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+
         $this->load->view('admin/leads/convert_to_customer', $data);
+    }
+
+    /**
+     * AJAX: states/cities for convert-to-customer location dropdowns.
+     */
+    public function get_state_city()
+    {
+        if (!is_staff_member()) {
+            ajax_access_denied();
+        }
+
+        $this->output->set_content_type('application/json');
+
+        $result = ['success' => false, 'data' => []];
+
+        if (!$this->input->post()) {
+            echo json_encode($result);
+
+            return;
+        }
+
+        $type         = $this->input->post('type');
+        $country_id   = (int) $this->input->post('country_id');
+        $country_code = get_country_short_name($country_id);
+
+        if (!$country_code) {
+            echo json_encode($result);
+
+            return;
+        }
+
+        if ($type === 'state') {
+            $result['data'] = $this->leadsnew_model->get_states(['country_code' => $country_code]);
+            if (empty($result['data'])) {
+                $country_name = get_country_name($country_id);
+                if ($country_name) {
+                    $result['data'] = $this->leadsnew_model->get_states(['country' => $country_name]);
+                }
+            }
+            $result['success'] = true;
+        } elseif ($type === 'city') {
+            $state = $this->input->post('state');
+            if ($state) {
+                $result['data'] = $this->leadsnew_model->get_cities([
+                    'country_code' => $country_code,
+                    'state'        => $state,
+                ]);
+                if (empty($result['data'])) {
+                    $country_name = get_country_name($country_id);
+                    if ($country_name) {
+                        $result['data'] = $this->leadsnew_model->get_cities([
+                            'country' => $country_name,
+                            'state'   => $state,
+                        ]);
+                    }
+                }
+                $result['success'] = true;
+            }
+        }
+
+        echo json_encode($result);
     }
 
     /**
