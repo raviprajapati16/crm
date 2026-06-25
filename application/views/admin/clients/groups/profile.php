@@ -194,7 +194,7 @@
                       }
                   }
                   $state_wrapper_class = !empty($selected_country) ? 'client-location-state-wrapper location-group-profile' : 'client-location-state-wrapper location-group-profile hide';
-                  $city_wrapper_class  = (!empty($selected_country) && !empty($selected_state)) ? 'client-location-city-wrapper location-group-profile' : 'client-location-city-wrapper location-group-profile hide';
+                  $city_wrapper_class  = (!empty($selected_country) && !empty($selected_state) && country_uses_city_dropdown($selected_country)) ? 'client-location-city-wrapper location-group-profile' : 'client-location-city-wrapper location-group-profile hide';
                   echo render_select('country', $countries, ['country_id', ['short_name']], 'clients_country', $selected_country, array_merge($location_select_attrs, [
                       'data-location-group' => 'profile',
                       'data-location-role'  => 'country',
@@ -297,7 +297,7 @@
                             }
                         }
                         $state_wrapper_class = !empty($selected_country) ? 'client-location-state-wrapper location-group-billing' : 'client-location-state-wrapper location-group-billing hide';
-                        $city_wrapper_class  = (!empty($selected_country) && !empty($selected_state)) ? 'client-location-city-wrapper location-group-billing' : 'client-location-city-wrapper location-group-billing hide';
+                        $city_wrapper_class  = (!empty($selected_country) && !empty($selected_state) && country_uses_city_dropdown($selected_country)) ? 'client-location-city-wrapper location-group-billing' : 'client-location-city-wrapper location-group-billing hide';
                         echo render_select('billing_country', $countries, ['country_id', ['short_name']], 'billing_country', $selected_country, array_merge($location_select_attrs, [
                             'data-location-group' => 'billing',
                             'data-location-role'  => 'country',
@@ -356,7 +356,7 @@
                             }
                         }
                         $state_wrapper_class = !empty($selected_country) ? 'client-location-state-wrapper location-group-shipping' : 'client-location-state-wrapper location-group-shipping hide';
-                        $city_wrapper_class  = (!empty($selected_country) && !empty($selected_state)) ? 'client-location-city-wrapper location-group-shipping' : 'client-location-city-wrapper location-group-shipping hide';
+                        $city_wrapper_class  = (!empty($selected_country) && !empty($selected_state) && country_uses_city_dropdown($selected_country)) ? 'client-location-city-wrapper location-group-shipping' : 'client-location-city-wrapper location-group-shipping hide';
                         echo render_select('shipping_country', $countries, ['country_id', ['short_name']], 'shipping_country', $selected_country, array_merge($location_select_attrs, [
                             'data-location-group' => 'shipping',
                             'data-location-role'  => 'country',

@@ -17,6 +17,7 @@
         proposalsTemplates = <?php echo json_encode(get_proposal_templates()); ?>,
         contractsTemplates = <?php echo json_encode(get_contract_templates()); ?>,
         billingAndShippingFields = ['billing_street','billing_city','billing_state','billing_zip','billing_country','shipping_street','shipping_city','shipping_state','shipping_zip','shipping_country'],
+        INDIA_COUNTRY_ID = <?php echo (int) get_india_country_id(); ?>,
         isRTL = '<?php echo $isRTL; ?>',
         taskid,taskTrackingStatsData,taskAttachmentDropzone,taskCommentAttachmentDropzone,newsFeedDropzone,expensePreviewDropzone,taskTrackingChart,cfh_popover_templates = {},_table_api;
     </script>

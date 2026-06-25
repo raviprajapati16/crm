@@ -249,24 +249,24 @@
                <div class="col-md-12">
                   <p class="bold"><?php echo _l('invoice_bill_to'); ?></p>
                   <address>
-                     <span class="billing_street">
+                     <span class="billing_street" id="invoice_bill_to_street">
                      <?php $billing_street = (isset($invoice) ? $invoice->billing_street : '--'); ?>
                      <?php $billing_street = ($billing_street == '' ? '--' :$billing_street); ?>
                      <?php echo $billing_street; ?></span><br>
-                     <span class="billing_city">
+                     <span class="billing_city" id="invoice_bill_to_city">
                      <?php $billing_city = (isset($invoice) ? $invoice->billing_city : '--'); ?>
                      <?php $billing_city = ($billing_city == '' ? '--' :$billing_city); ?>
                      <?php echo $billing_city; ?></span>,
-                     <span class="billing_state">
+                     <span class="billing_state" id="invoice_bill_to_state">
                      <?php $billing_state = (isset($invoice) ? $invoice->billing_state : '--'); ?>
                      <?php $billing_state = ($billing_state == '' ? '--' :$billing_state); ?>
                      <?php echo $billing_state; ?></span>
                      <br/>
-                     <span class="billing_country">
+                     <span class="billing_country" id="invoice_bill_to_country">
                      <?php $billing_country = (isset($invoice) ? get_country_short_name($invoice->billing_country) : '--'); ?>
                      <?php $billing_country = ($billing_country == '' ? '--' :$billing_country); ?>
                      <?php echo $billing_country; ?></span>,
-                     <span class="billing_zip">
+                     <span class="billing_zip" id="invoice_bill_to_zip">
                      <?php $billing_zip = (isset($invoice) ? $invoice->billing_zip : '--'); ?>
                      <?php $billing_zip = ($billing_zip == '' ? '--' :$billing_zip); ?>
                      <?php echo $billing_zip; ?></span>

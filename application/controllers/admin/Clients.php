@@ -1107,46 +1107,6 @@ class Clients extends AdminController
      */
     private function _build_location_dropdown_data($country_id, $state = '', $city = '')
     {
-        $data = [
-            'states' => [],
-            'cities' => [],
-        ];
-
-        if (empty($country_id)) {
-            return $data;
-        }
-
-        $this->load->model('leadsnew_model');
-
-        $country_code = get_country_short_name($country_id);
-        if (!$country_code) {
-            return $data;
-        }
-
-        $data['states'] = $this->leadsnew_model->get_states(['country_code' => $country_code]);
-        if (empty($data['states'])) {
-            $country_name = get_country_name($country_id);
-            if ($country_name) {
-                $data['states'] = $this->leadsnew_model->get_states(['country' => $country_name]);
-            }
-        }
-
-        if (!empty($state)) {
-            $data['cities'] = $this->leadsnew_model->get_cities([
-                'country_code' => $country_code,
-                'state'        => $state,
-            ]);
-            if (empty($data['cities'])) {
-                $country_name = get_country_name($country_id);
-                if ($country_name) {
-                    $data['cities'] = $this->leadsnew_model->get_cities([
-                        'country' => $country_name,
-                        'state'   => $state,
-                    ]);
-                }
-            }
-        }
-
-        return $data;
+        return build_location_dropdown_data($country_id, $state, $city);
     }
 }

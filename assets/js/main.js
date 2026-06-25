@@ -399,6 +399,11 @@ $(function() {
     });
 
     init_selectpicker();
+
+    if (typeof initInvoiceBillingLocationDropdowns === 'function') {
+        initInvoiceBillingLocationDropdowns();
+    }
+
     // Optimize body
     set_body_small();
     // Validate all form for reminders
@@ -2195,6 +2200,14 @@ $(function() {
 
     // Init the billing and shipping details in the field - estimates and invoices
     $("body").on('click', '.save-shipping-billing', function(e) {
+        e.preventDefault();
+        if ($('#invoice-form').length && $(this).hasClass('invoice-billing-apply')) {
+            return false;
+        }
+        if ($('#invoice-form').length && typeof applyInvoiceBillingAddress === 'function') {
+            applyInvoiceBillingAddress();
+            return false;
+        }
         init_billing_and_shipping_details();
     });
 
@@ -2311,7 +2324,14 @@ $(function() {
             for (var f in billingAndShippingFields) {
                 if (billingAndShippingFields[f].indexOf('billing') > -1) {
                     if (billingAndShippingFields[f].indexOf('country') > -1) {
+                        if ($('select[data-location-group="invoice-billing"][data-location-role="country"]').length) {
+                            continue;
+                        }
                         $('select[name="' + billingAndShippingFields[f] + '"]').selectpicker('val', response['billing_shipping'][0][billingAndShippingFields[f]]);
+                    } else if (billingAndShippingFields[f] === 'billing_state' || billingAndShippingFields[f] === 'billing_city') {
+                        if (!$('select[data-location-group="invoice-billing"][data-location-role="country"]').length) {
+                            $('input[name="' + billingAndShippingFields[f] + '"]').val(response['billing_shipping'][0][billingAndShippingFields[f]]);
+                        }
                     } else {
                         if (billingAndShippingFields[f].indexOf('billing_street') > -1) {
                             $('textarea[name="' + billingAndShippingFields[f] + '"]').val(response['billing_shipping'][0][billingAndShippingFields[f]]);
@@ -2320,6 +2340,20 @@ $(function() {
                         }
                     }
                 }
+            }
+
+            if (typeof setInvoiceLocationValues === 'function' && $('select[data-location-group="invoice-billing"][data-location-role="country"]').length) {
+                setInvoiceLocationValues(
+                    'invoice-billing',
+                    response['billing_shipping'][0]['billing_country'],
+                    response['billing_shipping'][0]['billing_state'],
+                    response['billing_shipping'][0]['billing_city'],
+                    function() {
+                        init_billing_and_shipping_details();
+                    }
+                );
+            } else {
+                init_billing_and_shipping_details();
             }
 
             if (!empty(response['billing_shipping'][0]['shipping_street'])) {
@@ -2339,8 +2373,6 @@ $(function() {
                     }
                 }
             }
-
-            init_billing_and_shipping_details();
 
             var client_currency = response['client_currency'];
             var s_currency = $("body").find('.accounting-template select[name="currency"]');
@@ -5578,6 +5610,12 @@ function clear_billing_and_shipping_details() {
     for (var f in billingAndShippingFields) {
         if (billingAndShippingFields[f].indexOf('country') > -1) {
             $('select[name="' + billingAndShippingFields[f] + '"]').selectpicker('val', '');
+        } else if (billingAndShippingFields[f] === 'billing_state' || billingAndShippingFields[f] === 'billing_city') {
+            if ($('select[name="' + billingAndShippingFields[f] + '"]').length) {
+                $('select[name="' + billingAndShippingFields[f] + '"]').empty().append('<option value=""></option>').selectpicker('refresh');
+            } else {
+                $('input[name="' + billingAndShippingFields[f] + '"]').val('');
+            }
         } else {
             $('input[name="' + billingAndShippingFields[f] + '"]').val('');
             $('textarea[name="' + billingAndShippingFields[f] + '"]').val('');
@@ -5588,24 +5626,96 @@ function clear_billing_and_shipping_details() {
         }
     }
 
+    if (typeof setInvoiceLocationValues === 'function' && $('select[data-location-group="invoice-billing"][data-location-role="country"]').length) {
+        setInvoiceLocationValues('invoice-billing', '', '', '');
+    }
+
     init_billing_and_shipping_details();
 }
 
-// Init billing and shipping details for invoice, estimate etc...
-function init_billing_and_shipping_details() {
+function get_billing_shipping_field_value(fieldName) {
+    var $select = $('#' + fieldName);
+    if (!$select.length) {
+        $select = $('#billing_and_shipping_details select[name="' + fieldName + '"]');
+    }
+    if (!$select.length) {
+        $select = $('select[name="' + fieldName + '"]').first();
+    }
+
+    if ($select.length) {
+        if ($select.hasClass('selectpicker') && typeof $select.selectpicker === 'function') {
+            try {
+                var picked = $select.selectpicker('val');
+                if (picked !== null && typeof picked !== 'undefined' && picked !== '') {
+                    var normalized = $.isArray(picked) ? (picked.length ? picked[0] : '') : picked;
+                    if (normalized) {
+                        $select.val(normalized);
+                    }
+                }
+            } catch (e) {}
+        }
+
+        var $selected = $select.find('option:selected');
+        if ($selected.length && $selected.val() !== '' && $selected.val() !== null) {
+            return $selected.val();
+        }
+
+        var $bootstrapSelect = $select.closest('.bootstrap-select');
+        if ($bootstrapSelect.length) {
+            var displayValue = $.trim($bootstrapSelect.find('.filter-option-inner-inner').text());
+            var noneSelectedText = $select.attr('data-none-selected-text') || '';
+            if (displayValue && displayValue !== noneSelectedText) {
+                return displayValue;
+            }
+        }
+
+        return $select.val() || '';
+    }
+
+    if ($('textarea[name="' + fieldName + '"]').length) {
+        return $('textarea[name="' + fieldName + '"]').val();
+    }
+
+    return $('input[name="' + fieldName + '"]').val() || '';
+}
+
+function ensure_invoice_billing_select_values() {
+    ['billing_state', 'billing_city'].forEach(function(fieldName) {
+        get_billing_shipping_field_value(fieldName);
+    });
+}
+
+// Update the Bill To / Ship To preview from modal form fields.
+function sync_billing_and_shipping_preview() {
+    if ($('#invoice-form').length && typeof renderInvoiceBillToAddress === 'function') {
+        if (typeof snapshotInvoiceBillingPreviewFields === 'function') {
+            snapshotInvoiceBillingPreviewFields();
+        }
+        renderInvoiceBillToAddress();
+        return;
+    }
+
     var _f;
     var include_shipping = $('input[name="include_shipping"]').prop('checked');
+
+    ensure_invoice_billing_select_values();
 
     for (var f in billingAndShippingFields) {
         _f = '';
         if (billingAndShippingFields[f].indexOf('country') > -1) {
             _f = $("#" + billingAndShippingFields[f] + " option:selected").data('subtext');
+            if (!_f) {
+                _f = get_billing_shipping_field_value(billingAndShippingFields[f]);
+            }
         } else if (billingAndShippingFields[f].indexOf('shipping_street') > -1 || billingAndShippingFields[f].indexOf('billing_street') > -1) {
             if ($('textarea[name="' + billingAndShippingFields[f] + '"]').length) {
                 _f = $('textarea[name="' + billingAndShippingFields[f] + '"]').val().replace(/(?:\r\n|\r|\n)/g, "<br />");
             }
+        } else if (billingAndShippingFields[f] === 'billing_state' || billingAndShippingFields[f] === 'billing_city' ||
+            billingAndShippingFields[f] === 'shipping_state' || billingAndShippingFields[f] === 'shipping_city') {
+            _f = get_billing_shipping_field_value(billingAndShippingFields[f]);
         } else {
-            _f = $('input[name="' + billingAndShippingFields[f] + '"]').val();
+            _f = get_billing_shipping_field_value(billingAndShippingFields[f]);
         }
         if (billingAndShippingFields[f].indexOf('shipping') > -1) {
             if (!include_shipping) {
@@ -5618,6 +5728,20 @@ function init_billing_and_shipping_details() {
         _f = (_f !== '' ? _f : '--');
         $('.' + billingAndShippingFields[f]).html(_f);
     }
+}
+
+// Init billing and shipping details for invoice, estimate etc...
+function init_billing_and_shipping_details() {
+    if ($('#invoice-form').length && typeof renderInvoiceBillToAddress === 'function') {
+        if (typeof snapshotInvoiceBillingPreviewFields === 'function') {
+            snapshotInvoiceBillingPreviewFields();
+        }
+        renderInvoiceBillToAddress();
+        $('#billing_and_shipping_details').modal('hide');
+        return;
+    }
+
+    sync_billing_and_shipping_preview();
     $('#billing_and_shipping_details').modal('hide');
 }
 

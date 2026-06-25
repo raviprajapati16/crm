@@ -110,8 +110,7 @@ class Client_map_model extends App_Model
             $r['longitude'] = $r['longitude'] ? (float) $r['longitude'] : null;
 
             if ($r['latitude'] === null && $r['name'] !== '') {
-                // Auto-geocode via invoice_map_model (non-blocking)
-                $this->invoice_map_model->geocode_city($r['name'], $state, $iso2);
+                $this->invoice_map_model->queue_city_geocode($r['name'], $state, $iso2);
             }
         }
         return $rows;
@@ -201,6 +200,8 @@ class Client_map_model extends App_Model
 
     private function _apply_filters($filters, $alias = 'cl')
     {
+        $this->db->where("{$alias}.deleted_at IS NULL");
+
         if (isset($filters['exclude_inactive']) && $filters['exclude_inactive'] == '1') {
             $this->db->where("{$alias}.active", 1);
         }
@@ -216,7 +217,11 @@ class Client_map_model extends App_Model
     private function _city_where($iso2, $state, $city)
     {
         $this->db->where('c.iso2', strtoupper($iso2));
-        $this->db->where('TRIM(cl.state)', trim($state));
-        $this->db->where('TRIM(cl.city)',  trim($city));
+        if ($state !== null && $state !== '') {
+            $this->db->where('TRIM(cl.state)', trim($state));
+        }
+        if ($city !== null && $city !== '') {
+            $this->db->where('TRIM(cl.city)', trim($city));
+        }
     }
 }

@@ -27,8 +27,9 @@ class Client_map extends AdminController
         // Pass countries that actually have clients
         $this->db->select('country_id, short_name');
         $this->db->from(db_prefix() . 'countries');
-        $this->db->where('country_id IN (SELECT country FROM ' . db_prefix() . 'clients)');
+        $this->db->where('country_id IN (SELECT country FROM ' . db_prefix() . 'clients WHERE deleted_at IS NULL)');
         $data['countries'] = $this->db->get()->result_array();
+        $data['geojson_version'] = $this->invoice_map_model->get_geojson_version_token();
 
         $this->load->view('admin/client_map/index', $data);
     }
@@ -91,10 +92,13 @@ class Client_map extends AdminController
         $page    = (int) $this->input->post('page');
         $filters = $this->_build_filters();
 
-        if (!$country || !$state || !$city) {
-            echo json_encode(['success' => false, 'message' => 'Missing location parameters.']);
+        if (!$country) {
+            echo json_encode(['success' => false, 'message' => 'Country is required.']);
             die();
         }
+
+        $city  = $city ? trim($city) : '';
+        $state = $state ? trim($state) : '';
 
         $result = $this->client_map_model->get_city_clients($country, $state, $city, $filters, $page);
 
@@ -328,8 +332,29 @@ class Client_map extends AdminController
         $state = preg_replace('/\s*&\s*/', ' and ', $state);
         $state = preg_replace('/_+/', ' ', $state);
         $state = preg_replace('/\s+/', ' ', trim($state));
+        $state = $this->_fold_diacritics($state);
 
         return $state !== '' ? substr($state, 0, 100) : null;
+    }
+
+    private function _fold_diacritics($text)
+    {
+        $text = (string) $text;
+        if ($text === '') {
+            return '';
+        }
+
+        if (class_exists('Normalizer')) {
+            $text = Normalizer::normalize($text, Normalizer::FORM_D);
+            $text = preg_replace('/\p{M}/u', '', $text);
+        } elseif (function_exists('iconv')) {
+            $converted = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $text);
+            if ($converted !== false) {
+                $text = $converted;
+            }
+        }
+
+        return $text;
     }
 
     private function _build_filters()
@@ -492,10 +517,15 @@ class Client_map extends AdminController
         $level = $this->input->get('level') ?: 'world';
         $iso2  = $this->input->get('iso2');
         $state = $this->input->get('state');
+        $stateIso = $this->input->get('state_iso');
 
         // Sanitise
         $level = in_array($level, ['world', 'country', 'state']) ? $level : 'world';
         if ($iso2)  $iso2  = strtoupper(preg_replace('/[^a-zA-Z]/', '', $iso2));
+        if ($stateIso) {
+            $stateIso = strtoupper(preg_replace('/[^a-zA-Z0-9\-]/', '', $stateIso));
+            $stateIso = substr($stateIso, 0, 16);
+        }
         if ($state) {
             $state = html_entity_decode($state, ENT_QUOTES | ENT_HTML5, 'UTF-8');
             $state = strip_tags($state);
@@ -504,7 +534,7 @@ class Client_map extends AdminController
             $state = substr($state, 0, 100);
         }
 
-        $geojson = $this->invoice_map_model->get_geojson($level, $iso2, $state);
+        $geojson = $this->invoice_map_model->get_geojson($level, $iso2, $state, $stateIso ?: null);
 
         if ($geojson === false) {
             $this->output->set_status_header(404);
@@ -513,10 +543,38 @@ class Client_map extends AdminController
             die();
         }
 
+        $version = $this->invoice_map_model->get_geojson_version_token();
         header('Content-Type: application/json; charset=utf-8');
-        header('Cache-Control: public, max-age=604800');   // 7-day browser cache
+        header('Cache-Control: public, max-age=86400, must-revalidate');
+        header('ETag: "' . $version . '"');
         header('Vary: Accept-Encoding');
         echo $geojson;
+        die();
+    }
+
+    // =========================================================================
+    // AJAX: server-side geocode (client profile map pin)
+    // =========================================================================
+    public function geocode()
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+
+        $query = trim((string) $this->input->get('q'));
+        if ($query === '') {
+            echo json_encode(['success' => false]);
+            die();
+        }
+
+        $this->load->library('app_geocoder');
+        $coords = $this->app_geocoder->get_coordinate($query);
+
+        echo json_encode([
+            'success' => (bool) $coords,
+            'lat'     => $coords['latitude'] ?? null,
+            'lon'     => $coords['longitude'] ?? null,
+        ]);
         die();
     }
 }

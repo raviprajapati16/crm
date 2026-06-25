@@ -242,19 +242,15 @@
         $('.billing-same-as-customer').on('click', function(e) {
             e.preventDefault();
             $('textarea[name="billing_street"]').val($('textarea[name="address"]').val());
-            $('input[name="billing_city"]').val($('input[name="city"]').val());
-            $('input[name="billing_state"]').val($('input[name="state"]').val());
             $('input[name="billing_zip"]').val($('input[name="zip"]').val());
-            $('select[name="billing_country"]').selectpicker('val', $('select[name="country"]').selectpicker('val'));
+            copyClientLocationGroup('profile', 'billing');
         });
 
         $('.customer-copy-billing-address').on('click', function(e) {
             e.preventDefault();
             $('textarea[name="shipping_street"]').val($('textarea[name="billing_street"]').val());
-            $('input[name="shipping_city"]').val($('input[name="billing_city"]').val());
-            $('input[name="shipping_state"]').val($('input[name="billing_state"]').val());
             $('input[name="shipping_zip"]').val($('input[name="billing_zip"]').val());
-            $('select[name="shipping_country"]').selectpicker('val', $('select[name="billing_country"]').selectpicker('val'));
+            copyClientLocationGroup('billing', 'shipping');
         });
 
         $('body').on('hidden.bs.modal', '#contact', function() {
@@ -265,7 +261,190 @@
             $('select[name="default_currency"]').prop('disabled', false);
         });
 
+        initClientLocationDropdowns();
+
     });
+
+    var INDIA_COUNTRY_ID = <?php echo (int) get_india_country_id(); ?>;
+    var _clientLocationSuppressChange = false;
+
+    function isIndiaCountry(countryId) {
+        return countryId && String(countryId) === String(INDIA_COUNTRY_ID);
+    }
+
+    function toggleClientLocationFields(group) {
+        var $country = $('select[data-location-group="' + group + '"][data-location-role="country"]');
+        var $state   = $('select[data-location-group="' + group + '"][data-location-role="state"]');
+        var countryId = $country.val();
+        var stateVal  = $state.val();
+
+        $('.client-location-state-wrapper.location-group-' + group).toggleClass('hide', !countryId);
+
+        var showCity = countryId && stateVal && isIndiaCountry(countryId);
+        $('.client-location-city-wrapper.location-group-' + group).toggleClass('hide', !showCity);
+    }
+
+    function appendClientLocationOption($select, value) {
+        if (!value) {
+            return;
+        }
+        if ($select.find('option').filter(function() { return $(this).val() === value; }).length === 0) {
+            $select.append($('<option>', { value: value, text: value }));
+        }
+    }
+
+    function refreshClientLocation(group, type, preselectState, preselectCity) {
+        var $country = $('select[data-location-group="' + group + '"][data-location-role="country"]');
+        var $state   = $('select[data-location-group="' + group + '"][data-location-role="state"]');
+        var $city    = $('select[data-location-group="' + group + '"][data-location-role="city"]');
+        var countryId = $country.val();
+
+        if (type === 'state') {
+            toggleClientLocationFields(group);
+            $state.empty().append('<option value=""></option>');
+            $city.empty().append('<option value=""></option>');
+            $state.selectpicker('refresh');
+            $city.selectpicker('refresh');
+        } else {
+            toggleClientLocationFields(group);
+            $city.empty().append('<option value=""></option>');
+            $city.selectpicker('refresh');
+        }
+
+        if (!countryId) {
+            toggleClientLocationFields(group);
+            return;
+        }
+
+        var postData = {
+            type: type,
+            country_id: countryId
+        };
+
+        if (typeof csrfData !== 'undefined') {
+            postData[csrfData.token_name] = csrfData.hash;
+        }
+
+        if (type === 'city') {
+            postData.state = $state.val();
+            if (!postData.state) {
+                toggleClientLocationFields(group);
+                return;
+            }
+            if (!isIndiaCountry(countryId)) {
+                toggleClientLocationFields(group);
+                return;
+            }
+        }
+
+        $.ajax({
+            url: admin_url + 'leads/get_state_city',
+            method: 'POST',
+            data: postData,
+            dataType: 'json'
+        }).done(function(result) {
+            if (!result || !result.success) {
+                toggleClientLocationFields(group);
+                return;
+            }
+
+            var $target = (type === 'state') ? $state : $city;
+            var key     = (type === 'state') ? 'state' : 'city';
+            var pre     = (type === 'state') ? preselectState : preselectCity;
+
+            $.each(result.data, function(i, item) {
+                if (item[key]) {
+                    $target.append(new Option(item[key], item[key]));
+                }
+            });
+
+            if (pre) {
+                appendClientLocationOption($target, pre);
+                $target.selectpicker('val', pre);
+            }
+
+            $target.selectpicker('refresh');
+
+            if (type === 'state' && preselectState && isIndiaCountry(countryId)) {
+                refreshClientLocation(group, 'city', null, preselectCity);
+            } else {
+                if (type === 'state' && preselectCity) {
+                    appendClientLocationOption($city, preselectCity);
+                    $city.selectpicker('val', preselectCity);
+                    $city.selectpicker('refresh');
+                }
+                toggleClientLocationFields(group);
+            }
+        }).fail(function() {
+            toggleClientLocationFields(group);
+        });
+    }
+
+    function getClientLocationValues(group) {
+        return {
+            country: $('select[data-location-group="' + group + '"][data-location-role="country"]').val() || '',
+            state: $('select[data-location-group="' + group + '"][data-location-role="state"]').val() || '',
+            city: $('select[data-location-group="' + group + '"][data-location-role="city"]').val() || ''
+        };
+    }
+
+    function copyClientLocationGroup(fromGroup, toGroup) {
+        var values = getClientLocationValues(fromGroup);
+        var $toCountry = $('select[data-location-group="' + toGroup + '"][data-location-role="country"]');
+        var $toState   = $('select[data-location-group="' + toGroup + '"][data-location-role="state"]');
+        var $toCity    = $('select[data-location-group="' + toGroup + '"][data-location-role="city"]');
+
+        if (!values.country) {
+            _clientLocationSuppressChange = true;
+            $toCountry.selectpicker('val', '');
+            _clientLocationSuppressChange = false;
+            $toState.empty().append('<option value=""></option>').selectpicker('refresh');
+            $toCity.empty().append('<option value=""></option>').selectpicker('refresh');
+            toggleClientLocationFields(toGroup);
+            return;
+        }
+
+        _clientLocationSuppressChange = true;
+        $toCountry.selectpicker('val', values.country);
+        refreshClientLocation(toGroup, 'state', values.state, values.city);
+        setTimeout(function() {
+            _clientLocationSuppressChange = false;
+        }, 0);
+    }
+
+    function initClientLocationDropdowns() {
+        if ($('select[data-location-role="country"]').length === 0) {
+            return;
+        }
+
+        $(document).off('changed.bs.select.clientLocation', 'select[data-location-role="country"]');
+        $(document).on('changed.bs.select.clientLocation', 'select[data-location-role="country"]', function() {
+            if (_clientLocationSuppressChange) {
+                return;
+            }
+            refreshClientLocation($(this).attr('data-location-group'), 'state');
+        });
+
+        $(document).off('changed.bs.select.clientLocation', 'select[data-location-role="state"]');
+        $(document).on('changed.bs.select.clientLocation', 'select[data-location-role="state"]', function() {
+            if (_clientLocationSuppressChange) {
+                return;
+            }
+            var group = $(this).attr('data-location-group');
+            var countryId = $('select[data-location-group="' + group + '"][data-location-role="country"]').val();
+            if (isIndiaCountry(countryId)) {
+                refreshClientLocation(group, 'city');
+            } else {
+                toggleClientLocationFields(group);
+            }
+        });
+
+        ['profile', 'billing', 'shipping'].forEach(function(group) {
+            if ($('select[data-location-group="' + group + '"][data-location-role="country"]').length) {
+                toggleClientLocationFields(group);
+            }
+        });
+    }
 
     function view_lead_data(lead_id) {
         $.ajax({

@@ -105,3 +105,87 @@ function get_country_id_by_iso2($iso2)
     }
     return '';
 }
+
+/**
+ * Country ID for India (used by location dropdowns).
+ *
+ * @return int
+ */
+function get_india_country_id()
+{
+    $CI = &get_instance();
+    $CI->db->select('country_id');
+    $CI->db->where('iso2', 'IN');
+    $country = $CI->db->get(db_prefix() . 'countries')->row();
+
+    return $country ? (int) $country->country_id : 0;
+}
+
+/**
+ * Whether the Country → State → City dropdown flow applies (India only).
+ *
+ * @param int|string $country_id
+ * @return bool
+ */
+function country_uses_city_dropdown($country_id)
+{
+    if (empty($country_id)) {
+        return false;
+    }
+
+    return get_country_short_name($country_id) === 'IN';
+}
+
+/**
+ * Build state/city option lists for location dropdowns.
+ *
+ * @param int|string $country_id
+ * @param string     $state
+ * @param string     $city
+ * @return array{states: array, cities: array}
+ */
+function build_location_dropdown_data($country_id, $state = '', $city = '')
+{
+    $data = [
+        'states' => [],
+        'cities' => [],
+    ];
+
+    if (empty($country_id)) {
+        return $data;
+    }
+
+    $CI = &get_instance();
+    $CI->load->model('leadsnew_model');
+
+    $country_code = get_country_short_name($country_id);
+    if (!$country_code) {
+        return $data;
+    }
+
+    $data['states'] = $CI->leadsnew_model->get_states(['country_code' => $country_code]);
+    if (empty($data['states'])) {
+        $country_name = get_country_name($country_id);
+        if ($country_name) {
+            $data['states'] = $CI->leadsnew_model->get_states(['country' => $country_name]);
+        }
+    }
+
+    if (!empty($state)) {
+        $data['cities'] = $CI->leadsnew_model->get_cities([
+            'country_code' => $country_code,
+            'state'        => $state,
+        ]);
+        if (empty($data['cities'])) {
+            $country_name = get_country_name($country_id);
+            if ($country_name) {
+                $data['cities'] = $CI->leadsnew_model->get_cities([
+                    'country' => $country_name,
+                    'state'   => $state,
+                ]);
+            }
+        }
+    }
+
+    return $data;
+}

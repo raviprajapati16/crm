@@ -32,15 +32,14 @@
 <script>
 /**
  * InvoiceMap — Hierarchical choropleth drilldown
- * World → Country → State → City (modal)
- *
- * Dynamic GeoJSON: served by /admin/invoice_map/geojson?level=&iso2=&state=
- * No hardcoded JSON files — works for any country on earth.
+ * World → Country → State → City (modal)  [India only]
+ * World → Country → State/Province (modal)  [all other countries]
  */
 var InvoiceMap = (function () {
 
     // ── Constants ──────────────────────────────────────────────────────────────
     var ADMIN_URL = '<?php echo admin_url(); ?>';
+    var GEOJSON_VERSION = '<?php echo isset($geojson_version) ? html_escape($geojson_version) : '1'; ?>';
     var MAP_DATA_URL    = ADMIN_URL + 'invoice_map/map_data';
     var GEOJSON_URL     = ADMIN_URL + 'invoice_map/geojson';
     var CITY_URL        = ADMIN_URL + 'invoice_map/city_invoices';
@@ -121,6 +120,29 @@ var InvoiceMap = (function () {
         },
     };
 
+    // India uses city-level drilldown; all other countries open the listing modal at state/province.
+    var CITY_DRILLDOWN_ISO2 = 'IN';
+
+    function _usesCityDrilldown(iso2) {
+        return iso2 && String(iso2).toUpperCase() === CITY_DRILLDOWN_ISO2;
+    }
+
+    function _countryHasSubdivisions(geojson) {
+        return !!(geojson && geojson.features && geojson.features.length > 1);
+    }
+
+    function _listingModalTitle(iso2, state, city) {
+        if (city)  return city + ' — ' + state;
+        if (state) return state;
+        return iso2 || '';
+    }
+
+    function _listingExportLevel(ctx) {
+        if (ctx.city)  return 'city';
+        if (ctx.state) return 'state';
+        return 'country';
+    }
+
     // Colour gradient for choropleth (low → high)
     var COLOR_RANGE = ['#c1f0c5ff', '#2E7D32'];
     var HOVER_COLOR = '#FF6F00';
@@ -139,6 +161,7 @@ var InvoiceMap = (function () {
     var currentLevel  = 'world';
     var currentISO2   = null;
     var currentState  = null;
+    var currentStateIso = null;
     var geoCache      = {};       // { cacheKey: parsedGeoJSON }
     var cityPage      = 0;
     var cityContext   = {};       // { iso2, state, city }
@@ -157,10 +180,10 @@ var InvoiceMap = (function () {
         });
         document.getElementById('im-reset-filters').addEventListener('click', _resetFilters);
         document.getElementById('im-export-csv').addEventListener('click', function() { _exportCsv(); });
-        document.getElementById('im-export-city-csv').addEventListener('click', function() { _exportCsv('city'); });
+        document.getElementById('im-export-city-csv').addEventListener('click', function() { _exportCsv(_listingExportLevel(cityContext)); });
         
         document.getElementById('im-export-pdf').addEventListener('click', function() { _exportPdf(); });
-        document.getElementById('im-export-city-pdf').addEventListener('click', function() { _exportPdf('city'); });
+        document.getElementById('im-export-city-pdf').addEventListener('click', function() { _exportPdf(_listingExportLevel(cityContext)); });
 
         // Bootstrap datepickers (if available)
         if ($.fn.datepicker) {
@@ -187,10 +210,11 @@ var InvoiceMap = (function () {
     }
 
     // ── Core: load a map level ──────────────────────────────────────────────────
-    function _loadLevel(level, iso2, state) {
-        currentLevel = level;
-        currentISO2  = iso2  || null;
-        currentState = state || null;
+    function _loadLevel(level, iso2, state, stateIso) {
+        currentLevel    = level;
+        currentISO2     = iso2  || null;
+        currentState    = state || null;
+        currentStateIso = stateIso || null;
 
         _setLoader(true, 'Fetching invoice data…');
         _hideNoData();
@@ -202,7 +226,7 @@ var InvoiceMap = (function () {
         var filters = _getFilters();
 
         // Parallel: GeoJSON + invoice data
-        var geoPromise  = _loadGeoJSON(level, iso2, state);
+        var geoPromise  = _loadGeoJSON(level, iso2, state, stateIso);
         var dataPromise = _fetchMapData(level, iso2, state, filters);
 
         Promise.all([geoPromise, dataPromise])
@@ -216,9 +240,23 @@ var InvoiceMap = (function () {
                 }
 
                 if (!geojson) {
+                    if (level === 'country' && !_usesCityDrilldown(iso2)) {
+                        _renderBreadcrumb(result.breadcrumb);
+                        _setLoader(false);
+                        _openCityModal(iso2, null, null);
+                        return;
+                    }
                     _showError('GeoJSON not available for this region. Showing data table only.');
                     _setLoader(false);
                     _renderBreadcrumb(result.breadcrumb);
+                    return;
+                }
+
+                if (level === 'country' && !_usesCityDrilldown(iso2) && !_countryHasSubdivisions(geojson)) {
+                    _renderMap(geojson, result.data, level, iso2, state);
+                    _renderBreadcrumb(result.breadcrumb);
+                    _setLoader(false);
+                    _openCityModal(iso2, null, null);
                     return;
                 }
 
@@ -235,16 +273,18 @@ var InvoiceMap = (function () {
     }
 
     // ── GeoJSON loader (with in-memory cache) ───────────────────────────────────
-    function _loadGeoJSON(level, iso2, state) {
-        var key = level + '_' + (iso2 || '') + '_' + (state || '');
+    function _loadGeoJSON(level, iso2, state, stateIso) {
+        var key = GEOJSON_VERSION + '_' + level + '_' + (iso2 || '') + '_' + (state || '') + '_' + (stateIso || '');
         if (geoCache[key]) {
             return Promise.resolve(geoCache[key]);
         }
 
         var url = GEOJSON_URL
             + '?level=' + encodeURIComponent(level)
+            + '&v=' + encodeURIComponent(GEOJSON_VERSION)
             + (iso2  ? '&iso2='  + encodeURIComponent(iso2)  : '')
-            + (state ? '&state=' + encodeURIComponent(state) : '');
+            + (state ? '&state=' + encodeURIComponent(state) : '')
+            + (stateIso ? '&state_iso=' + encodeURIComponent(stateIso) : '');
 
         _setLoaderText('Loading map boundaries…');
 
@@ -355,10 +395,136 @@ var InvoiceMap = (function () {
         };
     }
 
-    function _mapLayoutOptions(level, iso2) {
+    function _geojsonBounds(geojson) {
+        var minLon = Infinity, maxLon = -Infinity, minLat = Infinity, maxLat = -Infinity;
+
+        function walkCoords(coords) {
+            if (!coords || !coords.length) return;
+            if (typeof coords[0] === 'number') {
+                minLon = Math.min(minLon, coords[0]);
+                maxLon = Math.max(maxLon, coords[0]);
+                minLat = Math.min(minLat, coords[1]);
+                maxLat = Math.max(maxLat, coords[1]);
+                return;
+            }
+            for (var i = 0; i < coords.length; i++) {
+                walkCoords(coords[i]);
+            }
+        }
+
+        (geojson.features || []).forEach(function (f) {
+            if (f.geometry) walkCoords(f.geometry.coordinates);
+        });
+
+        if (!isFinite(minLon)) return null;
+
+        return {
+            minLon : minLon,
+            maxLon : maxLon,
+            minLat : minLat,
+            maxLat : maxLat,
+            center : [(minLon + maxLon) / 2, (minLat + maxLat) / 2],
+        };
+    }
+
+    function _finalizeStateChartData(geojson, chartData, data, level) {
+        if (level !== 'state') {
+            return chartData;
+        }
+
+        var features = geojson.features || [];
+        if (!features.length) {
+            return chartData;
+        }
+
+        var adm1Fallback = features.some(function (f) {
+            return f.properties && f.properties._from_adm1_fallback;
+        });
+
+        if (adm1Fallback || features.length === 1) {
+            var region     = features[0].properties || {};
+            var regionName = region.name || region.shapeName || '';
+            var cityNames  = [];
+            var total      = 0;
+            var totalAmount = 0;
+            var currencyName = '';
+
+            (data || []).forEach(function (d) {
+                total += (d.value || 0);
+                totalAmount += (d.total_amount || 0);
+                if (d.currency_name) currencyName = d.currency_name;
+                if (d.name) cityNames.push(d.name);
+            });
+
+            if (regionName) {
+                return [{
+                    name            : regionName,
+                    value           : total,
+                    total_amount    : totalAmount,
+                    total_formatted : totalAmount > 0 ? totalAmount.toFixed(2) + (currencyName ? ' ' + currencyName : '') : '—',
+                    raw_name        : region.shapeName || regionName,
+                    geo_name        : region.shapeName || regionName,
+                    geo_iso         : region.shapeISO || null,
+                    _city_names     : cityNames,
+                    _adm1_fallback  : true,
+                }];
+            }
+        }
+
+        var byName = {};
+        chartData.forEach(function (d) {
+            byName[(d.name || '').toLowerCase()] = true;
+        });
+
+        features.forEach(function (f) {
+            var p     = f.properties || {};
+            var fname = p.name || p.shapeName || '';
+            if (fname && !byName[fname.toLowerCase()]) {
+                chartData.push({
+                    name            : fname,
+                    value           : 0,
+                    total_amount    : 0,
+                    total_formatted : '—',
+                    raw_name        : p.shapeName || fname,
+                    geo_name        : p.shapeName || fname,
+                    geo_iso         : p.shapeISO || null,
+                });
+                byName[fname.toLowerCase()] = true;
+            }
+        });
+
+        return chartData;
+    }
+
+    function _resolveCityClickName(params) {
+        var d = params.data;
+        var cityName = (d && d.raw_name) ? d.raw_name : params.name;
+        if (d && d._city_names && d._city_names.length) {
+            if (d._city_names.length === 1) {
+                return d._city_names[0];
+            }
+            if (d._city_names.indexOf(cityName) === -1) {
+                return d._city_names[0];
+            }
+        }
+        return cityName;
+    }
+
+    function _mapLayoutOptions(level, iso2, geojson) {
         var layout = { zoom: 1.1 };
         if (level === 'country' && iso2 && COUNTRY_MAP_LAYOUT[iso2.toUpperCase()]) {
             $.extend(layout, COUNTRY_MAP_LAYOUT[iso2.toUpperCase()]);
+        }
+        if (level === 'state' && geojson) {
+            var bounds = _geojsonBounds(geojson);
+            if (bounds) {
+                var span = Math.max(bounds.maxLon - bounds.minLon, bounds.maxLat - bounds.minLat);
+                layout.center = bounds.center;
+                if (span < 3)       layout.zoom = 8;
+                else if (span < 8)  layout.zoom = 4;
+                else if (span < 15) layout.zoom = 2;
+                else                layout.zoom = 1.2;
+            }
         }
         return layout;
     }
@@ -373,29 +539,38 @@ var InvoiceMap = (function () {
         // ── Resolve feature names from GeoJSON for matching ─────────────────
         var featureNames = {};
         var isoToFeatureName = {};
+        var nameToGeoIso = {};
         (geojson.features || []).forEach(function (f) {
             var p = f.properties || {};
             
             var fname = '';
             if (level === 'state') {
-                // For state level, features are districts/cities. GADM uses NAME_2.
-                fname = p.name || p.NAME || p.NAME_2 || p.NAME_1 || '';
+                fname = p.shapeName || p.name || p.NAME || p.NAME_2 || p.NAME_1 || '';
             } else if (level === 'country') {
-                // For country level, features are states. GADM uses NAME_1.
-                fname = p.name || p.NAME || p.NAME_1 || p.ADMIN || '';
+                fname = p.shapeName || p.name || p.NAME || p.NAME_1 || p.ADMIN || '';
             } else {
-                fname = p.name || p.NAME || p.ADMIN || p.NAME_0 || '';
+                fname = p.shapeName || p.name || p.NAME || p.ADMIN || p.NAME_0 || '';
             }
 
             var fiso = p.ISO_A2 || p['ISO3166-1-Alpha-2'] || p.iso_a2 || '';
+            var shapeIso = p.shapeISO || '';
+            var displayName = p.name || fname;
             
-            if (fname) {
-                // ECharts fundamentally relies on properties.name
-                f.properties.name = fname;
-                featureNames[fname.toLowerCase()] = fname;
+            if (displayName) {
+                f.properties.name = displayName;
+                featureNames[displayName.toLowerCase()] = fname || displayName;
+                var fnameFolded = _foldDiacritics(displayName);
+                if (!featureNames[fnameFolded]) {
+                    featureNames[fnameFolded] = fname || displayName;
+                }
             }
-            if (fiso && fname) {
-                isoToFeatureName[fiso.toUpperCase()] = fname;
+            if (shapeIso && (fname || displayName)) {
+                nameToGeoIso[(fname || displayName).toLowerCase()] = shapeIso;
+                var suffix = shapeIso.indexOf('-') !== -1 ? shapeIso.split('-').pop() : shapeIso;
+                isoToFeatureName[suffix.toUpperCase()] = fname || displayName;
+            }
+            if (fiso && (fname || displayName)) {
+                isoToFeatureName[fiso.toUpperCase()] = fname || displayName;
             }
         });
 
@@ -413,14 +588,17 @@ var InvoiceMap = (function () {
         if (!data || data.length === 0) {
             // No invoices — still render the map with zero-value regions
             (geojson.features || []).forEach(function (f) {
-                var fname = (f.properties && f.properties.name) || '';
+                var p = f.properties || {};
+                var fname = p.shapeName || p.name || '';
                 if (fname) {
                     chartData.push({
-                        name            : fname,
+                        name            : p.name || fname,
                         value           : 0,
                         total_amount    : 0,
                         total_formatted : '—',
                         raw_name        : fname,
+                        geo_name        : fname,
+                        geo_iso         : p.shapeISO || null,
                         iso_code        : null,
                     });
                 }
@@ -431,20 +609,36 @@ var InvoiceMap = (function () {
                 var expanded = countryAliases && countryAliases[lower];
 
                 if (expanded && expanded.length) {
-                    // Distribute the count across all matching districts
-                    expanded.forEach(function (districtName) {
+                    if (_shouldExpandProvinceAlias(expanded, featureNames)) {
+                        expanded.forEach(function (districtName) {
+                            chartData.push({
+                                name            : districtName,
+                                value           : d.value,
+                                total_amount    : d.total_amount,
+                                total_formatted : d.total_formatted,
+                                raw_name        : d.name,
+                                geo_name        : districtName,
+                                geo_iso         : null,
+                                iso_code        : d.iso_code || null,
+                                is_province     : true,
+                            });
+                        });
+                    } else {
+                        var matchedName = expanded.length === 1
+                            ? (_matchFeatureName(expanded[0], featureNames) || expanded[0])
+                            : (_matchFeatureName(d.name, featureNames) || d.name);
                         chartData.push({
-                            name            : districtName,
+                            name            : matchedName,
                             value           : d.value,
                             total_amount    : d.total_amount,
                             total_formatted : d.total_formatted,
                             raw_name        : d.name,
+                            geo_name        : matchedName,
+                            geo_iso         : nameToGeoIso[(matchedName || '').toLowerCase()] || null,
                             iso_code        : d.iso_code || null,
-                            is_province     : true,
                         });
-                    });
+                    }
                 } else {
-                    // Standard: try ISO code match first, then fuzzy name match
                     var matchedName = (d.iso_code && isoToFeatureName[d.iso_code])
                         ? isoToFeatureName[d.iso_code]
                         : (_matchFeatureName(d.name, featureNames) || d.name);
@@ -454,17 +648,21 @@ var InvoiceMap = (function () {
                         total_amount    : d.total_amount,
                         total_formatted : d.total_formatted,
                         raw_name        : d.name,
+                        geo_name        : matchedName,
+                        geo_iso         : nameToGeoIso[(matchedName || '').toLowerCase()] || null,
                         iso_code        : d.iso_code || null,
                     });
                 }
             });
         }
 
+        chartData = _finalizeStateChartData(geojson, chartData, data, level);
+
         var maxVal = Math.max.apply(null, chartData.map(function (d) { return d.value; }));
         if (maxVal < 1) maxVal = 1;
 
         var labelConfig  = _mapLabelConfig(level, featureCount, chartData);
-        var layoutConfig = _mapLayoutOptions(level, iso2);
+        var layoutConfig = _mapLayoutOptions(level, iso2, geojson);
 
         var option = {
             backgroundColor: '#fafafa',
@@ -487,6 +685,13 @@ var InvoiceMap = (function () {
                                (params.name || 'Unknown') + ' — No invoices</span></div>';
                     }
                     var d = params.data;
+                    if (d._city_names && d._city_names.length > 1) {
+                        return '<div class="im-tooltip">' +
+                               '<div class="im-tt-name">' + _esc(params.name) + '</div>' +
+                               '<div class="im-tt-count">📄 Invoices: <b>' + d.value + '</b></div>' +
+                               '<div class="im-tt-amt">💰 Amount: <b>' + (d.total_formatted || _fmtMoney(d.total_amount)) + '</b></div>' +
+                               '<div class="im-tt-empty">' + d._city_names.length + ' cities</div></div>';
+                    }
                     return '<div class="im-tooltip">' +
                            '<div class="im-tt-name">' + _esc(params.name) + '</div>' +
                            '<div class="im-tt-count">📄 Invoices: <b>' + d.value + '</b></div>' +
@@ -500,6 +705,7 @@ var InvoiceMap = (function () {
                 map       : mapName,
                 roam      : true,
                 zoom      : layoutConfig.zoom,
+                center    : layoutConfig.center,
                 aspectScale : layoutConfig.aspectScale,
                 layoutCenter: layoutConfig.layoutCenter,
                 layoutSize  : layoutConfig.layoutSize,
@@ -525,46 +731,69 @@ var InvoiceMap = (function () {
     function _getNameProperty(geojson) {
         if (!geojson.features || !geojson.features.length) return 'name';
         var props = geojson.features[0].properties || {};
-        // geo-countries dataset
+        if (props.hasOwnProperty('shapeName')) return 'shapeName';
         if (props.hasOwnProperty('name'))   return 'name';
-        // GADM
         if (props.hasOwnProperty('ADMIN'))  return 'ADMIN';
         if (props.hasOwnProperty('NAME_1')) return 'NAME_1';
         if (props.hasOwnProperty('NAME_2')) return 'NAME_2';
         return 'name';
     }
 
+    function _foldDiacritics(str) {
+        if (!str) return '';
+        return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    }
+
     // ── Fuzzy name matching: DB name vs GeoJSON feature names ─────────────────
     function _matchFeatureName(dbName, featureNames) {
         if (!dbName) return null;
-        var lower = dbName.toLowerCase().trim();
+        var lower  = dbName.toLowerCase().trim();
+        var folded = _foldDiacritics(dbName);
 
-        // 1. Exact match
         if (featureNames[lower]) return featureNames[lower];
+        if (featureNames[folded]) return featureNames[folded];
 
-        // 2. Contains match (handles "West Bengal" ↔ "WestBengal" etc.)
         for (var fn in featureNames) {
             if (fn.indexOf(lower) !== -1 || lower.indexOf(fn) !== -1) {
                 return featureNames[fn];
             }
+            var fnFolded = _foldDiacritics(fn);
+            if (fnFolded.indexOf(folded) !== -1 || folded.indexOf(fnFolded) !== -1) {
+                return featureNames[fn];
+            }
         }
 
-        // 3. Vowel-stripped / phonetic match (handles "Ahmedabad" ↔ "Ahmadabad")
         var stripVowels = function(str) {
             if (!str) return '';
             var firstChar = str.charAt(0);
             var rest = str.substring(1).replace(/[aeiou\W_]/g, '');
             return firstChar + rest;
         };
-        
-        var strippedLower = stripVowels(lower);
+
+        var strippedLower = stripVowels(folded);
         for (var fn2 in featureNames) {
-            if (stripVowels(fn2) === strippedLower) {
+            if (stripVowels(_foldDiacritics(fn2)) === strippedLower) {
                 return featureNames[fn2];
             }
         }
 
         return null;
+    }
+
+    /**
+     * Province aliases may map CRM names to district lists (e.g. LK "Western Province" → Colombo, …).
+     * Only expand when those targets exist on the current GeoJSON; otherwise bind to the province feature.
+     */
+    function _aliasTargetsMatchGeojson(targets, featureNames) {
+        if (!targets || !targets.length) return false;
+        for (var i = 0; i < targets.length; i++) {
+            if (_matchFeatureName(targets[i], featureNames)) return true;
+        }
+        return false;
+    }
+
+    function _shouldExpandProvinceAlias(expanded, featureNames) {
+        return expanded.length > 1 && _aliasTargetsMatchGeojson(expanded, featureNames);
     }
 
     function _canonicalizeStateName(name) {
@@ -585,13 +814,24 @@ var InvoiceMap = (function () {
             _loadLevel('country', d.iso_code, null);
 
         } else if (currentLevel === 'country') {
-            var stateName = _canonicalizeStateName((d && d.raw_name) ? d.raw_name : params.name);
-            if (stateName) {
-                _loadLevel('state', currentISO2, stateName);
+            var stateIso = (d && d.geo_iso) ? d.geo_iso : null;
+            if (_usesCityDrilldown(currentISO2)) {
+                var stateName = _canonicalizeStateName(
+                    (d && d.geo_name) ? d.geo_name : ((d && d.raw_name) ? d.raw_name : params.name)
+                );
+                if (!stateName) return;
+                _loadLevel('state', currentISO2, stateName, stateIso);
+            } else {
+                var stateName = _canonicalizeStateName(
+                    (d && d.raw_name) ? d.raw_name : ((d && d.geo_name) ? d.geo_name : params.name)
+                );
+                if (!stateName) return;
+                _openCityModal(currentISO2, stateName, null);
             }
 
         } else if (currentLevel === 'state') {
-            var cityName = (d && d.raw_name) ? d.raw_name : params.name;
+            if (!_usesCityDrilldown(currentISO2)) return;
+            var cityName = _resolveCityClickName(params);
             if (cityName) {
                 _openCityModal(currentISO2, currentState, cityName);
             }
@@ -652,9 +892,9 @@ var InvoiceMap = (function () {
     // ── City Detail Modal ──────────────────────────────────────────────────────
     function _openCityModal(iso2, state, city) {
         cityPage    = 0;
-        cityContext = { iso2: iso2, state: state, city: city };
+        cityContext = { iso2: iso2, state: state || null, city: city || null };
 
-        document.getElementById('im-city-modal-title').textContent = city + ' — ' + state;
+        document.getElementById('im-city-modal-title').textContent = _listingModalTitle(iso2, state, city);
         document.getElementById('im-city-count').textContent  = '…';
         document.getElementById('im-city-amount').textContent = '…';
         document.getElementById('im-city-tbody').innerHTML    = '';
@@ -669,8 +909,8 @@ var InvoiceMap = (function () {
         var filters  = _getFilters();
         var postData = $.extend({
             country : iso2,
-            state   : state,
-            city    : city,
+            state   : state || '',
+            city    : city || '',
             page    : cityPage,
         }, filters);
         
@@ -745,16 +985,24 @@ var InvoiceMap = (function () {
         _loadLevel('world');
     }
 
+    function _exportLocation(overrideLevel) {
+        if (overrideLevel && cityContext && cityContext.iso2) {
+            return cityContext;
+        }
+        return { iso2: currentISO2, state: currentState, city: null };
+    }
+
     // EXPORT PDF
     function _exportPdf(overrideLevel) {
         var url = ADMIN_URL + 'invoice_map/export_pdf';
 
         var levelToExport = overrideLevel || currentLevel;
+        var loc = _exportLocation(overrideLevel);
         var data = $.extend({
             level   : levelToExport,
-            country : overrideLevel === 'city' ? cityContext.iso2 : currentISO2,
-            state   : overrideLevel === 'city' ? cityContext.state : currentState,
-            city    : overrideLevel === 'city' ? cityContext.city : ((cityContext && cityContext.city) ? cityContext.city : ''),
+            country : loc.iso2 || '',
+            state   : loc.state || '',
+            city    : loc.city || '',
         }, _getFilters());
         
         if (typeof csrfData !== 'undefined') {
@@ -801,11 +1049,12 @@ var InvoiceMap = (function () {
         form.target = '_blank';
 
         var levelToExport = overrideLevel || currentLevel;
+        var loc = _exportLocation(overrideLevel);
         var postData = $.extend({ 
             level: levelToExport, 
-            country: overrideLevel === 'city' ? cityContext.iso2 : currentISO2, 
-            state: overrideLevel === 'city' ? cityContext.state : currentState, 
-            city: overrideLevel === 'city' ? cityContext.city : (cityContext.city || '') 
+            country: loc.iso2 || '', 
+            state: loc.state || '', 
+            city: loc.city || '' 
         }, _getFilters());
         
         if (typeof csrfData !== 'undefined') {

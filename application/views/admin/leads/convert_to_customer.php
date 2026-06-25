@@ -68,7 +68,7 @@
                    $city_options[] = ['city' => $lead->city];
                }
            }
-           $city_wrapper_class = (!empty($selected_country) && !empty($lead->state)) ? 'convert-city-wrapper' : 'convert-city-wrapper hide';
+           $city_wrapper_class = (!empty($selected_country) && !empty($lead->state) && country_uses_city_dropdown($selected_country)) ? 'convert-city-wrapper' : 'convert-city-wrapper hide';
            echo render_select('city', $city_options, ['city', 'city'], 'client_city', $lead->city, ['data-none-selected-text' => _l('dropdown_non_selected_tex')], [], $city_wrapper_class);
            ?>
            <?php echo render_input('zip','clients_zip',$lead->zip); ?>
@@ -218,12 +218,18 @@
 
    (function() {
       var $form = $('#lead_to_client_form');
+      var INDIA_COUNTRY_ID = <?php echo (int) get_india_country_id(); ?>;
+
+      function isIndiaCountry(countryId) {
+         return countryId && String(countryId) === String(INDIA_COUNTRY_ID);
+      }
 
       function toggleConvertLocationFields() {
          var countryId = $form.find('select[name="country"]').val();
          var stateVal  = $form.find('select[name="state"]').val();
          $form.find('.convert-state-wrapper').toggleClass('hide', !countryId);
-         $form.find('.convert-city-wrapper').toggleClass('hide', !countryId || !stateVal);
+         var showCity = countryId && stateVal && isIndiaCountry(countryId);
+         $form.find('.convert-city-wrapper').toggleClass('hide', !showCity);
       }
 
       function appendLocationOption($select, value) {
@@ -272,6 +278,10 @@
                toggleConvertLocationFields();
                return;
             }
+            if (!isIndiaCountry(countryId)) {
+               toggleConvertLocationFields();
+               return;
+            }
          }
 
          $.ajax({
@@ -302,7 +312,7 @@
 
             $target.selectpicker('refresh');
 
-            if (type === 'state' && preselectState) {
+            if (type === 'state' && preselectState && isIndiaCountry(countryId)) {
                refreshConvertLocation('city', null, preselectCity);
             } else {
                toggleConvertLocationFields();
@@ -319,7 +329,12 @@
 
       $(document).off('changed.bs.select.convertLocation', '#lead_to_client_form select[name="state"]');
       $(document).on('changed.bs.select.convertLocation', '#lead_to_client_form select[name="state"]', function() {
-         refreshConvertLocation('city');
+         var countryId = $form.find('select[name="country"]').val();
+         if (isIndiaCountry(countryId)) {
+            refreshConvertLocation('city');
+         } else {
+            toggleConvertLocationFields();
+         }
       });
 
       toggleConvertLocationFields();

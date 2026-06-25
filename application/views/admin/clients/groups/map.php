@@ -23,14 +23,13 @@ if (isset($client)) {
                 }).addTo(map);
 
                 function geocode(query) {
-                    return fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(query))
-                        .then(response => response.json());
+                    return $.getJSON('<?php echo admin_url('client_map/geocode'); ?>', { q: query });
                 }
 
                 function showOnMap(data, query) {
-                    if (data && data.length > 0) {
-                        var lat = data[0].lat;
-                        var lon = data[0].lon;
+                    if (data && data.success && data.lat && data.lon) {
+                        var lat = data.lat;
+                        var lon = data.lon;
                         map.setView([lat, lon], 13);
 
                         var marker = L.marker([lat, lon]).addTo(map)
@@ -42,16 +41,25 @@ if (isset($client)) {
                 }
 
                 geocode(address)
-                    .then(data => showOnMap(data, address))
-                    .catch(() => {
-                        if (city) {
-                            return geocode(city).then(data => showOnMap(data, city));
+                    .done(function(data) {
+                        if (data && data.success) {
+                            showOnMap(data, address);
+                        } else if (city) {
+                            geocode(city).done(function(cityData) {
+                                if (cityData && cityData.success) {
+                                    showOnMap(cityData, city);
+                                } else {
+                                    alert_float('danger', 'Failed to get location data for both address and city');
+                                }
+                            }).fail(function() {
+                                alert_float('danger', 'Failed to get location data for both address and city');
+                            });
                         } else {
-                            alert_float('danger','Address not found and no city available');
+                            alert_float('danger', 'Address not found and no city available');
                         }
                     })
-                    .catch(() => {
-                        alert_float('danger','Failed to get location data for both address and city');
+                    .fail(function() {
+                        alert_float('danger', 'Failed to get location data for both address and city');
                     });
             });
         </script>

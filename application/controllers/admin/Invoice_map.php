@@ -7,8 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Hierarchical Invoice Choropleth Map
  *   World → Country (states/provinces) → State (cities) → City invoice list
  *
- * GeoJSON: fully dynamic — fetched from GADM CDN by ISO2 code.
- * No hardcoded files. Works for every country on Earth.
+ * GeoJSON: local-first boundaries via geoBoundaries (Geojson_dataset).
  */
 class Invoice_map extends AdminController
 {
@@ -35,6 +34,8 @@ class Invoice_map extends AdminController
         if (is_using_multiple_currencies()) {
             $data['currencies'] = $this->currencies_model->get();
         }
+
+        $data['geojson_version'] = $this->invoice_map_model->get_geojson_version_token();
 
         $this->load->view('admin/invoice_map/index', $data);
     }
@@ -107,11 +108,13 @@ class Invoice_map extends AdminController
         $page    = max(0, (int) $this->input->post('page'));
         $filters = $this->_build_filters();
 
-        if (!$iso2 || !$state || !$city) {
-            $this->_json_error('Country, state and city are required');
+        if (!$iso2) {
+            $this->_json_error('Country is required');
         }
 
-        $iso2 = strtoupper(preg_replace('/[^a-zA-Z]/', '', $iso2));
+        $iso2  = strtoupper(preg_replace('/[^a-zA-Z]/', '', $iso2));
+        $state = $state ? $this->_canonicalize_state_name($state) : '';
+        $city  = $city ? trim($city) : '';
 
         $result = $this->invoice_map_model->get_city_invoices(
             $iso2, $state, $city, $filters, $page
@@ -394,10 +397,15 @@ class Invoice_map extends AdminController
         $level = $this->input->get('level') ?: 'world';
         $iso2  = $this->input->get('iso2');
         $state = $this->input->get('state');
+        $stateIso = $this->input->get('state_iso');
 
         // Sanitise
         $level = in_array($level, ['world', 'country', 'state']) ? $level : 'world';
         if ($iso2)  $iso2  = strtoupper(preg_replace('/[^a-zA-Z]/', '', $iso2));
+        if ($stateIso) {
+            $stateIso = strtoupper(preg_replace('/[^a-zA-Z0-9\-]/', '', $stateIso));
+            $stateIso = substr($stateIso, 0, 16);
+        }
         if ($state) {
             $state = html_entity_decode($state, ENT_QUOTES | ENT_HTML5, 'UTF-8');
             $state = strip_tags($state);
@@ -406,7 +414,7 @@ class Invoice_map extends AdminController
             $state = substr($state, 0, 100);
         }
 
-        $geojson = $this->invoice_map_model->get_geojson($level, $iso2, $state);
+        $geojson = $this->invoice_map_model->get_geojson($level, $iso2, $state, $stateIso ?: null);
 
         if ($geojson === false) {
             $this->output->set_status_header(404);
@@ -415,10 +423,42 @@ class Invoice_map extends AdminController
             die();
         }
 
+        $version = $this->invoice_map_model->get_geojson_version_token();
         header('Content-Type: application/json; charset=utf-8');
-        header('Cache-Control: public, max-age=604800');   // 7-day browser cache
+        header('Cache-Control: public, max-age=86400, must-revalidate');
+        header('ETag: "' . $version . '"');
         header('Vary: Accept-Encoding');
         echo $geojson;
+        die();
+    }
+
+    // =========================================================================
+    // ADMIN: refresh local GeoJSON cache (geoBoundaries)
+    // GET /admin/invoice_map/refresh_geojson?force=1
+    // =========================================================================
+    public function refresh_geojson()
+    {
+        if (!is_admin()) {
+            access_denied('Invoice Map');
+        }
+
+        $force = (bool) $this->input->get('force');
+        $iso2  = $this->input->get('country');
+
+        $options = [
+            'world'     => true,
+            'countries' => $iso2 ? [strtoupper($iso2)] : 'active',
+            'force'     => $force,
+        ];
+
+        $result = $this->invoice_map_model->refresh_geojson_dataset($options);
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
+            'result'  => $result,
+            'version' => $this->invoice_map_model->get_geojson_version_token(),
+        ]);
         die();
     }
 

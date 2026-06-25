@@ -29,13 +29,14 @@
 <script>
 /**
  * ClientMap — Hierarchical choropleth drilldown
- * World → Country → State → City (modal)
- * Reuses admin/invoice_map/geojson for map boundaries.
+ * World → Country → State → City (modal)  [India only]
+ * World → Country → State/Province (modal)  [all other countries]
  */
 var ClientMap = (function () {
 
     // ── Constants ──────────────────────────────────────────────────────────────
     var ADMIN_URL = '<?php echo admin_url(); ?>';
+    var GEOJSON_VERSION = '<?php echo isset($geojson_version) ? html_escape($geojson_version) : '1'; ?>';
     var MAP_DATA_URL    = ADMIN_URL + 'client_map/map_data';
     var GEOJSON_URL     = ADMIN_URL + 'client_map/geojson'; // Reused!
     var CITY_URL        = ADMIN_URL + 'client_map/city_clients';
@@ -99,7 +100,29 @@ var ClientMap = (function () {
         },
     };
 
-    // Colour gradient for choropleth (low → high)
+    // India uses city-level drilldown; all other countries open the listing modal at state/province.
+    var CITY_DRILLDOWN_ISO2 = 'IN';
+
+    function _usesCityDrilldown(iso2) {
+        return iso2 && String(iso2).toUpperCase() === CITY_DRILLDOWN_ISO2;
+    }
+
+    function _countryHasSubdivisions(geojson) {
+        return !!(geojson && geojson.features && geojson.features.length > 1);
+    }
+
+    function _listingModalTitle(iso2, state, city) {
+        if (city)  return city + ' — ' + state;
+        if (state) return state;
+        return iso2 || '';
+    }
+
+    function _listingExportLevel(ctx) {
+        if (ctx.city)  return 'city';
+        if (ctx.state) return 'state';
+        return 'country';
+    }
+
     var COLOR_RANGE = ['#96baeb', '#146ce6']; // bule for clients
     var HOVER_COLOR = '#FF8F00';
 
@@ -117,6 +140,7 @@ var ClientMap = (function () {
     var currentLevel  = 'world';
     var currentISO2   = null;
     var currentState  = null;
+    var currentStateIso = null;
     var geoCache      = {};
     var cityPage      = 0;
     var cityContext   = {};
@@ -133,9 +157,9 @@ var ClientMap = (function () {
         });
         document.getElementById('cm-reset-filters').addEventListener('click', _resetFilters);
         document.getElementById('cm-export-csv').addEventListener('click', function() { _exportCsv(); });
-        document.getElementById('cm-export-city-csv').addEventListener('click', function() { _exportCsv('city'); });
+        document.getElementById('cm-export-city-csv').addEventListener('click', function() { _exportCsv(_listingExportLevel(cityContext)); });
         document.getElementById('cm-export-pdf').addEventListener('click', function() { _exportPdf(); });
-        document.getElementById('cm-export-city-pdf').addEventListener('click', function() { _exportPdf('city'); });
+        document.getElementById('cm-export-city-pdf').addEventListener('click', function() { _exportPdf(_listingExportLevel(cityContext)); });
 
         _loadLevel('world');
     }
@@ -154,10 +178,11 @@ var ClientMap = (function () {
         _fetchCityClients(cityContext.iso2, cityContext.state, cityContext.city, false);
     }
 
-    function _loadLevel(level, iso2, state) {
-        currentLevel = level;
-        currentISO2  = iso2  || null;
-        currentState = state || null;
+    function _loadLevel(level, iso2, state, stateIso) {
+        currentLevel    = level;
+        currentISO2     = iso2  || null;
+        currentState    = state || null;
+        currentStateIso = stateIso || null;
 
         _setLoader(true, 'Fetching customer data…');
         _hideNoData();
@@ -167,7 +192,7 @@ var ClientMap = (function () {
 
         var filters = _getFilters();
 
-        var geoPromise  = _loadGeoJSON(level, iso2, state);
+        var geoPromise  = _loadGeoJSON(level, iso2, state, stateIso);
         var dataPromise = _fetchMapData(level, iso2, state, filters);
 
         Promise.all([geoPromise, dataPromise])
@@ -181,9 +206,23 @@ var ClientMap = (function () {
                 }
 
                 if (!geojson) {
+                    if (level === 'country' && !_usesCityDrilldown(iso2)) {
+                        _renderBreadcrumb(result.breadcrumb);
+                        _setLoader(false);
+                        _openCityModal(iso2, null, null);
+                        return;
+                    }
                     _showError('GeoJSON not available for this region. Showing data table only.');
                     _setLoader(false);
                     _renderBreadcrumb(result.breadcrumb);
+                    return;
+                }
+
+                if (level === 'country' && !_usesCityDrilldown(iso2) && !_countryHasSubdivisions(geojson)) {
+                    _renderMap(geojson, result.data, level, iso2, state);
+                    _renderBreadcrumb(result.breadcrumb);
+                    _setLoader(false);
+                    _openCityModal(iso2, null, null);
                     return;
                 }
 
@@ -199,16 +238,18 @@ var ClientMap = (function () {
             });
     }
 
-    function _loadGeoJSON(level, iso2, state) {
-        var key = level + '_' + (iso2 || '') + '_' + (state || '');
+    function _loadGeoJSON(level, iso2, state, stateIso) {
+        var key = GEOJSON_VERSION + '_' + level + '_' + (iso2 || '') + '_' + (state || '') + '_' + (stateIso || '');
         if (geoCache[key]) {
             return Promise.resolve(geoCache[key]);
         }
 
         var url = GEOJSON_URL
             + '?level=' + encodeURIComponent(level)
+            + '&v=' + encodeURIComponent(GEOJSON_VERSION)
             + (iso2  ? '&iso2='  + encodeURIComponent(iso2)  : '')
-            + (state ? '&state=' + encodeURIComponent(state) : '');
+            + (state ? '&state=' + encodeURIComponent(state) : '')
+            + (stateIso ? '&state_iso=' + encodeURIComponent(stateIso) : '');
 
         _setLoaderText('Loading map boundaries…');
 
@@ -313,10 +354,132 @@ var ClientMap = (function () {
         };
     }
 
-    function _mapLayoutOptions(level, iso2) {
+    function _geojsonBounds(geojson) {
+        var minLon = Infinity, maxLon = -Infinity, minLat = Infinity, maxLat = -Infinity;
+
+        function walkCoords(coords) {
+            if (!coords || !coords.length) return;
+            if (typeof coords[0] === 'number') {
+                minLon = Math.min(minLon, coords[0]);
+                maxLon = Math.max(maxLon, coords[0]);
+                minLat = Math.min(minLat, coords[1]);
+                maxLat = Math.max(maxLat, coords[1]);
+                return;
+            }
+            for (var i = 0; i < coords.length; i++) {
+                walkCoords(coords[i]);
+            }
+        }
+
+        (geojson.features || []).forEach(function (f) {
+            if (f.geometry) walkCoords(f.geometry.coordinates);
+        });
+
+        if (!isFinite(minLon)) return null;
+
+        return {
+            minLon : minLon,
+            maxLon : maxLon,
+            minLat : minLat,
+            maxLat : maxLat,
+            center : [(minLon + maxLon) / 2, (minLat + maxLat) / 2],
+        };
+    }
+
+    /**
+     * State maps: bind CRM city rows to GeoJSON regions.
+     * ADM1-fallback areas (e.g. Saint Petersburg) have one boundary but CRM uses city names (Pavlovsk).
+     */
+    function _finalizeStateChartData(geojson, chartData, data, level) {
+        if (level !== 'state') {
+            return chartData;
+        }
+
+        var features = geojson.features || [];
+        if (!features.length) {
+            return chartData;
+        }
+
+        var adm1Fallback = features.some(function (f) {
+            return f.properties && f.properties._from_adm1_fallback;
+        });
+
+        if (adm1Fallback || features.length === 1) {
+            var region     = features[0].properties || {};
+            var regionName = region.name || region.shapeName || '';
+            var cityNames  = [];
+            var total      = 0;
+
+            (data || []).forEach(function (d) {
+                total += (d.value || 0);
+                if (d.name) cityNames.push(d.name);
+            });
+
+            if (regionName) {
+                return [{
+                    name           : regionName,
+                    value          : total,
+                    raw_name       : region.shapeName || regionName,
+                    geo_name       : region.shapeName || regionName,
+                    geo_iso        : region.shapeISO || null,
+                    _city_names    : cityNames,
+                    _adm1_fallback : true,
+                }];
+            }
+        }
+
+        var byName = {};
+        chartData.forEach(function (d) {
+            byName[(d.name || '').toLowerCase()] = true;
+        });
+
+        features.forEach(function (f) {
+            var p     = f.properties || {};
+            var fname = p.name || p.shapeName || '';
+            if (fname && !byName[fname.toLowerCase()]) {
+                chartData.push({
+                    name     : fname,
+                    value    : 0,
+                    raw_name : p.shapeName || fname,
+                    geo_name : p.shapeName || fname,
+                    geo_iso  : p.shapeISO || null,
+                });
+                byName[fname.toLowerCase()] = true;
+            }
+        });
+
+        return chartData;
+    }
+
+    function _resolveCityClickName(params) {
+        var d = params.data;
+        var cityName = (d && d.raw_name) ? d.raw_name : params.name;
+        if (d && d._city_names && d._city_names.length) {
+            if (d._city_names.length === 1) {
+                return d._city_names[0];
+            }
+            if (d._city_names.indexOf(cityName) === -1) {
+                return d._city_names[0];
+            }
+        }
+        return cityName;
+    }
+
+    function _mapLayoutOptions(level, iso2, geojson) {
         var layout = { zoom: 1.1 };
         if (level === 'country' && iso2 && COUNTRY_MAP_LAYOUT[iso2.toUpperCase()]) {
             $.extend(layout, COUNTRY_MAP_LAYOUT[iso2.toUpperCase()]);
+        }
+        if (level === 'state' && geojson) {
+            var bounds = _geojsonBounds(geojson);
+            if (bounds) {
+                var span = Math.max(bounds.maxLon - bounds.minLon, bounds.maxLat - bounds.minLat);
+                layout.center = bounds.center;
+                if (span < 3)       layout.zoom = 8;
+                else if (span < 8)  layout.zoom = 4;
+                else if (span < 15) layout.zoom = 2;
+                else                layout.zoom = 1.2;
+            }
         }
         return layout;
     }
@@ -328,26 +491,38 @@ var ClientMap = (function () {
         var featureCount = (geojson.features || []).length;
         var featureNames = {};
         var isoToFeatureName = {};
+        var nameToGeoIso = {};
 
         (geojson.features || []).forEach(function (f) {
             var p = f.properties || {};
             var fname = '';
             if (level === 'state') {
-                fname = p.name || p.NAME || p.NAME_2 || p.NAME_1 || '';
+                fname = p.shapeName || p.name || p.NAME || p.NAME_2 || p.NAME_1 || '';
             } else if (level === 'country') {
-                fname = p.name || p.NAME || p.NAME_1 || p.ADMIN || '';
+                fname = p.shapeName || p.name || p.NAME || p.NAME_1 || p.ADMIN || '';
             } else {
-                fname = p.name || p.NAME || p.ADMIN || p.NAME_0 || '';
+                fname = p.shapeName || p.name || p.NAME || p.ADMIN || p.NAME_0 || '';
             }
 
             var fiso = p.ISO_A2 || p['ISO3166-1-Alpha-2'] || p.iso_a2 || '';
+            var shapeIso = p.shapeISO || '';
+            var displayName = p.name || fname;
             
-            if (fname) {
-                f.properties.name = fname;
-                featureNames[fname.toLowerCase()] = fname;
+            if (displayName) {
+                f.properties.name = displayName;
+                featureNames[displayName.toLowerCase()] = fname || displayName;
+                var fnameFolded = _foldDiacritics(displayName);
+                if (!featureNames[fnameFolded]) {
+                    featureNames[fnameFolded] = fname || displayName;
+                }
             }
-            if (fiso && fname) {
-                isoToFeatureName[fiso.toUpperCase()] = fname;
+            if (shapeIso && (fname || displayName)) {
+                nameToGeoIso[(fname || displayName).toLowerCase()] = shapeIso;
+                var suffix = shapeIso.indexOf('-') !== -1 ? shapeIso.split('-').pop() : shapeIso;
+                isoToFeatureName[suffix.toUpperCase()] = fname || displayName;
+            }
+            if (fiso && (fname || displayName)) {
+                isoToFeatureName[fiso.toUpperCase()] = fname || displayName;
             }
         });
 
@@ -361,12 +536,15 @@ var ClientMap = (function () {
         if (!data || data.length === 0) {
             // No customers — still render the map with zero-value regions
             (geojson.features || []).forEach(function (f) {
-                var fname = (f.properties && f.properties.name) || '';
+                var p = f.properties || {};
+                var fname = p.shapeName || p.name || '';
                 if (fname) {
                     chartData.push({
-                        name     : fname,
+                        name     : p.name || fname,
                         value    : 0,
                         raw_name : fname,
+                        geo_name : fname,
+                        geo_iso  : p.shapeISO || null,
                         iso_code : null,
                     });
                 }
@@ -377,15 +555,31 @@ var ClientMap = (function () {
                 var expanded = countryAliases && countryAliases[lower];
 
                 if (expanded && expanded.length) {
-                    expanded.forEach(function (districtName) {
-                        chartData.push({
-                            name        : districtName,
-                            value       : d.value,
-                            raw_name    : d.name,
-                            iso_code    : d.iso_code || null,
-                            is_province : true,
+                    if (_shouldExpandProvinceAlias(expanded, featureNames)) {
+                        expanded.forEach(function (districtName) {
+                            chartData.push({
+                                name        : districtName,
+                                value       : d.value,
+                                raw_name    : d.name,
+                                geo_name    : districtName,
+                                geo_iso     : null,
+                                iso_code    : d.iso_code || null,
+                                is_province : true,
+                            });
                         });
-                    });
+                    } else {
+                        var matchedName = expanded.length === 1
+                            ? (_matchFeatureName(expanded[0], featureNames) || expanded[0])
+                            : (_matchFeatureName(d.name, featureNames) || d.name);
+                        chartData.push({
+                            name     : matchedName,
+                            value    : d.value,
+                            raw_name : d.name,
+                            geo_name : matchedName,
+                            geo_iso  : nameToGeoIso[(matchedName || '').toLowerCase()] || null,
+                            iso_code : d.iso_code || null,
+                        });
+                    }
                 } else {
                     var matchedName = (d.iso_code && isoToFeatureName[d.iso_code])
                         ? isoToFeatureName[d.iso_code]
@@ -394,17 +588,21 @@ var ClientMap = (function () {
                         name     : matchedName,
                         value    : d.value,
                         raw_name : d.name,
+                        geo_name : matchedName,
+                        geo_iso  : nameToGeoIso[(matchedName || '').toLowerCase()] || null,
                         iso_code : d.iso_code || null,
                     });
                 }
             });
         }
 
+        chartData = _finalizeStateChartData(geojson, chartData, data, level);
+
         var maxVal = Math.max.apply(null, chartData.map(function (d) { return d.value; }));
         if (maxVal < 1) maxVal = 1;
 
         var labelConfig  = _mapLabelConfig(level, featureCount, chartData);
-        var layoutConfig = _mapLayoutOptions(level, iso2);
+        var layoutConfig = _mapLayoutOptions(level, iso2, geojson);
 
         var option = {
             backgroundColor: '#fafafa',
@@ -427,6 +625,12 @@ var ClientMap = (function () {
                                (params.name || 'Unknown') + ' — No Customers</span></div>';
                     }
                     var d = params.data;
+                    if (d._city_names && d._city_names.length > 1) {
+                        return '<div class="cm-tooltip">' +
+                               '<div class="cm-tt-name">' + _esc(params.name) + '</div>' +
+                               '<div class="cm-tt-count">🏢 Customers: <b>' + d.value + '</b></div>' +
+                               '<div class="cm-tt-empty">' + d._city_names.length + ' cities</div></div>';
+                    }
                     return '<div class="cm-tooltip">' +
                            '<div class="cm-tt-name">' + _esc(params.name) + '</div>' +
                            '<div class="cm-tt-count">🏢 Customers: <b>' + d.value + '</b></div>' +
@@ -439,6 +643,7 @@ var ClientMap = (function () {
                 map       : mapName,
                 roam      : true,
                 zoom      : layoutConfig.zoom,
+                center    : layoutConfig.center,
                 aspectScale : layoutConfig.aspectScale,
                 layoutCenter: layoutConfig.layoutCenter,
                 layoutSize  : layoutConfig.layoutSize,
@@ -459,26 +664,56 @@ var ClientMap = (function () {
         bcRow.style.display = (level !== 'world') ? 'block' : 'none';
     }
 
+    function _foldDiacritics(str) {
+        if (!str) return '';
+        return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    }
+
     function _matchFeatureName(dbName, featureNames) {
         if (!dbName) return null;
-        var lower = dbName.toLowerCase().trim();
+        var lower  = dbName.toLowerCase().trim();
+        var folded = _foldDiacritics(dbName);
+
         if (featureNames[lower]) return featureNames[lower];
+        if (featureNames[folded]) return featureNames[folded];
+
         for (var fn in featureNames) {
             if (fn.indexOf(lower) !== -1 || lower.indexOf(fn) !== -1) {
                 return featureNames[fn];
             }
+            var fnFolded = _foldDiacritics(fn);
+            if (fnFolded.indexOf(folded) !== -1 || folded.indexOf(fnFolded) !== -1) {
+                return featureNames[fn];
+            }
         }
+
         var stripVowels = function(str) {
             if (!str) return '';
             return str.charAt(0) + str.substring(1).replace(/[aeiou\W_]/g, '');
         };
-        var strippedLower = stripVowels(lower);
+        var strippedLower = stripVowels(folded);
         for (var fn2 in featureNames) {
-            if (stripVowels(fn2) === strippedLower) {
+            if (stripVowels(_foldDiacritics(fn2)) === strippedLower) {
                 return featureNames[fn2];
             }
         }
         return null;
+    }
+
+    /**
+     * Province aliases may map CRM names to district lists (e.g. LK "Western Province" → Colombo, …).
+     * Only expand when those targets exist on the current GeoJSON; otherwise bind to the province feature.
+     */
+    function _aliasTargetsMatchGeojson(targets, featureNames) {
+        if (!targets || !targets.length) return false;
+        for (var i = 0; i < targets.length; i++) {
+            if (_matchFeatureName(targets[i], featureNames)) return true;
+        }
+        return false;
+    }
+
+    function _shouldExpandProvinceAlias(expanded, featureNames) {
+        return expanded.length > 1 && _aliasTargetsMatchGeojson(expanded, featureNames);
     }
 
     function _canonicalizeStateName(name) {
@@ -495,13 +730,23 @@ var ClientMap = (function () {
             }
             _loadLevel('country', d.iso_code, null);
         } else if (currentLevel === 'country') {
-            var stateName = _canonicalizeStateName((d && d.raw_name) ? d.raw_name : params.name);
-            if (stateName) _loadLevel('state', currentISO2, stateName);
+            var stateIso = (d && d.geo_iso) ? d.geo_iso : null;
+            if (_usesCityDrilldown(currentISO2)) {
+                var stateName = _canonicalizeStateName(
+                    (d && d.geo_name) ? d.geo_name : ((d && d.raw_name) ? d.raw_name : params.name)
+                );
+                if (!stateName) return;
+                _loadLevel('state', currentISO2, stateName, stateIso);
+            } else {
+                var stateName = _canonicalizeStateName(
+                    (d && d.raw_name) ? d.raw_name : ((d && d.geo_name) ? d.geo_name : params.name)
+                );
+                if (!stateName) return;
+                _openCityModal(currentISO2, stateName, null);
+            }
         } else if (currentLevel === 'state') {
-            var cityName = (d && d.raw_name) ? d.raw_name : params.name;
-            console.log(cityName);
-            console.log(currentISO2);
-            console.log(currentState);
+            if (!_usesCityDrilldown(currentISO2)) return;
+            var cityName = _resolveCityClickName(params);
             if (cityName) _openCityModal(currentISO2, currentState, cityName);
         }
     }
@@ -556,9 +801,9 @@ var ClientMap = (function () {
 
     function _openCityModal(iso2, state, city) {
         cityPage    = 0;
-        cityContext = { iso2: iso2, state: state, city: city };
+        cityContext = { iso2: iso2, state: state || null, city: city || null };
 
-        document.getElementById('cm-city-modal-title').textContent = city + ' — ' + state;
+        document.getElementById('cm-city-modal-title').textContent = _listingModalTitle(iso2, state, city);
         document.getElementById('cm-city-count').textContent  = '…';
         document.getElementById('cm-city-tbody').innerHTML    = '';
         document.getElementById('cm-city-loader').style.display     = 'block';
@@ -572,8 +817,8 @@ var ClientMap = (function () {
         var filters  = _getFilters();
         var postData = $.extend({
             country : iso2,
-            state   : state,
-            city    : city,
+            state   : state || '',
+            city    : city || '',
             page    : cityPage,
         }, filters);
         
@@ -623,6 +868,13 @@ var ClientMap = (function () {
         });
     }
 
+    function _exportLocation(overrideLevel) {
+        if (overrideLevel && cityContext && cityContext.iso2) {
+            return cityContext;
+        }
+        return { iso2: currentISO2, state: currentState, city: null };
+    }
+
     function _exportCsv(overrideLevel) {
         var url = ADMIN_URL + 'client_map/export_csv';
         var form = document.createElement('form');
@@ -631,11 +883,12 @@ var ClientMap = (function () {
         form.target = '_blank';
 
         var levelToExport = overrideLevel || currentLevel;
+        var loc = _exportLocation(overrideLevel);
         var postData = $.extend({ 
             level: levelToExport, 
-            country: overrideLevel === 'city' ? cityContext.iso2 : currentISO2, 
-            state: overrideLevel === 'city' ? cityContext.state : currentState, 
-            city: overrideLevel === 'city' ? cityContext.city : (cityContext.city || '') 
+            country: loc.iso2 || '', 
+            state: loc.state || '', 
+            city: loc.city || '' 
         }, _getFilters());
         
         if (typeof csrfData !== 'undefined') { postData[csrfData.token_name] = csrfData.hash; }
@@ -674,11 +927,12 @@ var ClientMap = (function () {
         form.target = '_blank';
 
         var levelToExport = overrideLevel || currentLevel;
+        var loc = _exportLocation(overrideLevel);
         var postData = $.extend({ 
             level: levelToExport, 
-            country: overrideLevel === 'city' ? cityContext.iso2 : currentISO2, 
-            state: overrideLevel === 'city' ? cityContext.state : currentState, 
-            city: overrideLevel === 'city' ? cityContext.city : (cityContext.city || '') 
+            country: loc.iso2 || '', 
+            state: loc.state || '', 
+            city: loc.city || '' 
         }, _getFilters());
         
         if (typeof csrfData !== 'undefined') { postData[csrfData.token_name] = csrfData.hash; }

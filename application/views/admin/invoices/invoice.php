@@ -29,6 +29,10 @@
 		// Maybe items ajax search
 		init_ajax_search('items', '#item_select.ajax-search', undefined, admin_url + 'items/search');
 
+		if (typeof initInvoiceBillingLocationDropdowns === 'function') {
+			initInvoiceBillingLocationDropdowns();
+		}
+
 		$('input[name="number"]').on('focusout', function() {
 			check_invoice_number();
 		})

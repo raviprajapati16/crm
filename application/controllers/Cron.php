@@ -618,4 +618,36 @@ class Cron extends App_Controller
     //         $this->db->update('tblleads', ['assigned' => $random_staff]);
     //     }
     // }
+
+    /**
+     * Refresh local GeoJSON boundary cache (geoBoundaries gbOpen).
+     * Schedule via cron, e.g. monthly:
+     *   php index.php cron refresh_geojson YOUR_APP_CRON_KEY
+     */
+    public function refresh_geojson($key = '')
+    {
+        if (defined('APP_CRON_KEY') && (APP_CRON_KEY != $key)) {
+            header('HTTP/1.0 401 Unauthorized');
+            die('Passed cron job key is not correct.');
+        }
+
+        @set_time_limit(0);
+        @ini_set('memory_limit', '512M');
+
+        $this->load->model('invoice_map_model');
+        $result = $this->invoice_map_model->refresh_geojson_dataset([
+            'world'     => true,
+            'countries' => 'active',
+            'force'     => false,
+        ]);
+
+        log_activity('GeoJSON refresh completed — ok: ' . count($result['ok']) . ', failed: ' . count($result['failed']));
+
+        if ($this->input->is_cli_request()) {
+            echo json_encode($result, JSON_PRETTY_PRINT) . PHP_EOL;
+        } else {
+            header('Content-Type: application/json');
+            echo json_encode($result);
+        }
+    }
 }
