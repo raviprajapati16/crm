@@ -61,6 +61,7 @@
                      </div>
                   </div>
                   <hr class="hr-panel-heading" />
+                  <?php render_lead_color_legend($statuses); ?>
                   <div class="tab-content">
                      <?php
                      if ($this->session->has_userdata('leads_kanban_view') && $this->session->userdata('leads_kanban_view') == 'true') { ?>

@@ -10,6 +10,34 @@ function leads_app_admin_head_data()
     <script>
         var leadUniqueValidationFields = <?php echo json_decode(json_encode(get_option('lead_unique_validation'))); ?>;
         var leadAttachmentsDropzone;
+
+        function getLeadRowColorClass(data, staffUserId) {
+            var lapselead = parseInt(data.lapselead, 10) || 0;
+            var lastcontact = data.lastcontact;
+
+            if (lapselead === 10) {
+                return 'alert-danger';
+            }
+            if (lapselead === 9) {
+                return 'alert-success';
+            }
+            if (lastcontact === null || lastcontact === '' || lastcontact === '0000-00-00 00:00:00') {
+                return 'alert-my-info';
+            }
+            if (lapselead === 8) {
+                return 'alert-warning';
+            }
+            if (lapselead === 7) {
+                return 'alert-info';
+            }
+            if (lapselead === 6 || lapselead === 5 || lapselead === 4) {
+                return 'alert-default-light';
+            }
+            if (parseInt(data.assigned, 10) === parseInt(staffUserId, 10)) {
+                return 'alert-info';
+            }
+            return '';
+        }
     </script>
 <?php
 }
@@ -897,4 +925,97 @@ function get_lead($lead_id)
     $CI->load->model('leads_model');
     $lead_data = $CI->leads_model->get($lead_id);
     return $lead_data;
+}
+
+/**
+ * SQL expression for lead follow-up priority (uses CalculateLeadPriority DB function).
+ *
+ * @param string $lastcontactColumn
+ * @param string $followupColumn  Reminder / follow-up date column
+ * @param string $statusColumn
+ * @return string
+ */
+function get_lead_priority_sql($lastcontactColumn = 'lastcontact', $followupColumn = 'reminderdate', $statusColumn = 'status')
+{
+    return 'CalculateLeadPriority(' . $lastcontactColumn . ',' . $followupColumn . ',' . $statusColumn . ') as lapselead';
+}
+
+/**
+ * Bootstrap row class for a lead based on priority score and contact history.
+ *
+ * @param mixed      $lapselead
+ * @param mixed      $lastcontact
+ * @param int|null   $assigned
+ * @param int|null   $staffId
+ * @return string
+ */
+function get_lead_row_color_class($lapselead, $lastcontact = null, $assigned = null, $staffId = null)
+{
+    $priority = (int) $lapselead;
+
+    if ($priority === 10) {
+        return 'alert-danger';
+    }
+
+    if ($priority === 9) {
+        return 'alert-success';
+    }
+
+    if ($lastcontact === null || $lastcontact === '' || $lastcontact === '0000-00-00 00:00:00') {
+        return 'alert-my-info';
+    }
+
+    if ($priority === 8) {
+        return 'alert-warning';
+    }
+
+    if ($priority === 7) {
+        return 'alert-info';
+    }
+
+    if ($priority === 6) {
+        return 'alert-default-light';
+    }
+
+    if ($priority === 5 || $priority === 4) {
+        return 'alert-default-light';
+    }
+
+    if ($staffId !== null && (int) $assigned === (int) $staffId) {
+        return 'alert-info';
+    }
+
+    return '';
+}
+
+/**
+ * Legend items explaining lead row background colors.
+ *
+ * @return array<int, array{class: string, label: string}>
+ */
+function get_lead_color_legend_items()
+{
+    return [
+        ['class' => 'alert-danger', 'label' => _l('lead_color_overdue')],
+        ['class' => 'alert-success', 'label' => _l('lead_color_followup_today')],
+        ['class' => 'alert-my-info', 'label' => _l('lead_color_never_contacted')],
+        ['class' => 'alert-warning', 'label' => _l('lead_color_status_attention')],
+        ['class' => 'alert-info', 'label' => _l('lead_color_followup_tomorrow')],
+        ['class' => 'alert-info', 'label' => _l('lead_color_assigned_to_me')],
+    ];
+}
+
+/**
+ * Render lead row color legend (and optional status color key).
+ *
+ * @param array $statuses Lead statuses from leads_model->get_status()
+ * @return void
+ */
+function render_lead_color_legend($statuses = [])
+{
+    $CI = &get_instance();
+    $CI->load->view('admin/leads/includes/color_legend', [
+        'legend_items' => get_lead_color_legend_items(),
+        'statuses'     => $statuses,
+    ]);
 }

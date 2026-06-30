@@ -31,7 +31,7 @@ $aColumns = array_merge($aColumns, [
     db_prefix() . 'leads.datedeleted as datedeleted',
     'deletedBy',
     'isDeleted',
-    'leadpriority(dateadded, reminderdate, lastcontact, status) as lapselead',
+    'CalculateLeadPriority(' . db_prefix() . 'leads.lastcontact, reminderdate, ' . db_prefix() . 'leads.status) as lapselead',
 ]);
 
 $sIndexColumn = 'id';
@@ -304,17 +304,15 @@ foreach ($rResult as $aRow) {
 
     $row['DT_RowId'] = 'lead_' . $aRow['id'];
 
-    if ($aRow['assigned'] == get_staff_user_id()) {
-        $row['DT_RowClass'] = 'alert-info';
-    }
-    if ($aRow['lapselead'] == "10") {
-        $row['DT_RowClass'] = 'alert-danger';
-    } else if ($aRow['lapselead'] == "9") {
-        $row['DT_RowClass'] = 'alert-success';
-    } else if ($aRow['lastcontact']  == null) {
-        $row['DT_RowClass'] = 'alert-my-info';
-    } else if ($aRow['lapselead'] == "8") {
-        $row['DT_RowClass'] = 'alert-my-info';
+    $rowClass = get_lead_row_color_class(
+        $aRow['lapselead'],
+        $aRow['lastcontact'],
+        $aRow['assigned'],
+        get_staff_user_id()
+    );
+
+    if ($rowClass !== '') {
+        $row['DT_RowClass'] = $rowClass;
     }
 
     if (isset($row['DT_RowClass'])) {

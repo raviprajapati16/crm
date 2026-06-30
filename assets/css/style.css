@@ -9238,6 +9238,11 @@ body.gantt {
     background-color: #fcfdeb;
     border-color: #fcfda3;
 }
+.alert-default-light, .alert-default-light a{
+    color: #666;
+    background-color: #f5f5f5;
+    border-color: #ddd;
+}
 
 @keyframes shake {
     0% { transform: translateX(0); }

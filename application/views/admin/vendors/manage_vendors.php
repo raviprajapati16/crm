@@ -21,6 +21,7 @@
                         <?php
                         }
                         ?>
+                        <?php render_lead_color_legend($statuses); ?>
                         <div class="row" id="leads-table">
 
                             <div class="col-md-12">
@@ -674,23 +675,10 @@ $(document).ready(function() {
             paging: true,
             serverSide: true,
             createdRow: function(row, data, dataIndex) {
-                var rowColor = "";
-                if (data.assigned == get_staff_user_id) {
-                    rowColor = 'alert-info';
+                var rowColor = getLeadRowColorClass(data, get_staff_user_id);
+                if (rowColor) {
+                    $(row).addClass(rowColor);
                 }
-                if (data.lapselead == "10") {
-                    rowColor = 'alert-danger';
-                } else if (data.lapselead == "9") {
-                    rowColor = 'alert-success';
-                } else if (data.lapselead == "8") {
-                    rowColor = 'alert-info';
-                } else if (data.lastcontact == null || data.lastcontact == "") {
-                    rowColor = 'alert-my-info';
-                } else if (data.lapselead == "7") {
-                    rowColor = 'alert-my-info';
-                }
-                $(row).addClass(rowColor);
-
             },
             drawCallback: function(settings) {
                 $("tr").on("click", "[type=checkbox]", function(e) {

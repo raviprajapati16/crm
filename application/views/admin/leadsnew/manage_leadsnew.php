@@ -95,6 +95,7 @@
                             </div>
                         </div>
                         <hr class="hr-panel-heading" />
+                        <?php render_lead_color_legend($statuses); ?>
                         <div class="tab-content">
                             <?php
                             if ($this->session->has_userdata('leads_kanban_view') && $this->session->userdata('leads_kanban_view') == 'true') { ?>
@@ -1002,38 +1003,23 @@ $(document).ready(function() {
             serverSide: true,
             createdRow: function(row, data, dataIndex) {
                 var rowColor = "";
-                if ($('#date_by').val() == "Inquiry Forms") { // If inquiry form filter active.
+                if ($('#date_by').val() == "Inquiry Forms") {
                     if (data.form_status == "pending") {
                         rowColor = 'alert-my-info';
-                    }
-                    if (data.form_status == "send") {
+                    } else if (data.form_status == "send") {
                         rowColor = 'alert-info';
                     } else if (data.form_status == "approved") {
                         rowColor = 'alert-success';
                     } else if (data.form_status == "not-approved") {
                         rowColor = 'alert-danger';
                     }
-                } else { // If inquiry form filter not active.
-                    if (data.assigned == get_staff_user_id) {
-                        rowColor = 'alert-info';
-                    }
-                    if (data.lapselead == "10") {
-                        rowColor = 'alert-danger';
-                    } else if (data.lapselead == "9") {
-                        rowColor = 'alert-success';
-                    } else if (data.lapselead == "8") {
-                        rowColor = 'alert-info';
-                    } else if (data.lastcontact == null || data.lastcontact == "") {
-                        rowColor = 'alert-my-info';
-                    } else if (data.lapselead == "7") {
-                        rowColor = 'alert-my-info';
-                    }
+                } else {
+                    rowColor = getLeadRowColorClass(data, get_staff_user_id);
                 }
 
-
-
-                $(row).addClass(rowColor);
-
+                if (rowColor) {
+                    $(row).addClass(rowColor);
+                }
             },
             drawCallback: function(oSettings) {
 

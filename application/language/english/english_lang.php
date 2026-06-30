@@ -1446,6 +1446,14 @@ $lang['lead_lost']                        = 'Lost';
 $lang['lead_junk']                        = 'Junk';
 $lang['leads_not_assigned']               = 'Not Assigned';
 $lang['lapsed_lead']                      = 'Lapsed lead';
+$lang['lead_color_legend_title']          = 'Lead row colors';
+$lang['lead_status_color_legend_title']   = 'Lead status colors';
+$lang['lead_color_overdue']               = 'Overdue / lapsed follow-up';
+$lang['lead_color_followup_today']        = 'Follow-up today';
+$lang['lead_color_never_contacted']       = 'Never contacted';
+$lang['lead_color_status_attention']      = 'Status needs follow-up (no date set)';
+$lang['lead_color_followup_tomorrow']     = 'Follow-up tomorrow';
+$lang['lead_color_assigned_to_me']        = 'Assigned to me';
 
 $lang['deleted_lead']                      = 'Deleted lead';
 
