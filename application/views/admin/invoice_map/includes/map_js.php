@@ -144,7 +144,7 @@ var InvoiceMap = (function () {
     }
 
     // Colour gradient for choropleth (low → high)
-    var COLOR_RANGE = ['#c1f0c5ff', '#2E7D32'];
+    var COLOR_RANGE = ['#ebebebff', '#2E7D32'];
     var HOVER_COLOR = '#FF6F00';
 
     // Per-country layout tuning for very wide or tall territories
@@ -184,11 +184,6 @@ var InvoiceMap = (function () {
         
         document.getElementById('im-export-pdf').addEventListener('click', function() { _exportPdf(); });
         document.getElementById('im-export-city-pdf').addEventListener('click', function() { _exportPdf(_listingExportLevel(cityContext)); });
-
-        // Bootstrap datepickers (if available)
-        if ($.fn.datepicker) {
-            $('#im-date-from, #im-date-to').datepicker({ autoclose: true });
-        }
 
         // Start at world level
         _loadLevel('world');
@@ -554,25 +549,37 @@ var InvoiceMap = (function () {
 
             var fiso = p.ISO_A2 || p['ISO3166-1-Alpha-2'] || p.iso_a2 || '';
             var shapeIso = p.shapeISO || '';
+            // displayName: prefer clean p.name (no diacritics) over shapeName
             var displayName = p.name || fname;
             
             if (displayName) {
                 f.properties.name = displayName;
-                featureNames[displayName.toLowerCase()] = fname || displayName;
+                // Store displayName (NOT fname/shapeName) so _matchFeatureName returns
+                // the EXACT string that ECharts matches against feature.properties.name.
+                // fname (shapeName) may contain diacritics (e.g. "Gujarāt") while
+                // p.name is the clean version ("Gujarat") that ECharts will use.
+                featureNames[displayName.toLowerCase()] = displayName;
+                // Also index by shapeName (fname) so CRM values with diacritics still match
+                if (fname && fname !== displayName) {
+                    featureNames[fname.toLowerCase()] = displayName;
+                    featureNames[_foldDiacritics(fname)] = displayName;
+                }
                 var fnameFolded = _foldDiacritics(displayName);
                 if (!featureNames[fnameFolded]) {
-                    featureNames[fnameFolded] = fname || displayName;
+                    featureNames[fnameFolded] = displayName;
                 }
             }
             if (shapeIso && (fname || displayName)) {
-                nameToGeoIso[(fname || displayName).toLowerCase()] = shapeIso;
+                nameToGeoIso[(displayName || fname).toLowerCase()] = shapeIso;
                 var suffix = shapeIso.indexOf('-') !== -1 ? shapeIso.split('-').pop() : shapeIso;
-                isoToFeatureName[suffix.toUpperCase()] = fname || displayName;
+                // isoToFeatureName must also return displayName for correct ECharts matching
+                isoToFeatureName[suffix.toUpperCase()] = displayName || fname;
             }
             if (fiso && (fname || displayName)) {
-                isoToFeatureName[fiso.toUpperCase()] = fname || displayName;
+                isoToFeatureName[fiso.toUpperCase()] = displayName || fname;
             }
         });
+
 
         // Register GeoJSON with ECharts (after normalizing names + antimeridian fix)
         echarts.registerMap(mapName, geojson);
@@ -584,6 +591,9 @@ var InvoiceMap = (function () {
         var countryAliases = (level === 'country' && iso2 && PROVINCE_ALIASES[iso2.toUpperCase()])
             ? PROVINCE_ALIASES[iso2.toUpperCase()]
             : null;
+
+        // Build a lookup: raw DB state name (lower) → data entry, for tooltip fallback
+        var dataByRawName = {};
 
         if (!data || data.length === 0) {
             // No invoices — still render the map with zero-value regions
@@ -611,7 +621,7 @@ var InvoiceMap = (function () {
                 if (expanded && expanded.length) {
                     if (_shouldExpandProvinceAlias(expanded, featureNames)) {
                         expanded.forEach(function (districtName) {
-                            chartData.push({
+                            var entry = {
                                 name            : districtName,
                                 value           : d.value,
                                 total_amount    : d.total_amount,
@@ -621,13 +631,15 @@ var InvoiceMap = (function () {
                                 geo_iso         : null,
                                 iso_code        : d.iso_code || null,
                                 is_province     : true,
-                            });
+                            };
+                            chartData.push(entry);
+                            dataByRawName[lower] = entry;
                         });
                     } else {
                         var matchedName = expanded.length === 1
                             ? (_matchFeatureName(expanded[0], featureNames) || expanded[0])
                             : (_matchFeatureName(d.name, featureNames) || d.name);
-                        chartData.push({
+                        var entry = {
                             name            : matchedName,
                             value           : d.value,
                             total_amount    : d.total_amount,
@@ -636,13 +648,15 @@ var InvoiceMap = (function () {
                             geo_name        : matchedName,
                             geo_iso         : nameToGeoIso[(matchedName || '').toLowerCase()] || null,
                             iso_code        : d.iso_code || null,
-                        });
+                        };
+                        chartData.push(entry);
+                        dataByRawName[lower] = entry;
                     }
                 } else {
                     var matchedName = (d.iso_code && isoToFeatureName[d.iso_code])
                         ? isoToFeatureName[d.iso_code]
                         : (_matchFeatureName(d.name, featureNames) || d.name);
-                    chartData.push({
+                    var entry = {
                         name            : matchedName,
                         value           : d.value,
                         total_amount    : d.total_amount,
@@ -651,7 +665,59 @@ var InvoiceMap = (function () {
                         geo_name        : matchedName,
                         geo_iso         : nameToGeoIso[(matchedName || '').toLowerCase()] || null,
                         iso_code        : d.iso_code || null,
-                    });
+                    };
+                    chartData.push(entry);
+                    dataByRawName[lower] = entry;
+                    // Also index by matched GeoJSON name for reverse lookup
+                    if (matchedName && matchedName.toLowerCase() !== lower) {
+                        dataByRawName[matchedName.toLowerCase()] = entry;
+                    }
+                }
+            });
+
+            // Ensure every GeoJSON feature appears in chartData (with 0 if no invoices).
+            // This guarantees params.data is always defined on hover, preventing
+            // false "No invoices" for states that do have data but whose name
+            // was matched to a slightly different key.
+            var coveredGeoNames = {};
+            chartData.forEach(function(cd) {
+                coveredGeoNames[(cd.name || '').toLowerCase()] = true;
+                coveredGeoNames[(cd.geo_name || '').toLowerCase()] = true;
+            });
+            (geojson.features || []).forEach(function (f) {
+                var p = f.properties || {};
+                var fname = p.shapeName || p.name || '';
+                var displayName = p.name || fname;
+                if (!displayName) return;
+                var dLower = displayName.toLowerCase();
+                if (!coveredGeoNames[dLower] && !coveredGeoNames[(fname || '').toLowerCase()]) {
+                    // Check if there's a DB entry that fuzzy-matches this feature
+                    var fallbackEntry = dataByRawName[dLower] || dataByRawName[_foldDiacritics(displayName)];
+                    if (fallbackEntry) {
+                        // Re-add with correct GeoJSON display name so ECharts matches it
+                        chartData.push({
+                            name            : displayName,
+                            value           : fallbackEntry.value,
+                            total_amount    : fallbackEntry.total_amount,
+                            total_formatted : fallbackEntry.total_formatted,
+                            raw_name        : fallbackEntry.raw_name,
+                            geo_name        : displayName,
+                            geo_iso         : p.shapeISO || fallbackEntry.geo_iso || null,
+                            iso_code        : fallbackEntry.iso_code || null,
+                        });
+                    } else {
+                        chartData.push({
+                            name            : displayName,
+                            value           : 0,
+                            total_amount    : 0,
+                            total_formatted : '—',
+                            raw_name        : displayName,
+                            geo_name        : displayName,
+                            geo_iso         : p.shapeISO || null,
+                            iso_code        : null,
+                        });
+                    }
+                    coveredGeoNames[dLower] = true;
                 }
             });
         }
@@ -680,11 +746,27 @@ var InvoiceMap = (function () {
                 trigger     : 'item',
                 enterable   : false,
                 formatter   : function (params) {
-                    if (!params.data || !params.data.value) {
-                        return '<div class="im-tooltip"><span class="im-tt-empty">' +
-                               (params.name || 'Unknown') + ' — No invoices</span></div>';
-                    }
                     var d = params.data;
+
+                    // params.data may be undefined when ECharts found no chartData
+                    // entry whose `name` matches the hovered GeoJSON feature name.
+                    // As a safety net, try to look up by GeoJSON name in our index.
+                    if (!d || d.value === undefined || d.value === null) {
+                        var fallback = dataByRawName[(params.name || '').toLowerCase()]
+                                    || dataByRawName[_foldDiacritics(params.name || '')];
+                        if (fallback && fallback.value > 0) {
+                            d = fallback;
+                        } else {
+                            return '<div class="im-tooltip"><span class="im-tt-empty">' +
+                                   _esc(params.name || 'Unknown') + ' — No invoices</span></div>';
+                        }
+                    }
+
+                    if (!d.value) {
+                        return '<div class="im-tooltip"><span class="im-tt-empty">' +
+                               _esc(params.name || d.raw_name || 'Unknown') + ' — No invoices</span></div>';
+                    }
+
                     if (d._city_names && d._city_names.length > 1) {
                         return '<div class="im-tooltip">' +
                                '<div class="im-tt-name">' + _esc(params.name) + '</div>' +

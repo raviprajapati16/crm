@@ -269,6 +269,27 @@ class Leads extends AdminController
         echo json_encode($result);
     }
 
+    public function hard_delete($id)
+    {
+        if (!has_permission('leads', '', 'delete')) {
+            ajax_access_denied('Delete Lead');
+        }
+
+        $response = $this->leads_model->hard_delete($id);
+        if (is_array($response) && isset($response['referenced'])) {
+            $result['success'] = false;
+            $result['message'] =  _l('is_referenced', _l('lead_lowercase'));
+        } elseif ($response === true) {
+            $this->leads_model->log_lead_activity($id, " Deleted Lead");
+            $result['success'] = true;
+            $result['message'] =  _l('deleted', _l('lead'));
+        } else {
+            $result['success'] = false;
+            $result['message'] = _l('problem_deleting', _l('lead_lowercase'));
+        }
+        echo json_encode($result);
+    }
+
     public function restore($id)
     {
         if (!has_permission('leads', '', 'delete')) {
@@ -1373,7 +1394,7 @@ class Leads extends AdminController
 
                     if ($this->input->post('mass_delete')) {
                         if ($has_permission_delete) {
-                            if ($this->leads_model->delete($id)) {
+                            if ($this->leads_model->hard_delete($id)) {
                                 $this->leads_model->log_lead_activity($id, " Deleted Lead");
                                 $total_deleted++;
                             }

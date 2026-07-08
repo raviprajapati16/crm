@@ -95,7 +95,7 @@
          </a>
       <?php } ?>
 
-      <?php if ($lead->is_vendor == 0) { ?>
+      <!-- <?php if ($lead->is_vendor == 0) { ?>
          <a href="javascript:;" data-toggle="tooltip" data-type="vendor" data-title="" class="btn btn-info convert-lead-vendor-btn mright5 mleft5 pull-right lead-top-btn lead-view">
             <i class="fa fa-exchange"></i><span class="btn_text"> Convert to Vendor</span>
          </a>
@@ -103,7 +103,7 @@
          <a href="javascript:;" data-toggle="tooltip" data-type="lead" data-title="" class="btn btn-info convert-lead-vendor-btn mright5 mleft5 pull-right lead-top-btn lead-view">
             <i class="fa fa-exchange"></i><span class="btn_text"> Convert to Lead</span>
          </a>
-      <?php } ?>
+      <?php } ?> -->
 
       <?php if (total_rows(db_prefix() . 'clients', array('leadid' => $lead->id, "deleted_at" => NULL)) == 0 && $lead->is_vendor == 0) { ?>
          <a href="#" data-toggle="tooltip" data-title="<?php echo $convert_to_client_tooltip_email_exists; ?>" class="btn btn-success pull-right lead-convert-to-customer lead-top-btn lead-view" onclick="convert_lead_to_customer(<?php echo $lead->id; ?>); return false;">

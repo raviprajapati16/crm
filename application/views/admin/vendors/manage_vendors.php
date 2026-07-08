@@ -21,8 +21,8 @@
                         <?php
                         }
                         ?>
-                        <?php render_lead_color_legend($statuses); ?>
-                        <div class="row" id="leads-table">
+                        <!-- <?php render_lead_color_legend($statuses); ?> -->
+                        <!-- <div class="row" id="leads-table">
 
                             <div class="col-md-12">
                                 <div class="row">
@@ -82,7 +82,6 @@
                                         echo render_select('view_source', $sources, array('name', 'name'), '', '', array('data-width' => '100%', 'data-none-selected-text' => _l('leads_source')), array(), 'no-mbot');
                                         ?>
                                     </div>
-                                    <!--start country select -->
                                     <div class="col-md-2 border-right">
                                         <label for="rel_type" class="control-label">Country</label>
                                         <?php
@@ -165,7 +164,6 @@
                                     <div class="col-md-2 leads-filter-column mtop10">
                                         <label for="rel_type" class="control-label">Followup Date</label>
                                         <?php echo render_date_input('followup_date', '', '', array('title' => "Followup date", 'placeholder' => 'Followup Date', 'name' => 'followupdate'), '', 'no-mbot', 'followupdate'); ?>
-                                        <!--?php echo render_date_input('followup_date', '', date('d-m-Y'), array('onchange' => "dt_custom_view('followup_date'); return false;", array('name', 'followupdate')), '', 'no-mbot', 'followupdate'); -->
                                     </div>
 
                                     <div class="col-md-2  mtop10 border-right form-group">
@@ -193,7 +191,7 @@
                                 </div>
                             </div>
                             <div class="clearfix"></div>
-                        </div>
+                        </div> -->
                         <div class="datatable-section">
                             <div class="modal fade bulk_actions" id="leads_bulk_actions" tabindex="-1" role="dialog">
                                 <div class="modal-dialog" role="document">

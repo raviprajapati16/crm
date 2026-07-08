@@ -659,6 +659,93 @@ class Leads_model extends App_Model
     }
 
     /**
+     * Permanently delete a lead and all its related data from the database.
+     * Only to be used by authorised admins (hard delete).
+     * @param  mixed $id leadid
+     * @return boolean
+     */
+    public function hard_delete($id)
+    {
+        $lead = $this->get($id);
+
+        if (!$lead) {
+            return false;
+        }
+
+        hooks()->do_action('before_lead_deleted', $id);
+
+        // Permanently delete the lead row
+        $this->db->where('id', $id);
+        $this->db->delete(db_prefix() . 'leads');
+
+        if ($this->db->affected_rows() > 0) {
+            log_activity('Lead Hard Deleted [Deleted by: ' . get_staff_full_name() . ', ID: ' . $id . ']');
+
+            // Delete attachments from disk and DB
+            $attachments = $this->get_lead_attachments($id);
+            foreach ($attachments as $attachment) {
+                $this->delete_lead_attachment($attachment['id']);
+            }
+
+            // Delete custom field values
+            $this->db->where('relid', $id);
+            $this->db->where('fieldto', 'leads');
+            $this->db->delete(db_prefix() . 'customfieldsvalues');
+
+            // Delete activity log
+            $this->db->where('leadid', $id);
+            $this->db->delete(db_prefix() . 'lead_activity_log');
+
+            // Delete email integration records
+            $this->db->where('leadid', $id);
+            $this->db->delete(db_prefix() . 'lead_integration_emails');
+
+            // Delete notes
+            $this->db->where('rel_id', $id);
+            $this->db->where('rel_type', 'lead');
+            $this->db->delete(db_prefix() . 'notes');
+
+            // Delete reminders
+            $this->db->where('rel_type', 'lead');
+            $this->db->where('rel_id', $id);
+            $this->db->delete(db_prefix() . 'reminders');
+
+            // Delete tags
+            $this->db->where('rel_type', 'lead');
+            $this->db->where('rel_id', $id);
+            $this->db->delete(db_prefix() . 'taggables');
+
+            // Delete related proposals
+            $this->load->model('proposals_model');
+            $this->db->where('rel_id', $id);
+            $this->db->where('rel_type', 'lead');
+            $proposals = $this->db->get(db_prefix() . 'proposals')->result_array();
+            foreach ($proposals as $proposal) {
+                $this->proposals_model->delete($proposal['id']);
+            }
+
+            // Delete related tasks
+            $this->db->where('rel_type', 'lead');
+            $this->db->where('rel_id', $id);
+            $tasks = $this->db->get(db_prefix() . 'tasks')->result_array();
+            $this->load->model('tasks_model');
+            foreach ($tasks as $task) {
+                $this->tasks_model->delete_task($task['id']);
+            }
+
+            // GDPR activity log cleanup
+            if (is_gdpr()) {
+                $this->db->where('(description LIKE "%' . $lead->email . '%" OR description LIKE "%' . $lead->name . '%" OR description LIKE "%' . $lead->phonenumber . '%")');
+                $this->db->delete(db_prefix() . 'activity_log');
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Mark lead as lost
      * @param  mixed $id lead id
      * @return boolean

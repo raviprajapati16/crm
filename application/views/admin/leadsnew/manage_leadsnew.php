@@ -364,12 +364,12 @@
                                             <h4 class="modal-title"><?php echo _l('bulk_actions'); ?></h4>
                                         </div>
                                         <div class="modal-body">
-                                            <?php if (has_permission('leads', '', 'delete')) { ?>
-                                            <div class="checkbox checkbox-danger">
-                                                <input type="checkbox" name="mass_delete" id="mass_delete">
-                                                <label for="mass_delete"><?php echo _l('mass_delete'); ?></label>
-                                            </div>
-                                            <hr class="mass_delete_separator" />
+                                            <?php if (has_permission('leads', '', 'delete') && (get_staff_user_id() == 1 || get_staff_user_id() == 4)) { ?>
+                                                <div class="checkbox checkbox-danger">
+                                                    <input type="checkbox" name="mass_delete" id="mass_delete">
+                                                    <label for="mass_delete"><?php echo _l('mass_delete'); ?></label>
+                                                </div>
+                                                <hr class="mass_delete_separator" />
                                             <?php } ?>
                                             <div id="bulk_change">
                                                 <div class="form-group">
@@ -528,6 +528,7 @@ var leadIndexUrl = "<?php echo admin_url('leads/index/'); ?>";
 var leadEditUrl = "<?php echo admin_url('leads/index/'); ?>";
 var leadDeleteUrl = "<?php echo admin_url('leads/delete/'); ?>";
 var leadRestoreUrl = "<?php echo admin_url('leads/restore/'); ?>";
+var leadHardDeleteUrl = "<?php echo admin_url('leads/hard_delete/'); ?>";
 var table;
 var resultData;
 var statusData = JSON.parse('<?php echo json_encode($statuses) ?>');
@@ -590,6 +591,7 @@ $(document).ready(function() {
     loadTableData();
 
     function loadTableData() {
+        var loggedInUserId = <?php echo get_staff_user_id(); ?>;
         let currentXHR = null;
         table = $('#leads_table').DataTable({
             ajax: {
@@ -753,13 +755,27 @@ $(document).ready(function() {
                             return data;
                         }
                         var deleteRestoreHtml = "";
+
                         if (deletePermissionCheck) {
+
                             if (row.isDeleted == "true") {
-                                deleteRestoreHtml = '| <a data-url="' + leadRestoreUrl + row
-                                    .id +
+
+                                // Always show Restore
+                                deleteRestoreHtml =
+                                    '| <a data-url="' + leadRestoreUrl + row.id +
                                     '" href="javascript:;" class="restore_lead _delete text-success">Restore</a>';
+
+                                // Show Hard Delete only for user ID 1 and 4
+                                if (loggedInUserId == 12 || loggedInUserId == 4) {
+                                    deleteRestoreHtml +=
+                                        ' | <a data-url="' + leadHardDeleteUrl + row.id +
+                                        '" href="javascript:;" class="hard_delete_lead _delete text-danger">Hard Delete</a>';
+                                }
+
                             } else {
-                                deleteRestoreHtml = '| <a data-url="' + leadDeleteUrl + row.id +
+
+                                deleteRestoreHtml =
+                                    '| <a data-url="' + leadDeleteUrl + row.id +
                                     '" href="javascript:;" class="delete_lead _delete text-danger">Delete</a>';
                             }
                         }
@@ -1196,6 +1212,27 @@ $(document).ready(function() {
         var restore_url = $(this).data('url');
         $.ajax({
             url: restore_url,
+            method: "POST",
+            dataType: 'json'
+        }).done(function(result) {
+            if (result.success) {
+                alert_float('success', result.message);
+                if (table) {
+                    table.draw();
+                }
+            } else {
+                alert_float('danger', result.message);
+            }
+        });
+    });
+
+    $(document).on('click', '.hard_delete_lead', function() {
+        if (!confirm('Are you sure you want to permanently delete this lead? This action cannot be undone.')) {
+            return;
+        }
+        var delete_url = $(this).data('url');
+        $.ajax({
+            url: delete_url,
             method: "POST",
             dataType: 'json'
         }).done(function(result) {

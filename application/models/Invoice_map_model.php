@@ -748,15 +748,37 @@ class Invoice_map_model extends App_Model
     // PRIVATE HELPERS
     // =========================================================================
 
+    private function _parse_filter_date($date)
+    {
+        if ($date === '' || $date === null) {
+            return null;
+        }
+
+        $from_format = get_current_date_format(true);
+        $dt          = date_create_from_format($from_format, trim($date));
+
+        if ($dt === false) {
+            return null;
+        }
+
+        return $dt->format('Y-m-d');
+    }
+
     private function _apply_filters($filters, $alias = 'inv')
     {
         $this->db->where("{$alias}.deleted_at IS NULL");
 
         if (!empty($filters['date_from'])) {
-            $this->db->where("{$alias}.date >=", to_sql_date($filters['date_from']));
+            $sqlDateFrom = $this->_parse_filter_date($filters['date_from']);
+            if ($sqlDateFrom) {
+                $this->db->where("{$alias}.date >=", $sqlDateFrom);
+            }
         }
         if (!empty($filters['date_to'])) {
-            $this->db->where("{$alias}.date <=", to_sql_date($filters['date_to']));
+            $sqlDateTo = $this->_parse_filter_date($filters['date_to']);
+            if ($sqlDateTo) {
+                $this->db->where("{$alias}.date <=", $sqlDateTo);
+            }
         }
         if (!empty($filters['status']) && is_array($filters['status'])) {
             $statuses = array_filter(array_map('intval', $filters['status']));
