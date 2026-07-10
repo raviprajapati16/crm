@@ -123,8 +123,9 @@ var ClientMap = (function () {
         return 'country';
     }
 
-    var COLOR_RANGE = ['#96baeb', '#146ce6']; // bule for clients
-    var HOVER_COLOR = '#FF8F00';
+    var COLOR_ACTIVE  = '#efa94dff'; // flat color for regions with customers
+    var COLOR_EMPTY   = '#e8ecf0'; // flat color for regions with 0 customers
+    var HOVER_COLOR   = '#619d4b';
 
     // Per-country layout tuning for very wide or tall territories
     var COUNTRY_MAP_LAYOUT = {
@@ -510,19 +511,30 @@ var ClientMap = (function () {
             
             if (displayName) {
                 f.properties.name = displayName;
-                featureNames[displayName.toLowerCase()] = fname || displayName;
+                // Store displayName (= f.properties.name) as the lookup value so that
+                // _matchFeatureName returns exactly what ECharts registered as the
+                // feature key — fname (shapeName) can differ from displayName (p.name).
+                featureNames[displayName.toLowerCase()] = displayName;
                 var fnameFolded = _foldDiacritics(displayName);
                 if (!featureNames[fnameFolded]) {
-                    featureNames[fnameFolded] = fname || displayName;
+                    featureNames[fnameFolded] = displayName;
+                }
+                // Also index by shapeName so DB values using shapeName still resolve.
+                if (fname && fname !== displayName) {
+                    featureNames[fname.toLowerCase()] = displayName;
+                    var fnameFoldedAlt = _foldDiacritics(fname);
+                    if (!featureNames[fnameFoldedAlt]) {
+                        featureNames[fnameFoldedAlt] = displayName;
+                    }
                 }
             }
             if (shapeIso && (fname || displayName)) {
-                nameToGeoIso[(fname || displayName).toLowerCase()] = shapeIso;
+                nameToGeoIso[(displayName || fname).toLowerCase()] = shapeIso;
                 var suffix = shapeIso.indexOf('-') !== -1 ? shapeIso.split('-').pop() : shapeIso;
-                isoToFeatureName[suffix.toUpperCase()] = fname || displayName;
+                isoToFeatureName[suffix.toUpperCase()] = displayName || fname;
             }
             if (fiso && (fname || displayName)) {
-                isoToFeatureName[fiso.toUpperCase()] = fname || displayName;
+                isoToFeatureName[fiso.toUpperCase()] = displayName || fname;
             }
         });
 
@@ -598,33 +610,41 @@ var ClientMap = (function () {
 
         chartData = _finalizeStateChartData(geojson, chartData, data, level);
 
-        var maxVal = Math.max.apply(null, chartData.map(function (d) { return d.value; }));
-        if (maxVal < 1) maxVal = 1;
+        // Stamp a flat itemStyle on every data entry so coloring is independent
+        // of ECharts' visualMap and works even when name-matching falls back.
+        chartData.forEach(function (d) {
+            d.itemStyle = { areaColor: d.value > 0 ? COLOR_ACTIVE : COLOR_EMPTY };
+        });
 
         var labelConfig  = _mapLabelConfig(level, featureCount, chartData);
         var layoutConfig = _mapLayoutOptions(level, iso2, geojson);
 
         var option = {
             backgroundColor: '#fafafa',
-            visualMap: {
-                min          : 0,
-                max          : maxVal,
-                left         : 'left',
-                bottom       : 30,
-                text         : ['High', 'Low'],
-                calculable   : true,
-                inRange      : { color: COLOR_RANGE },
-                textStyle    : { color: '#555' },
-            },
             tooltip: {
                 trigger     : 'item',
                 enterable   : false,
                 formatter   : function (params) {
-                    if (!params.data || !params.data.value) {
-                        return '<div class="cm-tooltip"><span class="cm-tt-empty">' +
-                               (params.name || 'Unknown') + ' — No Customers</span></div>';
-                    }
+                    // params.data may be undefined when ECharts can't match the data
+                    // entry name to the GeoJSON feature name exactly.
+                    // Fall back to searching chartData by display name.
                     var d = params.data;
+                    if (!d) {
+                        var pname = (params.name || '').toLowerCase().trim();
+                        for (var i = 0; i < chartData.length; i++) {
+                            var cd = chartData[i];
+                            if ((cd.name || '').toLowerCase().trim() === pname ||
+                                (cd.raw_name || '').toLowerCase().trim() === pname ||
+                                (cd.geo_name || '').toLowerCase().trim() === pname) {
+                                d = cd;
+                                break;
+                            }
+                        }
+                    }
+                    if (!d || !d.value) {
+                        return '<div class="cm-tooltip"><span class="cm-tt-empty">' +
+                               _esc(params.name || 'Unknown') + ' — No Customers</span></div>';
+                    }
                     if (d._city_names && d._city_names.length > 1) {
                         return '<div class="cm-tooltip">' +
                                '<div class="cm-tt-name">' + _esc(params.name) + '</div>' +
@@ -647,6 +667,8 @@ var ClientMap = (function () {
                 aspectScale : layoutConfig.aspectScale,
                 layoutCenter: layoutConfig.layoutCenter,
                 layoutSize  : layoutConfig.layoutSize,
+                // Default style for GeoJSON features not present in chartData
+                itemStyle: { areaColor: COLOR_EMPTY, borderColor: '#ccc', borderWidth: 0.5 },
                 emphasis  : {
                     label    : { show: true, fontSize: 11, fontWeight: 'bold' },
                     itemStyle: { areaColor: HOVER_COLOR },

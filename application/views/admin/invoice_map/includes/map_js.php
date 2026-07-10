@@ -143,9 +143,10 @@ var InvoiceMap = (function () {
         return 'country';
     }
 
-    // Colour gradient for choropleth (low → high)
-    var COLOR_RANGE = ['#ebebebff', '#2E7D32'];
-    var HOVER_COLOR = '#FF6F00';
+    // Flat colours — no gradient range
+    var COLOR_ACTIVE = '#2E7D32'; // regions with invoices
+    var COLOR_EMPTY  = '#e8ecf0'; // regions with 0 invoices
+    var HOVER_COLOR  = '#FF6F00';
 
     // Per-country layout tuning for very wide or tall territories
     var COUNTRY_MAP_LAYOUT = {
@@ -724,24 +725,16 @@ var InvoiceMap = (function () {
 
         chartData = _finalizeStateChartData(geojson, chartData, data, level);
 
-        var maxVal = Math.max.apply(null, chartData.map(function (d) { return d.value; }));
-        if (maxVal < 1) maxVal = 1;
+        // Stamp a flat itemStyle so every region is coloured independently.
+        chartData.forEach(function (d) {
+            d.itemStyle = { areaColor: d.value > 0 ? COLOR_ACTIVE : COLOR_EMPTY };
+        });
 
         var labelConfig  = _mapLabelConfig(level, featureCount, chartData);
         var layoutConfig = _mapLayoutOptions(level, iso2, geojson);
 
         var option = {
             backgroundColor: '#fafafa',
-            visualMap: {
-                min          : 0,
-                max          : maxVal,
-                left         : 'left',
-                bottom       : 30,
-                text         : ['High', 'Low'],
-                calculable   : true,
-                inRange      : { color: COLOR_RANGE },
-                textStyle    : { color: '#555' },
-            },
             tooltip: {
                 trigger     : 'item',
                 enterable   : false,
@@ -791,6 +784,8 @@ var InvoiceMap = (function () {
                 aspectScale : layoutConfig.aspectScale,
                 layoutCenter: layoutConfig.layoutCenter,
                 layoutSize  : layoutConfig.layoutSize,
+                // Default for GeoJSON features not present in chartData
+                itemStyle: { areaColor: COLOR_EMPTY, borderColor: '#ccc', borderWidth: 0.5 },
                 emphasis  : {
                     label    : { show: true, fontSize: 11, fontWeight: 'bold' },
                     itemStyle: { areaColor: HOVER_COLOR },
