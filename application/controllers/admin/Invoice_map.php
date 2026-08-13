@@ -277,15 +277,27 @@ class Invoice_map extends AdminController
         $label_style = 'font-weight:bold; background-color:#f4f5f7;';
         $col_count   = 10;
 
-        $html = $this->_export_pdf_logo_html();
+        $logo_html = $this->_export_pdf_logo_html('left');
 
-        $html .= '<h2 style="text-align:center; font-weight:bold; color:#323a45; margin:4px 0;">' . htmlspecialchars($company_name) . '</h2>';
-        $html .= '<h3 style="text-align:center; font-weight:bold; color:#28b8da; letter-spacing:1px; margin:4px 0;">INVOICE MAP REPORT</h3>';
-        $html .= '<p style="text-align:center; font-size:12px; color:#555; margin:6px 0;">Scope: ' . htmlspecialchars($scope) . '</p>';
+        $html = '<table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td width="50%" align="left">' . $logo_html . '</td>
+            <td width="50%" align="right" style="font-size:10px; color:#333; line-height:1.4;">' . format_organization_info() . '</td>
+        </tr>
+        </table>';
+        
+        $html .= '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:4px; margin-bottom:4px;">';
+        $html .= '<tr>';
+        $html .= '<td width="33%" align="left" style="font-size:12px; color:#555; vertical-align:middle;">Scope: ' . htmlspecialchars($scope) . '</td>';
+        $html .= '<td width="34%" align="center"><h3 style="margin:0; font-weight:bold; color:#555; letter-spacing:1px;">INVOICE MAP REPORT</h3></td>';
+        $html .= '<td width="33%" align="right" style="font-size:9px; color:#777; vertical-align:middle;">Generated on ' . htmlspecialchars($generated_on) . '<br>by ' . htmlspecialchars($generated_by) . '</td>';
+        $html .= '</tr>';
+        $html .= '</table>';
         if ($filters_text !== '') {
             $html .= '<p style="text-align:center; font-size:10px; color:#555; margin:4px 0;">' . htmlspecialchars($filters_text) . '</p>';
         }
-        $html .= '<p style="text-align:right; font-size:9px; color:#777; margin:8px 0;">Generated on ' . htmlspecialchars($generated_on) . ' by ' . htmlspecialchars($generated_by) . '</p>';
+        $html .= '<hr style="border:none; border-top:1px solid #ccc; margin: 4px 0;">';
+        $html .= $this->_export_pdf_spacer(15);
 
         $html .= '<table width="40%" border="1" cellpadding="6" cellspacing="0">';
         $html .= '<tr><td colspan="2" style="font-weight:bold; background-color:#f7f9fa;">Summary</td></tr>';
@@ -324,12 +336,12 @@ class Invoice_map extends AdminController
         $html .= $this->_export_pdf_spacer(10);
 
         $headers = ['#', 'Invoice Number', 'Client', 'Date', 'Due Date', 'Total Amount', 'Status', 'Country', 'State', 'City'];
-        $widths  = ['5%', '12%', '18%', '10%', '10%', '10%', '10%', '8%', '8%', '9%'];
+        $widths  = ['4%', '11%', '17%', '9%', '9%', '10%', '8%', '9%', '11%', '12%'];
 
         $html .= '<table border="1" cellpadding="5" cellspacing="0" width="100%">';
         $html .= '<tr>';
         foreach ($headers as $index => $h) {
-            $html .= '<th width="' . $widths[$index] . '" style="' . $th_style . '">' . $h . '</th>';
+            $html .= '<th width="' . $widths[$index] . '" style="' . $th_style . '" nowrap="nowrap">' . $h . '</th>';
         }
         $html .= '</tr>';
 
@@ -344,16 +356,16 @@ class Invoice_map extends AdminController
                 $row_bg       = ($counter % 2 === 0) ? '#fafafa' : '#ffffff';
 
                 $html .= '<tr style="background-color:' . $row_bg . ';">';
-                $html .= '<td style="text-align:center;">' . $counter . '</td>';
-                $html .= '<td>' . htmlspecialchars($inv['number']) . '</td>';
-                $html .= '<td>' . htmlspecialchars($inv['client']) . '</td>';
-                $html .= '<td style="text-align:center;">' . _d($inv['date']) . '</td>';
-                $html .= '<td style="text-align:center;">' . _d($inv['duedate']) . '</td>';
-                $html .= '<td style="text-align:right;">' . app_format_money($inv['total'], $inv_currency) . '</td>';
-                $html .= '<td style="text-align:center; color:' . $status_color . '; font-weight:bold;">' . htmlspecialchars($status_label) . '</td>';
-                $html .= '<td>' . htmlspecialchars($inv['country']) . '</td>';
-                $html .= '<td>' . htmlspecialchars($inv['state']) . '</td>';
-                $html .= '<td>' . htmlspecialchars($inv['city']) . '</td>';
+                $html .= '<td style="text-align:center;" nowrap="nowrap">' . $counter . '</td>';
+                $html .= '<td nowrap="nowrap">' . htmlspecialchars($inv['number']) . '</td>';
+                $html .= '<td nowrap="nowrap">' . htmlspecialchars($inv['client']) . '</td>';
+                $html .= '<td style="text-align:center;" nowrap="nowrap">' . _d($inv['date']) . '</td>';
+                $html .= '<td style="text-align:center;" nowrap="nowrap">' . _d($inv['duedate']) . '</td>';
+                $html .= '<td style="text-align:right;" nowrap="nowrap">' . app_format_money($inv['total'], $inv_currency) . '</td>';
+                $html .= '<td style="text-align:center; color:' . $status_color . '; font-weight:bold;" nowrap="nowrap">' . htmlspecialchars($status_label) . '</td>';
+                $html .= '<td nowrap="nowrap">' . htmlspecialchars($inv['country']) . '</td>';
+                $html .= '<td nowrap="nowrap">' . htmlspecialchars($inv['state']) . '</td>';
+                $html .= '<td nowrap="nowrap">' . htmlspecialchars($inv['city']) . '</td>';
                 $html .= '</tr>';
 
                 $counter++;
@@ -526,7 +538,7 @@ class Invoice_map extends AdminController
         return ($size !== '' && is_numeric($size)) ? (int) $size : 9;
     }
 
-    private function _export_pdf_logo_html()
+    private function _export_pdf_logo_html($align = 'left')
     {
         $width = (int) (get_option('pdf_logo_width') ?: 120);
         $path  = $this->_export_pdf_logo_path();
@@ -545,7 +557,7 @@ class Invoice_map extends AdminController
             return '';
         }
 
-        return '<div style="text-align:center; margin-bottom:8px;">'
+        return '<div style="text-align:' . $align . ';">'
             . '<img src="@' . $imageData . '" width="' . $width . '" />'
             . '</div>';
     }
@@ -710,10 +722,10 @@ class Invoice_map extends AdminController
         $bc = [['label' => 'World', 'level' => 'world', 'iso2' => null, 'state' => null]];
 
         if ($iso2) {
-            $this->db->select('long_name')->where('iso2', $iso2);
+            $this->db->select('short_name')->where('iso2', $iso2);
             $row   = $this->db->get(db_prefix() . 'countries')->row();
             $bc[]  = [
-                'label' => $row ? $row->long_name : $iso2,
+                'label' => $row ? $row->short_name : $iso2,
                 'level' => 'country',
                 'iso2'  => $iso2,
                 'state' => null,

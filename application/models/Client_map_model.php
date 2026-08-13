@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class Client_map_model extends App_Model
 {
@@ -13,9 +13,11 @@ class Client_map_model extends App_Model
     // =========================================================================
     public function get_world_data($filters = [])
     {
+        $has_permission_view = has_permission('customers', '', 'view');
+
         $this->db->select('
             c.iso2                           AS iso_code,
-            c.long_name                      AS name,
+            c.short_name                      AS name,
             COUNT(cl.userid)                 AS value
         ');
         $this->db->from(db_prefix() . 'clients cl');
@@ -25,7 +27,10 @@ class Client_map_model extends App_Model
             'left'
         );
         $this->_apply_filters($filters, 'cl');
-        $this->db->group_by('c.iso2, c.long_name');
+        if (!$has_permission_view) {
+            $this->db->where('cl.userid IN (SELECT customer_id FROM ' . db_prefix() . 'customer_admins WHERE staff_id=' . get_staff_user_id() . ')');
+        }
+        $this->db->group_by('c.iso2, c.short_name');
         $this->db->having('value >', 0);
 
         $rows = $this->db->get()->result_array();
@@ -41,6 +46,8 @@ class Client_map_model extends App_Model
     // =========================================================================
     public function get_country_data($iso2, $filters = [])
     {
+        $has_permission_view = has_permission('customers', '', 'view');
+
         $this->db->select('
             TRIM(cl.state)                   AS name,
             COUNT(cl.userid)                 AS value
@@ -55,6 +62,9 @@ class Client_map_model extends App_Model
         $this->db->where('cl.state !=', '');
         $this->db->where('cl.state IS NOT NULL');
         $this->_apply_filters($filters, 'cl');
+        if (!$has_permission_view) {
+            $this->db->where('cl.userid IN (SELECT customer_id FROM ' . db_prefix() . 'customer_admins WHERE staff_id=' . get_staff_user_id() . ')');
+        }
         $this->db->group_by('TRIM(cl.state)');
         $this->db->having('value >', 0);
         $this->db->order_by('value', 'DESC');
@@ -71,6 +81,8 @@ class Client_map_model extends App_Model
     // =========================================================================
     public function get_state_data($iso2, $state, $filters = [])
     {
+        $has_permission_view = has_permission('customers', '', 'view');
+
         $this->db->select('
             TRIM(cl.city) AS name,
             COUNT(cl.userid) AS value,
@@ -96,6 +108,9 @@ class Client_map_model extends App_Model
         $this->db->where('cl.city !=', '');
         $this->db->where('cl.city IS NOT NULL');
         $this->_apply_filters($filters, 'cl');
+        if (!$has_permission_view) {
+            $this->db->where('cl.userid IN (SELECT customer_id FROM ' . db_prefix() . 'customer_admins WHERE staff_id=' . get_staff_user_id() . ')');
+        }
         $this->db->group_by('TRIM(cl.city), geo.latitude, geo.longitude');
         $this->db->having('value >', 0);
         $this->db->order_by('value', 'DESC');
@@ -121,6 +136,8 @@ class Client_map_model extends App_Model
     // =========================================================================
     public function get_city_clients($iso2, $state, $city, $filters = [], $page = 0)
     {
+        $has_permission_view = has_permission('customers', '', 'view');
+
         $per_page = 100;
         $offset   = $page * $per_page;
 
@@ -129,6 +146,9 @@ class Client_map_model extends App_Model
         $this->db->join(db_prefix() . 'countries c', 'c.country_id = cl.country', 'left');
         $this->_city_where($iso2, $state, $city);
         $this->_apply_filters($filters, 'cl');
+        if (!$has_permission_view) {
+            $this->db->where('cl.userid IN (SELECT customer_id FROM ' . db_prefix() . 'customer_admins WHERE staff_id=' . get_staff_user_id() . ')');
+        }
         $summary = $this->db->get()->row_array();
 
         $this->db->select('
@@ -146,6 +166,9 @@ class Client_map_model extends App_Model
         $this->db->join(db_prefix() . 'countries c', 'c.country_id = cl.country', 'left');
         $this->_city_where($iso2, $state, $city);
         $this->_apply_filters($filters, 'cl');
+        if (!$has_permission_view) {
+            $this->db->where('cl.userid IN (SELECT customer_id FROM ' . db_prefix() . 'customer_admins WHERE staff_id=' . get_staff_user_id() . ')');
+        }
         $this->db->order_by('cl.company', 'ASC');
         $this->db->limit($per_page, $offset);
         $clients = $this->db->get()->result_array();
@@ -161,12 +184,14 @@ class Client_map_model extends App_Model
     // =========================================================================
     public function get_export_clients($level, $iso2, $state, $city, $filters = [])
     {
+        $has_permission_view = has_permission('customers', '', 'view');
+
         $this->db->select('
             cl.userid,
             cl.company,
             cl.phonenumber,
             cl.active,
-            c.long_name AS country,
+            c.short_name AS country,
             cl.state,
             cl.city,
             cl.datecreated,
@@ -177,7 +202,7 @@ class Client_map_model extends App_Model
         ');
         $this->db->from(db_prefix() . 'clients cl');
         $this->db->join(db_prefix() . 'countries c', 'c.country_id = cl.country', 'left');
-        
+
         if ($level === 'country' || $level === 'state' || $level === 'city') {
             if ($iso2) $this->db->where('c.iso2', strtoupper($iso2));
         }
@@ -189,8 +214,12 @@ class Client_map_model extends App_Model
         }
 
         $this->_apply_filters($filters, 'cl');
+
+        if (!$has_permission_view) {
+            $this->db->where('cl.userid IN (SELECT customer_id FROM ' . db_prefix() . 'customer_admins WHERE staff_id=' . get_staff_user_id() . ')');
+        }
         $this->db->order_by('cl.company', 'ASC');
-        
+
         return $this->db->get()->result_array();
     }
 

@@ -144,7 +144,7 @@ var InvoiceMap = (function () {
     }
 
     // Flat colours — no gradient range
-    var COLOR_ACTIVE = '#2E7D32'; // regions with invoices
+    var COLOR_ACTIVE = '#749e4c'; // regions with invoices
     var COLOR_EMPTY  = '#e8ecf0'; // regions with 0 invoices
     var HOVER_COLOR  = '#FF6F00';
 

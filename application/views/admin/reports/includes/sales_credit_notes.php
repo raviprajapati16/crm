@@ -18,16 +18,21 @@
     <th><?php echo _l('credit_note_number'); ?></th>
     <th><?php echo _l('credit_note_date'); ?></th>
     <th><?php echo _l('client'); ?></th>
-    <th><?php echo _l('reference_no'); ?></th>
+    <th class="not-export-pdf"><?php echo _l('reference_no'); ?></th>
     <th><?php echo _l('credit_note_amount'); ?></th>
     <th><?php echo _l('report_invoice_amount_with_tax'); ?></th>
     <th><?php echo _l('report_invoice_total_tax'); ?></th>
-    <?php foreach($credit_note_taxes as $tax){ ?>
-      <th><?php echo $tax['taxname']; ?> <small><?php echo $tax['taxrate']; ?>%</small></th>
+    <?php foreach($credit_note_taxes as $tax){ 
+        $tax_class = '';
+        if (strtoupper($tax['taxname']) === 'GST' && (float)$tax['taxrate'] == 12.0) {
+            $tax_class = 'not-export-pdf';
+        }
+    ?>
+      <th class="<?php echo $tax_class; ?>"><?php echo $tax['taxname']; ?> <small><?php echo $tax['taxrate']; ?>%</small></th>
     <?php } ?>
     <th><?php echo _l('invoice_discount'); ?></th>
-    <th><?php echo _l('invoice_adjustment'); ?></th>
-    <th><?php echo _l('credit_note_remaining_credits'); ?></th>
+    <th class="not-export-pdf"><?php echo _l('invoice_adjustment'); ?></th>
+    <th class="not-export-pdf"><?php echo _l('credit_note_remaining_credits'); ?></th>
     <th><?php echo _l('credit_note_status'); ?></th>
   </tr>
 </thead>

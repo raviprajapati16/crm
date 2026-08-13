@@ -8,7 +8,7 @@
                <th><?php echo _l('payments_table_invoicenumber_heading'); ?></th>
                <th><?php echo _l('payments_table_client_heading'); ?></th>
                <th><?php echo _l('payments_table_mode_heading'); ?></th>
-               <th><?php echo _l('payment_transaction_id'); ?></th>
+               <th class="not-export-pdf"><?php echo _l('payment_transaction_id'); ?></th>
                <th><?php echo _l('note'); ?></th>
                <th><?php echo _l('payments_table_amount_heading'); ?></th>
             </tr>

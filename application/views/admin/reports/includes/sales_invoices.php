@@ -46,16 +46,19 @@
          <th><?php echo _l('report_invoice_customer'); ?></th>
          <th><?php echo _l('invoice_estimate_year'); ?></th>
          <th><?php echo _l('report_invoice_date'); ?></th>
-         <th><?php echo _l('report_invoice_duedate'); ?></th>
+         <th class="not-export-pdf"><?php echo _l('report_invoice_duedate'); ?></th>
          <th><?php echo _l('report_invoice_amount'); ?></th>
          <th><?php echo _l('report_invoice_amount_with_tax'); ?></th>
          <th><?php echo _l('report_invoice_total_tax'); ?></th>
-         <?php foreach($invoice_taxes as $tax){ ?>
-            <th><?php echo $tax['taxname']; ?> <small><?php echo $tax['taxrate']; ?>%</small></th>
+         <?php foreach($invoice_taxes as $tax){ 
+            $tax_str = strtolower(trim($tax['taxname'] . ' ' . $tax['taxrate'] . '%'));
+            $hide_class = in_array($tax_str, ['gst 5.00%', 'gst 12.00%', 'gst 18.00%', 'no tax 0.00%']) ? 'not-export-pdf' : '';
+         ?>
+            <th class="<?php echo $hide_class; ?>"><?php echo $tax['taxname']; ?> <small><?php echo $tax['taxrate']; ?>%</small></th>
          <?php } ?>
          <th><?php echo _l('invoice_discount'); ?></th>
-         <th><?php echo _l('invoice_adjustment'); ?></th>
-         <th><?php echo _l('applied_credits'); ?></th>
+         <th class="not-export-pdf"><?php echo _l('invoice_adjustment'); ?></th>
+         <th class="not-export-pdf"><?php echo _l('applied_credits'); ?></th>
          <th><?php echo _l('report_invoice_amount_open'); ?></th>
          <th><?php echo _l('report_invoice_status'); ?></th>
       </tr>

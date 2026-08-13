@@ -53,19 +53,13 @@ class Client_map extends AdminController
 
         if ($level === 'world') {
             $data = $this->client_map_model->get_world_data($filters);
-            $breadcrumb[] = ['label' => 'World', 'level' => 'world'];
-
         } elseif ($level === 'country') {
             $data = $this->client_map_model->get_country_data($country, $filters);
-            $breadcrumb[] = ['label' => 'World', 'level' => 'world'];
-            $breadcrumb[] = ['label' => $country, 'level' => 'country', 'iso2' => $country];
-
         } elseif ($level === 'state') {
             $data = $this->client_map_model->get_state_data($country, $state, $filters);
-            $breadcrumb[] = ['label' => 'World', 'level' => 'world'];
-            $breadcrumb[] = ['label' => $country, 'level' => 'country', 'iso2' => $country];
-            $breadcrumb[] = ['label' => $state,   'level' => 'state',   'iso2' => $country, 'state' => $state];
         }
+
+        $breadcrumb = $this->_build_breadcrumb($level, $country, $state);
 
         echo json_encode([
             'success'    => true,
@@ -229,15 +223,27 @@ class Client_map extends AdminController
         $label_style = 'font-weight:bold; background-color:#f4f5f7;';
         $col_count   = 9;
 
-        $html = $this->_export_pdf_logo_html();
+        $logo_html = $this->_export_pdf_logo_html('left');
 
-        $html .= '<h2 style="text-align:center; font-weight:bold; color:#323a45; margin:4px 0;">' . htmlspecialchars($company_name) . '</h2>';
-        $html .= '<h3 style="text-align:center; font-weight:bold; color:#28b8da; letter-spacing:1px; margin:4px 0;">CUSTOMER MAP REPORT</h3>';
-        $html .= '<p style="text-align:center; font-size:12px; color:#555; margin:6px 0;">Scope: ' . htmlspecialchars($scope) . '</p>';
+        $html = '<table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td width="50%" align="left">' . $logo_html . '</td>
+            <td width="50%" align="right" style="font-size:10px; color:#333; line-height:1.4;">' . format_organization_info() . '</td>
+        </tr>
+        </table>';
+
+        $html .= '<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:4px; margin-bottom:4px;">';
+        $html .= '<tr>';
+        $html .= '<td width="33%" align="left" style="font-size:12px; color:#555; vertical-align:middle;">Scope: ' . htmlspecialchars($scope) . '</td>';
+        $html .= '<td width="34%" align="center"><h3 style="margin:0; font-weight:bold; color:#555; letter-spacing:1px;">CUSTOMER MAP REPORT</h3></td>';
+        $html .= '<td width="33%" align="right" style="font-size:9px; color:#777; vertical-align:middle;">Generated on ' . htmlspecialchars($generated_on) . '<br>by ' . htmlspecialchars($generated_by) . '</td>';
+        $html .= '</tr>';
+        $html .= '</table>';
         if ($filters_text !== '') {
             $html .= '<p style="text-align:center; font-size:10px; color:#555; margin:4px 0;">' . htmlspecialchars($filters_text) . '</p>';
         }
-        $html .= '<p style="text-align:right; font-size:9px; color:#777; margin:8px 0;">Generated on ' . htmlspecialchars($generated_on) . ' by ' . htmlspecialchars($generated_by) . '</p>';
+        $html .= '<hr style="border:none; border-top:1px solid #ccc; margin: 4px 0;">';
+        $html .= $this->_export_pdf_spacer(15);
 
         $html .= '<table width="40%" border="1" cellpadding="6" cellspacing="0">';
         $html .= '<tr><td colspan="2" style="font-weight:bold; background-color:#f7f9fa;">Summary</td></tr>';
@@ -380,7 +386,7 @@ class Client_map extends AdminController
             . '</table>';
     }
 
-    private function _export_pdf_logo_html()
+    private function _export_pdf_logo_html($align = 'left')
     {
         $width = (int) (get_option('pdf_logo_width') ?: 120);
         $path  = $this->_export_pdf_logo_path();
@@ -399,7 +405,7 @@ class Client_map extends AdminController
             return '';
         }
 
-        return '<div style="text-align:center; margin-bottom:8px;">'
+        return '<div style="text-align:' . $align . ';">'
             . '<img src="@' . $imageData . '" width="' . $width . '" />'
             . '</div>';
     }
@@ -495,10 +501,10 @@ class Client_map extends AdminController
         $bc = [['label' => 'World', 'level' => 'world', 'iso2' => null, 'state' => null]];
 
         if ($iso2) {
-            $this->db->select('long_name')->where('iso2', $iso2);
+            $this->db->select('short_name')->where('iso2', $iso2);
             $row  = $this->db->get(db_prefix() . 'countries')->row();
             $bc[] = [
-                'label' => $row ? $row->long_name : $iso2,
+                'label' => $row ? $row->short_name : $iso2,
                 'level' => 'country',
                 'iso2'  => $iso2,
                 'state' => null,

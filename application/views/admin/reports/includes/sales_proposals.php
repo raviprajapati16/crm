@@ -42,15 +42,24 @@
       <thead>
          <tr>
             <th><?php echo _l('proposal'); ?> #</th>
-            <th><?php echo _l('proposal_subject'); ?></th>
             <th><?php echo _l('proposal_to'); ?></th>
+            <th><?php echo _l('proposal_subject'); ?></th>
             <th><?php echo _l('proposal_date'); ?></th>
-            <th><?php echo _l('proposal_open_till'); ?></th>
+            <th class="not-export-pdf"><?php echo _l('proposal_open_till'); ?></th>
             <th><?php echo _l('estimate_dt_table_heading_amount'); ?></th>
             <th><?php echo _l('report_invoice_amount_with_tax'); ?></th>
             <th><?php echo _l('report_invoice_total_tax'); ?></th>
-            <?php foreach($proposal_taxes as $tax){ ?>
-            <th><?php echo $tax['taxname']; ?> <small><?php echo $tax['taxrate']; ?>%</small></th>
+            <?php foreach($proposal_taxes as $tax){ 
+                $tax_class = '';
+                $tax_name_upper = strtoupper($tax['taxname']);
+                if (
+                    ($tax_name_upper === 'GST' && ((float)$tax['taxrate'] == 5.0 || (float)$tax['taxrate'] == 12.0 || (float)$tax['taxrate'] == 18.0)) ||
+                    ($tax_name_upper === 'NO TAX' && (float)$tax['taxrate'] == 0.0)
+                ) {
+                    $tax_class = 'not-export-pdf';
+                }
+            ?>
+            <th class="<?php echo $tax_class; ?>"><?php echo $tax['taxname']; ?> <small><?php echo $tax['taxrate']; ?>%</small></th>
             <?php } ?>
             <th><?php echo _l('estimate_discount'); ?></th>
             <th><?php echo _l('estimate_adjustment'); ?></th>

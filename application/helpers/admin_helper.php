@@ -462,6 +462,43 @@ function render_admin_js_variables()
 
     echo 'app.lang.datatables = ' . json_encode(get_datatables_language_array()) . ';';
 
+    // PDF Export Customizations - match Invoice_map.php logo prioritization
+    $CI->load->helper('sales');
+    $logoUrl = '';
+    $logoPath = '';
+    
+    if (get_option('company_logo') != '' && file_exists(get_upload_path_by_type('company') . get_option('company_logo'))) {
+        $logoPath = get_upload_path_by_type('company') . get_option('company_logo');
+        $logoUrl = base_url($logoPath);
+    } elseif (get_option('custom_pdf_logo_image_url') != '') {
+        $logoUrl = get_option('custom_pdf_logo_image_url');
+    } elseif (get_option('company_logo_dark') != '' && file_exists(get_upload_path_by_type('company') . get_option('company_logo_dark'))) {
+        $logoPath = get_upload_path_by_type('company') . get_option('company_logo_dark');
+        $logoUrl = base_url($logoPath);
+    }
+    
+    $company_logo_base64 = '';
+    if ($logoPath != '' && file_exists($logoPath)) {
+        $type = pathinfo($logoPath, PATHINFO_EXTENSION);
+        $data = @file_get_contents($logoPath);
+        if ($data !== false) {
+             $company_logo_base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        }
+    } else if ($logoUrl != '') {
+         $data = @file_get_contents($logoUrl);
+         if ($data !== false) {
+              $type = pathinfo($logoUrl, PATHINFO_EXTENSION);
+              if ($type == '') $type = 'png';
+              $company_logo_base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+         }
+    }
+    
+    $company_info = clear_textarea_breaks(strip_tags(str_replace(['<br />', '<br>', '<br/>'], "\n", format_organization_info())));
+
+    echo 'app.options.company_logo_base64 = "' . $company_logo_base64 . '";';
+    echo 'app.options.company_info_pdf = ' . json_encode($company_info) . ';';
+
+
     /**
      * @deprecated 2.3.2
      */

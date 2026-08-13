@@ -168,8 +168,14 @@ class Reports extends AdminController
             $where        = [];
             array_push($where, 'AND ' . db_prefix() . 'clients.deleted_at IS NULL');
 
-            $result = data_tables_init($aColumns, $sIndexColumn, $sTable, [], $where, [
+            $join = [
+                'LEFT JOIN ' . db_prefix() . 'countries ON ' . db_prefix() . 'countries.country_id = ' . db_prefix() . 'clients.country'
+            ];
+            $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [
                 'userid',
+                db_prefix() . 'countries.short_name as country_name',
+                db_prefix() . 'clients.state',
+                db_prefix() . 'clients.city',
             ]);
             $output  = $result['output'];
             $rResult = $result['rResult'];
@@ -191,7 +197,14 @@ class Reports extends AdminController
                         $_data = app_format_money($_data, $currency->name);
                     }
                     $row[] = $_data;
+                    
+                    if ($i == 0) {
+                        $row[] = isset($aRow['country_name']) ? $aRow['country_name'] : '';
+                        $row[] = isset($aRow['state']) ? $aRow['state'] : '';
+                        $row[] = isset($aRow['city']) ? $aRow['city'] : '';
+                    }
                 }
+
                 $output['aaData'][] = $row;
                 $x++;
             }
@@ -650,8 +663,6 @@ class Reports extends AdminController
 
                 $row[] = '<a href="' . admin_url('proposals/list_proposals/' . $aRow['id']) . '" target="_blank">' . format_proposal_number($aRow['id']) . '</a>';
 
-                $row[] = '<a href="' . admin_url('proposals/list_proposals/' . $aRow['id']) . '" target="_blank">' . $aRow['subject'] . '</a>';
-
                 if ($aRow['rel_type'] == 'lead') {
                     $row[] = '<a href="#" onclick="init_lead(' . $aRow['rel_id'] . ');return false;" target="_blank" data-toggle="tooltip" data-title="' . _l('lead') . '">' . $aRow['proposal_to'] . '</a>' . '<span class="hide">' . _l('lead') . '</span>';
                 } elseif ($aRow['rel_type'] == 'customer') {
@@ -659,6 +670,8 @@ class Reports extends AdminController
                 } else {
                     $row[] = '';
                 }
+
+                $row[] = '<a href="' . admin_url('proposals/list_proposals/' . $aRow['id']) . '" target="_blank">' . $aRow['subject'] . '</a>';
 
                 $row[] = _d($aRow['date']);
 

@@ -125,7 +125,7 @@ var ClientMap = (function () {
 
     var COLOR_ACTIVE  = '#efa94dff'; // flat color for regions with customers
     var COLOR_EMPTY   = '#e8ecf0'; // flat color for regions with 0 customers
-    var HOVER_COLOR   = '#619d4b';
+    var HOVER_COLOR   = '#749e4c';
 
     // Per-country layout tuning for very wide or tall territories
     var COUNTRY_MAP_LAYOUT = {

@@ -28,7 +28,7 @@ class Invoice_map_model extends App_Model
     {
         $this->db->select('
             c.iso2                           AS iso_code,
-            c.long_name                      AS name,
+            c.short_name                      AS name,
             COUNT(inv.id)                    AS value,
             COALESCE(SUM(inv.total), 0)      AS total_amount,
             MAX(cur.name)                    AS currency_name
@@ -42,7 +42,7 @@ class Invoice_map_model extends App_Model
         );
         $this->db->where('inv.status !=', 5);
         $this->_apply_filters($filters, 'inv');
-        $this->db->group_by('c.iso2, c.long_name');
+        $this->db->group_by('c.iso2, c.short_name');
         $this->db->having('value >', 0);
 
         $rows = $this->db->get()->result_array();
@@ -171,7 +171,7 @@ class Invoice_map_model extends App_Model
             inv.total,
             inv.status,
             cur.name AS currency_name,
-            c.long_name AS country,
+            c.short_name AS country,
             inv.billing_state AS state,
             inv.billing_city AS city
         ');
@@ -206,7 +206,7 @@ class Invoice_map_model extends App_Model
             inv.total,
             inv.status,
             cur.name AS currency_name,
-            c.long_name AS country,
+            c.short_name AS country,
             inv.billing_state AS state,
             inv.billing_city AS city
         ');

@@ -833,6 +833,36 @@ function get_datatable_buttons(table) {
             return text.trim();
         }
     };
+    window.appDataTablePdfHeader = function() {
+        if (app.options && app.options.company_info_pdf) {
+            var columns = [];
+            if (app.options.company_logo_base64) {
+                columns.push({
+                    image: app.options.company_logo_base64,
+                    fit: [200, 60],
+                    alignment: 'left'
+                });
+            }
+            
+            var lines = app.options.company_info_pdf.split('\n');
+            var companyName = lines.shift();
+            var restOfInfo = lines.join('\n');
+            
+            columns.push({
+                text: [
+                    { text: companyName + '\n', bold: true },
+                    { text: restOfInfo }
+                ],
+                alignment: 'right',
+                fontSize: 10
+            });
+            return {
+                columns: columns,
+                margin: [0, 0, 0, 15]
+            };
+        }
+        return null;
+    };
     var table_buttons_options = [];
 
     if (typeof(table_export_button_is_hidden) != 'function' || !table_export_button_is_hidden()) {
@@ -867,7 +897,7 @@ function get_datatable_buttons(table) {
                 text: app.lang.dt_button_pdf,
                 footer: true,
                 exportOptions: {
-                    columns: [':not(.not-export)'],
+                    columns: [':not(.not-export):not(.not-export-pdf), .export-pdf-only'],
                     rows: function(index) {
                         return _dt_maybe_export_only_selected_rows(index, table);
                     },
@@ -875,6 +905,34 @@ function get_datatable_buttons(table) {
                 },
                 orientation: 'landscape',
                 customize: function(doc) {
+                    var pdfHeader = window.appDataTablePdfHeader();
+                    if (pdfHeader) {
+                        doc.content.unshift(pdfHeader);
+                    }
+                    
+                    // Find the table and insert HR line after title
+                    var tableIndex = -1;
+                    for (var j = 0; j < doc.content.length; j++) {
+                        if (doc.content[j].table) {
+                            tableIndex = j;
+                            break;
+                        }
+                    }
+
+                    if (tableIndex > 0) {
+                        // If the element right before the table has 'text', it is a title/message
+                        if (doc.content[tableIndex - 1].text) {
+                            doc.content.splice(tableIndex, 0, {
+                                canvas: [{ type: 'line', x1: 0, y1: 5, x2: 818, y2: 5, lineWidth: 1, lineColor: '#cccccc' }],
+                                margin: [0, 0, 0, 15]
+                            });
+                            tableIndex++; // table shifted down
+                        }
+                    }
+
+                    var docTable = tableIndex >= 0 ? doc.content[tableIndex].table : null;
+                    var isInvoiceOrProposal = $(table).hasClass('table-invoices-report') || $(table).hasClass('table-proposals-report');
+
                     // Fix for column widths
                     var table_api = $(table).DataTable();
                     var columns = table_api.columns().visible();
@@ -887,14 +945,62 @@ function get_datatable_buttons(table) {
                             total_visible_columns++;
                         }
                     }
-                    setTimeout(function() {
-                        if (total_visible_columns <= 5) {
-                            for (i = 0; i < total_visible_columns; i++) {
-                                pdf_widths.push((735 / total_visible_columns));
+                    
+                    var star_col = -1;
+                    if (docTable && docTable.body && docTable.body[0]) {
+                        var headers = docTable.body[0];
+                        for(var k = 0; k < headers.length; k++) {
+                            var txt = headers[k].text ? headers[k].text.toString().trim().toLowerCase() : '';
+                            if (txt === 'customer' || txt === 'client' || txt === 'item' || txt === 'proposal #') {
+                                star_col = k;
+                                break;
                             }
-                            doc.content[1].table.widths = pdf_widths;
                         }
-                    }, 10);
+                        if (star_col === -1) {
+                            star_col = 0;
+                        }
+                    }
+                    var pdf_cols_length = (docTable && docTable.body && docTable.body[0]) ? docTable.body[0].length : total_visible_columns;
+                    if (docTable && docTable.body && docTable.body[0]) {
+                        var hasStar = false;
+                        for (i = 0; i < pdf_cols_length; i++) {
+                            var thText = docTable.body[0][i].text ? docTable.body[0][i].text.toString().trim().toLowerCase() : '';
+                            if (thText === 'item' || thText === 'subject' || thText === 'to' || thText === 'description') {
+                                hasStar = true;
+                            }
+                        }
+                        for (i = 0; i < pdf_cols_length; i++) {
+                            var thText = docTable.body[0][i].text ? docTable.body[0][i].text.toString().trim().toLowerCase() : '';
+                            if (thText === 'customer' || thText === 'client') {
+                                pdf_widths.push('auto');
+                            } else if (thText === 'item' || thText === 'subject' || thText === 'to' || thText === 'description') {
+                                pdf_widths.push('*');
+                            } else {
+                                pdf_widths.push(hasStar ? 'auto' : '*');
+                            }
+                        }
+                    } else {
+                        for (i = 0; i < pdf_cols_length; i++) {
+                            pdf_widths.push('*');
+                        }
+                    }
+                    if (docTable) {
+                        docTable.widths = pdf_widths;
+                    }
+
+                    if (isInvoiceOrProposal) {
+                        // Dynamically adjust font sizes based on columns count to fit all columns
+                        if (total_visible_columns > 10) {
+                            doc.defaultStyle.fontSize = 6;
+                            doc.styles.tableHeader.fontSize = 6;
+                            doc.styles.tableFooter.fontSize = 6;
+                        } else if (total_visible_columns > 7) {
+                            doc.defaultStyle.fontSize = 8;
+                            doc.styles.tableHeader.fontSize = 8;
+                            doc.styles.tableFooter.fontSize = 8;
+                        }
+                    }
+                    doc.styles.tableHeader.noWrap = true;
 
                     if (app.user_language.toLowerCase() == 'persian' || app.user_language.toLowerCase() == 'arabic') {
                         doc.defaultStyle.font = Object.keys(pdfMake.fonts)[0];
