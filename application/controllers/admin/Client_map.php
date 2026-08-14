@@ -9,9 +9,9 @@ class Client_map extends AdminController
         $this->load->model('client_map_model');
         $this->load->model('invoice_map_model');
         // Ensure user has access to clients module
-        if (!has_permission('customers', '', 'view') && !have_assigned_customers()) {
-            access_denied('customers');
-        }
+        // if (!has_permission('customers', '', 'view') && !have_assigned_customers()) {
+        //     access_denied('customers');
+        // }
     }
 
     // =========================================================================
@@ -19,6 +19,10 @@ class Client_map extends AdminController
     // =========================================================================
     public function index()
     {
+          if (!has_permission('customer_map', '', 'view') && !has_permission('customer_map', '', 'view_own')) {
+            access_denied('customer_map');
+        }
+       
         $data['title'] = _l('clients') . ' - Map View';
 
         $this->load->model('clients_model');
@@ -39,6 +43,7 @@ class Client_map extends AdminController
     // =========================================================================
     public function map_data()
     {
+        
         if (!$this->input->is_ajax_request()) {
             show_404();
         }

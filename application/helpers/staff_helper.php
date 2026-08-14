@@ -265,6 +265,13 @@ function get_available_staff_permissions($data = [])
             'delete' => _l('permission_delete'),
         ]
     ];
+ $corePermissions['customer_map'] = [
+        'name'         => "Customer Map",
+        'capabilities' => [
+            'view_own' => _l('permission_view_own'),
+            'view'   => $viewGlobalName,
+        ]
+    ];
 
     $corePermissions['customer_media'] = [
         'name'         => "Customer > Media",
@@ -625,6 +632,7 @@ function get_available_manager_permissions_for_under_staff()
         'email_campaigns' => "Email Campaigns",
         'payments' => "Payments",
         'tasks' => "Tasks",
+        'customer_map' => "Customer Map",
     ];
 
     return $corePermissions;
@@ -636,7 +644,7 @@ function manager_employee_data_access_permission_check($module)
     if (is_manager()) {
         $CI->db->select('*');
         $CI->db->from(db_prefix() . 'roles');
-        $CI->db->where('roleid', 3);
+        // $CI->db->where('roleid', 3);
         $query = $CI->db->get();
         $role = $query->row();
         $permissionModule = unserialize($role->employee_permissions);
