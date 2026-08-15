@@ -104,58 +104,58 @@
             <i class="fa fa-exchange"></i><span class="btn_text"> Convert to Lead</span>
          </a>
       <?php } ?> -->
-
+      <div class="pull-left lead-actions-left mleft5" style="margin-top: 2px;">
+         <?php if (!empty($lead->email)) { ?>
+            <a href="#" class="lead-compose-email" style="font-size: 18px; margin-right: 5px;"><i class="fa fa-envelope-o email-icon" aria-hidden="true"></i></a>
+         <?php } ?>
+         <?php
+         if (!empty($lead->phonenumber)) {
+            $phoneNumberArr = phonenumberSplit($lead->phonenumber);
+            $ctr_iso2 = (isset($lead) && $lead->country != 0 ? get_country($lead->country)->iso2 : 'IN');
+            if (!empty($phoneNumberArr)) {
+               foreach ($phoneNumberArr as $phoneNumber) {
+                  $formattedNumber = convert_phonenumer_by_country($phoneNumber, $ctr_iso2);
+         ?>
+                  <a href="#" data-toggle="tooltip" data-title="<?= $phoneNumber ?>" data-number="<?= $formattedNumber ?>" class="WhatsApp-a1 lead-compose-whatsapp" style="font-size: 18px; margin-right: 5px;"><i class="fa fa-whatsapp whatsapp-icon" aria-hidden="true"></i></a>
+         <?php
+               }
+            }
+         } ?>
+      </div>
       <?php if (total_rows(db_prefix() . 'clients', array('leadid' => $lead->id, "deleted_at" => NULL)) == 0 && $lead->is_vendor == 0) { ?>
          <a href="#" data-toggle="tooltip" data-title="<?php echo $convert_to_client_tooltip_email_exists; ?>" class="btn btn-success pull-right lead-convert-to-customer lead-top-btn lead-view" onclick="convert_lead_to_customer(<?php echo $lead->id; ?>); return false;">
             <i class="fa fa-user-o"></i>
             <?php echo $text; ?>
          </a>
+         <a href="#" data-toggle="tooltip" data-title="New Module" class="btn btn-info pull-right lead-top-btn lead-view mright5">
+            <i class="fa fa-cube"></i> New Module
+         </a>
       <?php } ?>
    <?php } ?>
    <div class="pull-right lead-modal lead-top-btn lead-view" style="padding-right: 10px;">
-      <?php
-      if (!empty($lead->email)) {
-      ?>
-         <a href="#" class="lead-compose-email"><i class="fa fa-envelope-o email-icon" aria-hidden="true"></i></a>
-      <?php
-      }
-      ?>
-      <?php
-      $location = "";
-      if (!empty($lead->address)) {
-         $location = $lead->address;
-      } else if (!empty($lead->city)) {
-         $location = $lead->city;
-         if (!empty($lead->state)) {
-            $location .= ", " . $lead->state;
-         }
-         if (!empty($lead->country) && $lead->country != "0") {
-            $location .= ", " . get_country($lead->country)->short_name;
-         }
-      }
-      if (!empty($location)) {
-         $location_link = "https://www.google.com/maps/search/$location";
-      ?>
+
+      <!-- <?php
+            $location = "";
+            if (!empty($lead->address)) {
+               $location = $lead->address;
+            } else if (!empty($lead->city)) {
+               $location = $lead->city;
+               if (!empty($lead->state)) {
+                  $location .= ", " . $lead->state;
+               }
+               if (!empty($lead->country) && $lead->country != "0") {
+                  $location .= ", " . get_country($lead->country)->short_name;
+               }
+            }
+            if (!empty($location)) {
+               $location_link = "https://www.google.com/maps/search/$location";
+            ?>
          <a href='<?= $location_link ?>' target='_blank'><i class="fa fa-map-marker map-icon" aria-hidden="true"></i></a>
       <?php
-      }
-      ?>
-      <?php
-      if (!empty($lead->phonenumber)) {
-         $phoneNumberArr = phonenumberSplit($lead->phonenumber);
-         $ctr_iso2 = (isset($lead) && $lead->country != 0 ? get_country($lead->country)->iso2 : 'IN');
-         if (!empty($phoneNumberArr)) {
-            foreach ($phoneNumberArr as $phoneNumber) {
-               $formattedNumber = convert_phonenumer_by_country($phoneNumber, $ctr_iso2);
-      ?>
-               <a href="#" data-toggle="tooltip" data-title="<?= $phoneNumber ?>" data-number="<?= $formattedNumber ?>" class="WhatsApp-a1 lead-compose-whatsapp"><i class="fa fa-whatsapp whatsapp-icon" aria-hidden="true"></i></a>
-         <?php
             }
-         }
-         ?>
-      <?php
-      }
-      ?>
+      ?> -->
+
+
    </div>
    <div class="clearfix no-margin"></div>
 
@@ -272,17 +272,17 @@
             <p class="text-muted lead-field-heading"><?php echo _l('lead_add_edit_assigned'); ?></p>
             <p class="bold font-medium-xs mbot15"><?php echo (isset($lead) && $lead->assigned != 0 ? get_staff_full_name($lead->assigned) : '-') ?></p>
             <?php if ($lead->is_vendor == 0) { ?>
-            <p class="text-muted lead-field-heading">Assign To Customer</p>
-            <p class="bold font-medium-xs mbot15">
-               <?php
-               if ($lead->assigned_customer_id != '' && $lead->assigned_customer_id != 0) {
-                  $rel_data = get_relation_data('customer', $lead->assigned_customer_id);
-                  $rel_val = get_relation_values($rel_data, 'customer');
-                  echo $rel_val['name'];
-               } else {
-                  echo "-";
-               } ?>
-            </p>
+               <p class="text-muted lead-field-heading">Assign To Customer</p>
+               <p class="bold font-medium-xs mbot15">
+                  <?php
+                  if ($lead->assigned_customer_id != '' && $lead->assigned_customer_id != 0) {
+                     $rel_data = get_relation_data('customer', $lead->assigned_customer_id);
+                     $rel_val = get_relation_values($rel_data, 'customer');
+                     echo $rel_val['name'];
+                  } else {
+                     echo "-";
+                  } ?>
+               </p>
             <?php } ?>
             <p class="text-muted lead-field-heading"><?php echo _l('tags'); ?></p>
             <p class="bold font-medium-xs mbot10">
@@ -385,7 +385,7 @@
             echo render_select('assigned', $staff_users, array('staffid', array('firstname', 'lastname')), 'lead_add_edit_assigned', $selected, $assigned_attrs); ?>
          </div>
          <div class="col-md-4">
-               <div class="form-group select-placeholder" id="assigned_customer_id_wrapper">
+            <div class="form-group select-placeholder" id="assigned_customer_id_wrapper">
                <label for="assigned_customer_id" class="control-label">Assign to Customer</label>
                <div id="assigned_customer_id_select">
                   <select id="assigned_customer_id" name="assigned_customer_id" data-live-search="true" data-width="100%" class="ajax-search" data-none-selected-text="Not Selected">
@@ -412,7 +412,7 @@
 
          <div class="col-md-6">
             <?php $value = (isset($lead) ? $lead->company : ''); ?>
-            <?php echo render_input('company', 'lead_company', $value,'text',[],[],"","lead-company-name"); ?>
+            <?php echo render_input('company', 'lead_company', $value, 'text', [], [], "", "lead-company-name"); ?>
             <?php $value = (isset($lead) ? $lead->name : ''); ?>
             <?php echo render_input('name', 'lead_add_edit_name', $value); ?>
             <?php $value = (isset($lead) ? $lead->title : ''); ?>

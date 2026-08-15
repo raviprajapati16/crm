@@ -109,11 +109,11 @@
                            </li>
                         <?php } ?>
 
-                        <li role="presentation">
+                        <!-- <li role="presentation">
                            <a href="#tab_tasks_leads" onclick="init_rel_tasks_table(<?php echo $lead->id; ?>,'lead','.table-rel-tasks-leads');" aria-controls="tab_tasks_leads" role="tab">
                               <?php echo _l('tasks'); ?>
                            </a>
-                        </li>
+                        </li> -->
                         <li role="presentation">
                            <a href="#attachments" aria-controls="attachments" role="tab">
                               <?php echo _l('lead_attachments'); ?>
@@ -138,7 +138,7 @@
                               </a>
                            </li>
                         <?php } ?>
-                        <?php if (isset($lead) && !$lead->is_vendor) { ?>
+                        <!-- <?php if (isset($lead) && !$lead->is_vendor) { ?>
                            <li role="presentation">
                               <a href="#lead_inquiry_forms" onclick="getInquiryFormLists()" aria-controls="lead_inquiry_forms" role="tab">
                                  <?php echo _l('lead_inquiry_form'); ?>
@@ -158,7 +158,7 @@
                                  <?php echo _l('lead_plant_visit_form'); ?>
                               </a>
                            </li>
-                        <?php } ?>
+                        <?php } ?> -->
                      <?php } ?>
                   </ul>
                </div>
@@ -408,18 +408,27 @@
                   <div class="form-group">
                      <textarea id="lead_note_description" name="lead_note_description" class="form-control" rows="4"></textarea>
                   </div>
-                  <div class="lead-select-date-contacted hide">
-                     <?php echo render_datetime_input('custom_contact_date', 'lead_add_edit_datecontacted', '', array('data-date-end-date' => date('Y-m-d'))); ?>
+                  <div class="row">
+                     <div class="col-md-6">
+                        <div class="lead-select-date-contacted hide">
+                           <?php echo render_datetime_input('custom_contact_date', 'lead_add_edit_datecontacted', '', array('data-date-end-date' => date('Y-m-d'))); ?>
+                        </div>
+                        <div class="radio radio-primary">
+                           <input type="radio" name="contacted_indicator" id="contacted_indicator_yes" value="yes">
+                           <label for="contacted_indicator_yes"><?php echo _l('lead_add_edit_contacted_this_lead'); ?></label>
+                        </div>
+                        <div class="radio radio-primary">
+                           <input type="radio" name="contacted_indicator" id="contacted_indicator_no" value="no" checked>
+                           <label for="contacted_indicator_no"><?php echo _l('lead_not_contacted'); ?></label>
+                        </div>
+                     </div>
+                     <div class="col-md-6">
+                        <div class="pull-right" style="width: 250px;">
+                           <?php echo render_select('notify_staff_id', $members, array('staffid', array('firstname', 'lastname')), 'Select Staff to Notify', '', array('required' => 'true')); ?>
+                        </div>
+                     </div>
                   </div>
-                  <div class="radio radio-primary">
-                     <input type="radio" name="contacted_indicator" id="contacted_indicator_yes" value="yes">
-                     <label for="contacted_indicator_yes"><?php echo _l('lead_add_edit_contacted_this_lead'); ?></label>
-                  </div>
-                  <div class="radio radio-primary">
-                     <input type="radio" name="contacted_indicator" id="contacted_indicator_no" value="no" checked>
-                     <label for="contacted_indicator_no"><?php echo _l('lead_not_contacted'); ?></label>
-                  </div>
-                  <button type="submit" class="btn btn-info pull-right"><?php echo _l('lead_add_edit_add_note'); ?></button>
+                  <button type="submit" class="btn btn-info pull-right mtop15"><?php echo _l('lead_add_edit_add_note'); ?></button>
                   <?php echo form_close(); ?>
                   <div class="clearfix"></div>
                   <hr />
@@ -952,6 +961,33 @@ $(document).on('show.bs.modal', '.modal', function () {
    function initReminderTable() {
       initDataTable('.table-reminders-leads', admin_url + 'misc/get_reminders/' + <?php echo $lead->id; ?> + '/' + 'lead', undefined, undefined, undefined, [1, 'asc']);
    }
+
+   $(document).ajaxComplete(function(event, xhr, settings) {
+      if (settings.url && settings.url.indexOf('leads/add_note') !== -1) {
+         try {
+            var res = JSON.parse(xhr.responseText);
+            if (res.whatsapp_link && res.whatsapp_link !== '') {
+               // Use sweetalert to bypass popup blocker requiring user interaction
+               if (typeof swal !== 'undefined') {
+                  swal({
+                     title: "Notification Ready",
+                     text: "Email sent successfully! Click below to send the WhatsApp message.",
+                     type: "success",
+                     showCancelButton: true,
+                     confirmButtonText: "Send WhatsApp",
+                     cancelButtonText: "Close"
+                  }, function(isConfirm) {
+                     if (isConfirm) {
+                        window.open(res.whatsapp_link, '_blank');
+                     }
+                  });
+               } else {
+                  window.open(res.whatsapp_link, '_blank');
+               }
+            }
+         } catch (e) {}
+      }
+   });
 </script>
 <style>
    .customer-label-image {

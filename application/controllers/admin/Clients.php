@@ -179,6 +179,7 @@ class Clients extends AdminController
                 $data['payment_modes'] = $this->payment_modes_model->get();
             } elseif ($group == 'notes') {
                 $data['user_notes'] = $this->misc_model->get_notes($id, 'customer');
+                $data['staff'] = $this->staff_model->get('', ['active' => 1]);
             } elseif ($group == 'projects') {
                 $this->load->model('projects_model');
                 $data['project_statuses'] = $this->projects_model->get_project_statuses();

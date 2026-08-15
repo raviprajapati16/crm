@@ -512,10 +512,58 @@ class Misc extends AdminController
     {
         if ($this->input->post()) {
             $data = $this->input->post();
+            
+            $notify_staff_id = '';
+            if (isset($data['notify_staff_id'])) {
+                $notify_staff_id = $data['notify_staff_id'];
+                unset($data['notify_staff_id']);
+            }
+            
             $data['is_private'] = isset($data['is_private']) ? 1 : 0;
             $success = $this->misc_model->add_note($data, $rel_type, $rel_id);
             if ($success) {
                 set_alert('success', _l('added_successfully', _l('note')));
+                
+                if ($notify_staff_id != '' && $rel_type == 'customer') {
+                    $staff = $this->staff_model->get($notify_staff_id);
+                    $this->load->model('clients_model');
+                    $client = $this->clients_model->get($rel_id);
+                    
+                    if ($staff && $client) {
+                        $note_desc = strip_tags($data['description']);
+                        $client_url = admin_url('clients/client/' . $client->userid . '?group=notes');
+                        
+                        $company = isset($client->company) ? $client->company : "Customer";
+                        $message = "A new note has been added to Customer: " . $company . "\n\nNote: " . $note_desc . "\n\nCustomer Link: " . $client_url;
+
+                        // Send In-App Notification
+                        $notified = add_notification([
+                            'description'     => 'New note added to customer: ' . $company,
+                            'touserid'        => $notify_staff_id,
+                            'fromcompany'     => 1,
+                            'fromuserid'      => get_staff_user_id(),
+                            'link'            => 'clients/client/' . $client->userid . '?group=notes',
+                        ]);
+                        if ($notified) {
+                            pusher_trigger_notification([$notify_staff_id]);
+                        }
+
+                        // Send Email Notification
+                        $this->load->library('email');
+                        $this->email->from(get_option('smtp_email'), get_option('companyname'));
+                        $this->email->to($staff->email);
+                        $this->email->subject("New Note Added to Customer: " . $company);
+                        $this->email->message(nl2br($message));
+                        $this->email->send();
+
+                        // WhatsApp link Generation
+                        if (!empty($staff->phonenumber)) {
+                            $whatsappMessage = urlencode($message);
+                            $whatsapp_link = "https://api.whatsapp.com/send?phone=" . $staff->phonenumber . "&text=" . $whatsappMessage;
+                            $this->session->set_flashdata('whatsapp_link', $whatsapp_link);
+                        }
+                    }
+                }
             }
         }
         redirect($_SERVER['HTTP_REFERER']);

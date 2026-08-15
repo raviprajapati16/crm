@@ -417,11 +417,43 @@
                 <div role="tabpanel" class="tab-pane" id="tab_notes">
                     <?php echo form_open(admin_url('invoices/add_note/' . $invoice->id), array('id' => 'sales-notes', 'class' => 'invoice-notes-form')); ?>
                     <?php echo render_textarea('description'); ?>
-                    <div class="text-right">
-                        <button type="submit"
-                            class="btn btn-info mtop15 mbot15"><?php echo _l('estimate_add_note'); ?></button>
+                    <div class="row mtop15 mbot15">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6 text-right">
+                            <div class="pull-right" style="width: 250px; text-align: left;">
+                                <?php echo render_select('notify_staff_id', $members, array('staffid', array('firstname', 'lastname')), 'Select Staff to Notify', '', array('required' => 'true')); ?>
+                            </div>
+                            <div class="clearfix"></div>
+                            <button type="submit" class="btn btn-info pull-right mtop15"><?php echo _l('estimate_add_note'); ?></button>
+                        </div>
                     </div>
                     <?php echo form_close(); ?>
+                    <script>
+                    $(document).ajaxComplete(function(event, xhr, settings) {
+                        if (settings.url.indexOf("invoices/add_note") > -1) {
+                            $.get(admin_url + 'invoices/get_whatsapp_link', function(res) {
+                                if (res && res.link) {
+                                    if (typeof swal !== 'undefined') {
+                                        swal({
+                                            title: "Notification Ready",
+                                            text: "Email sent successfully! Click below to send the WhatsApp message.",
+                                            type: "success",
+                                            showCancelButton: true,
+                                            confirmButtonText: "Send WhatsApp",
+                                            cancelButtonText: "Close"
+                                        }, function(isConfirm) {
+                                            if (isConfirm) {
+                                                window.open(res.link, '_blank');
+                                            }
+                                        });
+                                    } else {
+                                        window.open(res.link, '_blank');
+                                    }
+                                }
+                            }, 'json');
+                        }
+                    });
+                    </script>
                     <hr />
                     <div class="panel_s mtop20 no-shadow" id="sales_notes_area"></div>
                 </div>

@@ -148,6 +148,8 @@
                         <div class="_buttons">
                             <?php if (has_permission('contact_book', '', 'create')) { ?>
                             <a href="javascript:;" onclick="openContactModal()" class="btn btn-info">Add Contact</a>
+                            <a href="javascript:;" onclick="$('#vcard_upload').click();" class="btn btn-info mleft5">Import vCard</a>
+                            <input type="file" id="vcard_upload" accept=".vcf" style="display:none;">
                             <?php } ?>
                         </div>
                         <div class="clearfix"></div>
@@ -371,6 +373,29 @@
             </div>
         </div>
         <?php echo form_close(); ?>
+    </div>
+</div>
+
+<!-- Import Results Modal -->
+<div class="modal fade" id="import_results_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">vCard Import Results</h4>
+            </div>
+            <div class="modal-body">
+                <p id="import_summary" class="bold"></p>
+                <div id="skipped_contacts_container" style="display:none; margin-top: 15px;">
+                    <h5>Skipped Contacts (Duplicates)</h5>
+                    <ul id="skipped_contacts_list" class="text-danger" style="max-height: 200px; overflow-y: auto;">
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?php echo _l('close'); ?></button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -945,6 +970,56 @@ function category_add_inline_select_submit(type) {
         .prop('disabled', false);
     $(".inline-field-new").removeClass('disabled').removeAttr('style');
 }
+
+$(function() {
+    $('#vcard_upload').on('change', function() {
+        var file = this.files[0];
+        if (!file) return;
+
+        var formData = new FormData();
+        formData.append('vcard', file);
+        formData.append('<?php echo $this->security->get_csrf_token_name(); ?>', '<?php echo $this->security->get_csrf_hash(); ?>');
+
+        $.ajax({
+            url: admin_url + 'contact_book/import_vcard',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    alert_float('success', response.message);
+                    $('.table-contact-list').DataTable().ajax.reload();
+                    
+                    // Populate modal
+                    $('#import_summary').text("Imported: " + response.imported + " | Skipped: " + response.skipped.length);
+                    
+                    var $list = $('#skipped_contacts_list');
+                    $list.empty();
+                    
+                    if (response.skipped.length > 0) {
+                        $.each(response.skipped, function(i, skippedContact) {
+                            $list.append('<li>' + skippedContact.name + ' (' + skippedContact.reason + ')</li>');
+                        });
+                        $('#skipped_contacts_container').show();
+                    } else {
+                        $('#skipped_contacts_container').hide();
+                    }
+                    
+                    $('#import_results_modal').modal('show');
+                } else {
+                    alert_float('danger', response.message || 'Error importing vCard');
+                }
+                $('#vcard_upload').val(''); // Reset file input
+            },
+            error: function() {
+                alert_float('danger', 'Error importing vCard');
+                $('#vcard_upload').val('');
+            }
+        });
+    });
+});
 </script>
 </body>
 

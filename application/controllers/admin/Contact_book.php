@@ -355,4 +355,154 @@ class Contact_book extends AdminController
         $file_path = 'uploads/contact_book/' . $attachment->contact_id . '/' . $attachment->file_name;
         redirect('download/file_download?path=' . $file_path);
     }
+
+    public function import_vcard()
+    {
+        if (!has_permission('contact_book', '', 'create')) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Access denied: You do not have permission to create contacts.'
+            ]);
+            return;
+        }
+
+        if (isset($_FILES['vcard']) && $_FILES['vcard']['error'] === UPLOAD_ERR_OK) {
+            $tmpName = $_FILES['vcard']['tmp_name'];
+            $content = file_get_contents($tmpName);
+            
+            if (!$content) {
+                echo json_encode(['success' => false, 'message' => 'Failed to read file.']);
+                return;
+            }
+
+            $lines = explode("\n", $content);
+            $contacts = [];
+            $contact = [];
+            
+            foreach ($lines as $line) {
+                $line = trim($line);
+                if (empty($line)) continue;
+                
+                if (strtoupper($line) === 'BEGIN:VCARD') {
+                    $contact = [];
+                } elseif (strtoupper($line) === 'END:VCARD') {
+                    if (!empty($contact['firstname'])) {
+                        $contacts[] = $contact;
+                    }
+                }
+                // FN (Full Name)
+                elseif (preg_match('/^(?:item\d+\.)?FN:/i', $line)) {
+                    $parts = explode(':', $line, 2);
+                    if (count($parts) > 1) {
+                        $fullName = trim($parts[1]);
+                        $nameParts = explode(' ', $fullName, 2);
+                        $contact['firstname'] = $nameParts[0];
+                        if (isset($nameParts[1])) {
+                            $contact['lastname'] = $nameParts[1];
+                        }
+                    }
+                } 
+                // EMAIL
+                elseif (preg_match('/^(?:item\d+\.)?EMAIL[;:]/i', $line)) {
+                    $parts = explode(':', $line);
+                    if (count($parts) > 1) {
+                        $contact['email'] = trim(end($parts));
+                    }
+                }
+                // TEL
+                elseif (preg_match('/^(?:item\d+\.)?TEL[;:]/i', $line)) {
+                    $parts = explode(':', $line);
+                    if (count($parts) > 1) {
+                        $contact['phone'] = trim(end($parts));
+                    }
+                }
+                // ORG
+                elseif (preg_match('/^(?:item\d+\.)?ORG[;:]/i', $line)) {
+                    $parts = explode(':', $line);
+                    if (count($parts) > 1) {
+                        $org = end($parts);
+                        $org = trim($org, '; ');
+                        $contact['company'] = trim($org);
+                    }
+                }
+                // NOTE
+                elseif (preg_match('/^(?:item\d+\.)?NOTE[;:]/i', $line)) {
+                    $parts = explode(':', $line, 2);
+                    if (count($parts) > 1) {
+                        $contact['details'] = trim($parts[1]);
+                    }
+                }
+                // ADR
+                elseif (preg_match('/^(?:item\d+\.)?ADR[;:]/i', $line)) {
+                    $parts = explode(':', $line);
+                    if (count($parts) > 1) {
+                        $adr = end($parts);
+                        $adrParts = explode(';', $adr);
+                        if (isset($adrParts[2])) $contact['address'] = trim($adrParts[2]);
+                        if (isset($adrParts[3])) $contact['city'] = trim($adrParts[3]);
+                        if (isset($adrParts[4])) $contact['state'] = trim($adrParts[4]);
+                    }
+                }
+            }
+
+            $imported = 0;
+            $skipped = [];
+
+            if (empty($contacts) && !empty($contact['firstname'])) {
+                $contacts[] = $contact; // In case END:VCARD is missing
+            }
+
+            foreach ($contacts as $c) {
+                // Ensure required fields are set if needed
+                if (!isset($c['email'])) $c['email'] = '';
+                if (!isset($c['phone'])) $c['phone'] = '';
+                if (!isset($c['company'])) $c['company'] = '';
+                if (!isset($c['lastname'])) $c['lastname'] = '';
+                
+                $isDuplicate = false;
+                $duplicateReason = '';
+
+                // Check for duplicates
+                if (!empty($c['phone'])) {
+                    $this->db->where('phone', $c['phone']);
+                    $existing = $this->db->get(db_prefix() . 'contact_book')->row();
+                    if ($existing) {
+                        $isDuplicate = true;
+                        $duplicateReason = 'Phone exists';
+                    }
+                } elseif (!empty($c['email'])) {
+                    // Only check email uniqueness if phone is empty, to prevent exact duplicates of email-only contacts
+                    $this->db->where('email', $c['email']);
+                    $this->db->where('phone', '');
+                    $existing = $this->db->get(db_prefix() . 'contact_book')->row();
+                    if ($existing) {
+                        $isDuplicate = true;
+                        $duplicateReason = 'Contact with this email and no phone already exists';
+                    }
+                }
+
+                if ($isDuplicate) {
+                    $skipped[] = [
+                        'name' => $c['firstname'] . ' ' . $c['lastname'],
+                        'reason' => $duplicateReason
+                    ];
+                    continue; // Skip this record
+                }
+
+                $id = $this->contact_book_model->insert($c);
+                if ($id) {
+                    $imported++;
+                }
+            }
+
+            echo json_encode([
+                'success' => true,
+                'message' => "Import complete. Imported: $imported, Skipped: " . count($skipped),
+                'imported' => $imported,
+                'skipped' => $skipped
+            ]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'No file uploaded or upload error.']);
+        }
+    }
 }

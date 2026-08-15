@@ -1189,13 +1189,23 @@ class Leads extends AdminController
         if ($this->input->post()) {
             $data = $this->input->post();
 
-            if ($data['contacted_indicator'] == 'yes') {
+            $notify_staff_id = '';
+            if (isset($data['notify_staff_id'])) {
+                $notify_staff_id = $data['notify_staff_id'];
+                unset($data['notify_staff_id']);
+            }
+
+            if (isset($data['contacted_indicator']) && $data['contacted_indicator'] == 'yes') {
                 $contacted_date = to_sql_date($data['custom_contact_date'], true);
                 $data['date_contacted'] = $contacted_date;
             }
 
-            unset($data['contacted_indicator']);
-            unset($data['custom_contact_date']);
+            if (isset($data['contacted_indicator'])) {
+                unset($data['contacted_indicator']);
+            }
+            if (isset($data['custom_contact_date'])) {
+                unset($data['custom_contact_date']);
+            }
 
             // Causing issues with duplicate ID or if my prefixed file for lead.php is used
             $data['description'] = isset($data['lead_note_description']) ? $data['lead_note_description'] : $data['description'];
@@ -1205,6 +1215,7 @@ class Leads extends AdminController
             }
 
             $note_id = $this->misc_model->add_note($data, 'lead', $rel_id);
+            $whatsapp_link = '';
 
             if ($note_id) {
                 if (isset($contacted_date)) {
@@ -1219,9 +1230,45 @@ class Leads extends AdminController
                         ]));
                     }
                 }
+
+                if ($notify_staff_id != '') {
+                    $staff = $this->staff_model->get($notify_staff_id);
+                    $lead = $this->leads_model->get($rel_id);
+                    if ($staff && $lead) {
+                        $note_desc = strip_tags($data['description']);
+                        $lead_url = admin_url('leads/index/' . $lead->id);
+                        $message = "A new note has been added to Lead: " . $lead->name . "\n\nNote: " . $note_desc . "\n\nLead Link: " . $lead_url;
+
+                        // Send In-App Notification
+                        $notified = add_notification([
+                            'description'     => 'New note added to lead: ' . $lead->name,
+                            'touserid'        => $notify_staff_id,
+                            'fromcompany'     => 1,
+                            'fromuserid'      => get_staff_user_id(),
+                            'link'            => '#leadid=' . $rel_id,
+                        ]);
+                        if ($notified) {
+                            pusher_trigger_notification([$notify_staff_id]);
+                        }
+
+                        // Send Email Notification
+                        $this->load->library('email');
+                        $this->email->from(get_option('smtp_email'), get_option('companyname'));
+                        $this->email->to($staff->email);
+                        $this->email->subject("New Note Added to Lead: " . $lead->name);
+                        $this->email->message(nl2br($message));
+                        $this->email->send();
+
+                        // WhatsApp link Generation
+                        if (!empty($staff->phonenumber)) {
+                            $whatsappMessage = urlencode($message);
+                            $whatsapp_link = "https://api.whatsapp.com/send?phone=" . $staff->phonenumber . "&text=" . $whatsappMessage;
+                        }
+                    }
+                }
             }
         }
-        echo json_encode(['leadView' => $this->_get_lead_data($rel_id), 'id' => $rel_id]);
+        echo json_encode(['leadView' => $this->_get_lead_data($rel_id), 'id' => $rel_id, 'whatsapp_link' => $whatsapp_link]);
     }
 
     public function test_email_integration()

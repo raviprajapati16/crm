@@ -325,12 +325,12 @@ function app_init_customer_profile_tabs()
         'position' => 100,
     ]);
 
-    $CI->app_tabs->add_customer_profile_tab('map', [
-        'name' => _l('customer_map'),
-        'icon' => 'fa fa-map-marker',
-        'view' => 'admin/clients/groups/map',
-        'position' => 105,
-    ]);
+    // $CI->app_tabs->add_customer_profile_tab('map', [
+    //     'name' => _l('customer_map'),
+    //     'icon' => 'fa fa-map-marker',
+    //     'view' => 'admin/clients/groups/map',
+    //     'position' => 105,
+    // ]);
 }
 
 /**

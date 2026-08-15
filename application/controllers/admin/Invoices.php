@@ -186,8 +186,65 @@ class Invoices extends AdminController
     public function add_note($rel_id)
     {
         if ($this->input->post() && user_can_view_invoice($rel_id)) {
-            $this->misc_model->add_note($this->input->post(), 'invoice', $rel_id);
+            $data = $this->input->post();
+            $notify_staff_id = '';
+            if (isset($data['notify_staff_id'])) {
+                $notify_staff_id = $data['notify_staff_id'];
+                unset($data['notify_staff_id']);
+            }
+            
+            $this->misc_model->add_note($data, 'invoice', $rel_id);
+            
+            if ($notify_staff_id != '') {
+                $staff = $this->staff_model->get($notify_staff_id);
+                $invoice = $this->invoices_model->get($rel_id);
+                if ($staff && $invoice) {
+                    $note_desc = strip_tags($data['description']);
+                    $invoice_url = admin_url('invoices#' . $invoice->id);
+                    $invoice_title = format_invoice_number($invoice->id);
+                    $message = "A new note has been added to Invoice: " . $invoice_title . "\n\nNote: " . $note_desc . "\n\nInvoice Link: " . $invoice_url;
+
+                    // Send In-App Notification
+                    $notified = add_notification([
+                        'description'     => 'New note added to invoice: ' . $invoice_title,
+                        'touserid'        => $notify_staff_id,
+                        'fromcompany'     => 1,
+                        'fromuserid'      => get_staff_user_id(),
+                        'link'            => 'invoices#' . $invoice->id,
+                    ]);
+                    if ($notified) {
+                        pusher_trigger_notification([$notify_staff_id]);
+                    }
+
+                    // Send Email Notification
+                    $this->load->library('email');
+                    $this->email->from(get_option('smtp_email'), get_option('companyname'));
+                    $this->email->to($staff->email);
+                    $this->email->subject("New Note Added to Invoice: " . $invoice_title);
+                    $this->email->message(nl2br($message));
+                    $this->email->send();
+
+                    // WhatsApp link Generation
+                    if (!empty($staff->phonenumber)) {
+                        $whatsappMessage = urlencode($message);
+                        $whatsapp_link = "https://api.whatsapp.com/send?phone=" . $staff->phonenumber . "&text=" . $whatsappMessage;
+                        $this->session->set_userdata('invoice_whatsapp_link', $whatsapp_link);
+                    }
+                }
+            }
+            
             echo $rel_id;
+        }
+    }
+
+    public function get_whatsapp_link()
+    {
+        $link = $this->session->userdata('invoice_whatsapp_link');
+        if ($link) {
+            $this->session->unset_userdata('invoice_whatsapp_link');
+            echo json_encode(['link' => $link]);
+        } else {
+            echo json_encode(['link' => false]);
         }
     }
 

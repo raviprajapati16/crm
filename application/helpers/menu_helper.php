@@ -52,14 +52,14 @@ function app_init_admin_sidebar_menu_items()
         ]);
     }
 
-    if (has_permission('lead_dashboard', '', 'view')) {
-        $CI->app_menu->add_sidebar_children_item('dashboards', [
-            'name' => _l('leads_map'),
-            'href' => admin_url('leads_map'),
-            'position' => 5,
-            'icon' => '',
-        ]);
-    }
+    // if (has_permission('lead_dashboard', '', 'view')) {
+    //     $CI->app_menu->add_sidebar_children_item('dashboards', [
+    //         'name' => _l('leads_map'),
+    //         'href' => admin_url('leads_map'),
+    //         'position' => 5,
+    //         'icon' => '',
+    //     ]);
+    // }
 
     $CI->app_menu->add_sidebar_menu_item('tasks', [
         'name' => _l('als_tasks'),
@@ -262,7 +262,6 @@ function app_init_admin_sidebar_menu_items()
             'href' => admin_url('expenses'),
             'position' => 4,
         ]);
-
     }
 
     if (has_permission('contact_book', '', 'view') || has_permission('contact_book', '', 'view_own')) {

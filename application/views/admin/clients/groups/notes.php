@@ -10,16 +10,26 @@
         </div>
         <div class="clearfix"></div>
         <div class="usernote hide">
-            <?php echo form_open(admin_url('misc/add_note/' . $client->userid . '/customer')); ?>
+            <?php echo form_open(admin_url('misc/add_note/' . $client->userid . '/customer'), array('id' => 'customer-notes-form')); ?>
             <?php echo render_textarea('description', 'note_description', '', array('rows' => 5)); ?>
-            <?php if (is_admin()) { ?>
-                <p>Is Private Note ?</p>
-                <div class="onoffswitch">
-                    <input type="checkbox" id="is_private" class="onoffswitch-checkbox" value="1" name="is_private">
-                    <label class="onoffswitch-label" for="is_private"></label>
+            <div class="row">
+                <div class="col-md-6">
+                    <?php if (is_admin()) { ?>
+                        <p>Is Private Note ?</p>
+                        <div class="onoffswitch">
+                            <input type="checkbox" id="is_private" class="onoffswitch-checkbox" value="1" name="is_private">
+                            <label class="onoffswitch-label" for="is_private"></label>
+                        </div>
+                    <?php } ?>
                 </div>
-            <?php } ?>
-            <button class="btn btn-info pull-right mbot15">
+                <div class="col-md-6">
+                    <div class="pull-right" style="width: 250px;">
+                        <?php echo render_select('notify_staff_id', $staff, array('staffid', array('firstname', 'lastname')), 'Select Staff to Notify', '', array('required' => 'true')); ?>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <button class="btn btn-info pull-right mbot15 mtop15">
                 <?php echo _l('submit'); ?>
             </button>
             <?php echo form_close(); ?>
@@ -98,3 +108,32 @@
             </table>
         </div>
     <?php } ?>
+<script>
+    window.addEventListener('load', function() {
+        if (typeof appValidateForm === 'function') {
+            appValidateForm($('#customer-notes-form'), {
+                notify_staff_id: 'required',
+                description: 'required'
+            });
+        }
+
+        <?php $wa_link = $this->session->flashdata('whatsapp_link'); if ($wa_link) { ?>
+            if (typeof swal !== 'undefined') {
+                swal({
+                    title: "Notification Ready",
+                    text: "Email sent successfully! Click below to send the WhatsApp message.",
+                    type: "success",
+                    showCancelButton: true,
+                    confirmButtonText: "Send WhatsApp",
+                    cancelButtonText: "Close"
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        window.open("<?php echo $wa_link; ?>", '_blank');
+                    }
+                });
+            } else {
+                window.open("<?php echo $wa_link; ?>", '_blank');
+            }
+        <?php } ?>
+    });
+</script>

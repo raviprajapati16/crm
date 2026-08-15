@@ -457,8 +457,65 @@ class Proposals extends AdminController
     public function add_note($rel_id)
     {
         if ($this->input->post() && user_can_view_proposal($rel_id)) {
-            $this->misc_model->add_note($this->input->post(), 'proposal', $rel_id);
+            $data = $this->input->post();
+            $notify_staff_id = '';
+            if (isset($data['notify_staff_id'])) {
+                $notify_staff_id = $data['notify_staff_id'];
+                unset($data['notify_staff_id']);
+            }
+            
+            $this->misc_model->add_note($data, 'proposal', $rel_id);
+            
+            if ($notify_staff_id != '') {
+                $staff = $this->staff_model->get($notify_staff_id);
+                $proposal = $this->proposals_model->get($rel_id);
+                if ($staff && $proposal) {
+                    $note_desc = strip_tags($data['description']);
+                    $proposal_url = admin_url('proposals#' . $proposal->id);
+                    $proposal_title = format_proposal_number($proposal->id);
+                    $message = "A new note has been added to Proposal: " . $proposal_title . "\n\nNote: " . $note_desc . "\n\nProposal Link: " . $proposal_url;
+
+                    // Send In-App Notification
+                    $notified = add_notification([
+                        'description'     => 'New note added to proposal: ' . $proposal_title,
+                        'touserid'        => $notify_staff_id,
+                        'fromcompany'     => 1,
+                        'fromuserid'      => get_staff_user_id(),
+                        'link'            => 'proposals#' . $proposal->id,
+                    ]);
+                    if ($notified) {
+                        pusher_trigger_notification([$notify_staff_id]);
+                    }
+
+                    // Send Email Notification
+                    $this->load->library('email');
+                    $this->email->from(get_option('smtp_email'), get_option('companyname'));
+                    $this->email->to($staff->email);
+                    $this->email->subject("New Note Added to Proposal: " . $proposal_title);
+                    $this->email->message(nl2br($message));
+                    $this->email->send();
+
+                    // WhatsApp link Generation
+                    if (!empty($staff->phonenumber)) {
+                        $whatsappMessage = urlencode($message);
+                        $whatsapp_link = "https://api.whatsapp.com/send?phone=" . $staff->phonenumber . "&text=" . $whatsappMessage;
+                        $this->session->set_userdata('proposal_whatsapp_link', $whatsapp_link);
+                    }
+                }
+            }
+            
             echo $rel_id;
+        }
+    }
+
+    public function get_whatsapp_link()
+    {
+        $link = $this->session->userdata('proposal_whatsapp_link');
+        if ($link) {
+            $this->session->unset_userdata('proposal_whatsapp_link');
+            echo json_encode(['link' => $link]);
+        } else {
+            echo json_encode(['link' => false]);
         }
     }
 
