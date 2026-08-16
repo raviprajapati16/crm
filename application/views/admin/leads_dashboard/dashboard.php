@@ -2,21 +2,25 @@
 <?php init_head(); ?>
 <link rel="stylesheet" href="<?= site_url('assets/plugins/daterangepicker/daterangepicker.css') ?>" />
 <style>
-#loadingOverlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(255, 255, 255, 0.9);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
+    #loadingOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.9);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
 
-/* <!-- </style>
+    /* <!-- 
+</style>
 
-<style> --> */
+<style>
+    -->*/
     /* #loadingOverlay {
         position: fixed;
         top: 0;
@@ -255,7 +259,7 @@
                                         <div class="panel-title">Leads Summary</div>
                                     </div>
                                     <div class="panel-body">
-                                        <div class="row chart-div" id="lead-summary-section">
+                                        <div class="row" id="lead-summary-section">
 
                                         </div>
                                     </div>
@@ -330,11 +334,11 @@
                             <div class="col-md-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
-                                        <div class="panel-title">Lead Email Sent</div>
+                                        <div class="panel-title">Lead Whatsapp Sent</div>
                                         <div class="pull-right d-flex header-filter-section select-container">
                                             <select id="lead-send-type" class="form-control">
-                                                <option value="email" selected>Email</option>
-                                                <option value="whatsapp">Whatsapp</option>
+                                                <option value="email">Email</option>
+                                                <option value="whatsapp" selected>Whatsapp</option>
                                             </select>
                                             <select id="lead-chart-sent-types" class="form-control">
                                                 <option value="line" selected>Line Chart</option>
@@ -397,6 +401,7 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Commented out Lead Attend Time to Total Sales boxes as requested
                         <div class="row charts-section">
                             <div class="col-md-6">
                                 <div class="panel panel-default">
@@ -561,6 +566,7 @@
                                 </div>
                             </div>
                         </div>
+                        -->
                         <div class="row charts-section hide">
                             <div class="col-md-12">
                                 <div class="panel panel-default">
@@ -819,19 +825,19 @@
                     leadAllocationChart();
                     leadCustomerConversionChart();
                     leadsFollowUpChart();
-                    leadVendorConversionChart();
-                    FormsChart();
-                    ProposalChart();
-                    ContractChart();
+                    // leadVendorConversionChart();
+                    // FormsChart();
+                    // ProposalChart();
+                    // ContractChart();
                     LeadTransferToSelfChart();
                     LeadTransferToOtherChart();
                     // todayLeadFollowupChart();
                     // todayLeadsChart();
-                    LeadAttendChart();
-                    LeadFollowupDurationChart();
-                    lapsedLeadChart();
+                    // LeadAttendChart();
+                    // LeadFollowupDurationChart();
+                    // lapsedLeadChart();
                     leadsSummary();
-                    salesChart();
+                    // salesChart();
                 } else {
                     if (target == "lead-view-chart") {
                         leadViewChart();
@@ -5473,18 +5479,11 @@
             data = JSON.parse(data);
             console.log(data);
 
-            var totalItems = data.leads_summary.length;
-            var halfItems = Math.ceil(totalItems / 2); // Split the data in half
-            var firstHalf = data.leads_summary.slice(0, halfItems); // First half of the items
-            var secondHalf = data.leads_summary.slice(halfItems); // Second half of the items
+            var html = '';
 
-            var html = '<div class="row">';
-
-            // First half
-            html += '<div class="col-md-6 summary-firstpart">';
-            $(firstHalf).each(function(index, item) {
-                html += '<div class="col-xs-6 border-right">';
-                html += '<h3 class="bold">' + item.total;
+            $(data.leads_summary).each(function(index, item) {
+                html += '<div class="col-md-2 col-sm-4 col-xs-6 border-right" style="margin-bottom: 15px;">';
+                html += '<h3 class="bold" style="margin-top: 0;">' + item.total;
                 if (item.percent !== undefined) {
                     html += '<span style="font-size: 14px;"> (' + item.percent + '%)' + '</span>';
                 }
@@ -5493,24 +5492,6 @@
                 html += '<span style="color:' + item.color + ';" class="' + textColorClass + '">' + item.name + '</span>';
                 html += '</div>';
             });
-            html += '</div>';
-
-            // Second half
-            html += '<div class="col-md-6 summary-secondpart">';
-            $(secondHalf).each(function(index, item) {
-                html += '<div class="col-xs-6 border-right">';
-                html += '<h3 class="bold">' + item.total;
-                if (item.percent !== undefined) {
-                    html += '<span style="font-size: 14px;"> (' + item.percent + '%)' + '</span>';
-                }
-                html += '</h3>';
-                var textColorClass = (item.junk !== undefined || item.lost !== undefined) ? 'text-danger' : '';
-                html += '<span style="color:' + item.color + ';" class="' + textColorClass + '">' + item.name + '</span>';
-                html += '</div>';
-            });
-            html += '</div>';
-
-            html += '</div>';
 
             $('#lead-summary-section').html(html);
         } else {
@@ -5733,9 +5714,6 @@
         pdf.save(filename);
         $('#loadingOverlay').remove();
     }
-
-
-
 </script>
 
 
