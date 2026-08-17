@@ -24,7 +24,7 @@ $aColumns = [
 
 $sIndexColumn = 'userid';
 $sTable = db_prefix() . 'clients';
-$where = ['AND ' . db_prefix() . 'clients.is_target_market=0'];
+$where = ['AND ' . db_prefix() . 'clients.is_target_market=1'];
 // Add blank where all filter can be stored
 $filter = [];
 
@@ -189,7 +189,7 @@ foreach ($rResult as $aRow) {
     // User id
     $row[] = $aRow['userid'];
     $country = ($aRow['country'] ? $aRow['country'] : '-');
-    $countryUrl = admin_url('clients/client/' . $aRow['userid']);
+    $countryUrl = admin_url('target_markets/client/' . $aRow['userid']);
     $countryLabel = '<a href="' . $countryUrl . '">' . $country . '</a>';
 
     $countryLabel .= '<div class="row-options">';
@@ -199,7 +199,7 @@ foreach ($rResult as $aRow) {
         $countryLabel .= ' | <a href="' . admin_url('clients/confirm_registration/' . $aRow['userid']) . '" class="text-success bold">' . _l('confirm_registration') . '</a>';
     }
     if (!$isPerson) {
-        $countryLabel .= ' | <a href="' . admin_url('clients/client/' . $aRow['userid'] . '?group=contacts') . '">' . _l('customer_contacts') . '</a>';
+        $countryLabel .= ' | <a href="' . admin_url('target_markets/client/' . $aRow['userid'] . '?group=contacts') . '">' . _l('customer_contacts') . '</a>';
     }
     if ($hasPermissionDelete) {
         $countryLabel .= ' | <a href="' . admin_url('clients/delete/' . $aRow['userid']) . '" class="text-danger _delete">' . _l('delete') . '</a>';
@@ -217,7 +217,7 @@ foreach ($rResult as $aRow) {
         $isPerson = true;
     }
 
-    $url = admin_url('clients/client/' . $aRow['userid']);
+    $url = admin_url('target_markets/client/' . $aRow['userid']);
 
     if ($isPerson && $aRow['contact_id']) {
         $url .= '?contactid=' . $aRow['contact_id'];
@@ -232,7 +232,7 @@ foreach ($rResult as $aRow) {
         $company .= ' | <a href="' . admin_url('clients/confirm_registration/' . $aRow['userid']) . '" class="text-success bold">' . _l('confirm_registration') . '</a>';
     }
     if (!$isPerson) {
-        $company .= ' | <a href="' . admin_url('clients/client/' . $aRow['userid'] . '?group=contacts') . '">' . _l('customer_contacts') . '</a>';
+        $company .= ' | <a href="' . admin_url('target_markets/client/' . $aRow['userid'] . '?group=contacts') . '">' . _l('customer_contacts') . '</a>';
     }
     if ($hasPermissionDelete) {
         $company .= ' | <a href="' . admin_url('clients/delete/' . $aRow['userid']) . '" class="text-danger _delete">' . _l('delete') . '</a>';
@@ -243,7 +243,7 @@ foreach ($rResult as $aRow) {
     $row[] = $company;
 
     // Primary contact
-    $row[] = ($aRow['contact_id'] ? '<a href="' . admin_url('clients/client/' . $aRow['userid'] . '?contactid=' . $aRow['contact_id']) . '" target="_blank">' . $aRow['firstname'] . ' ' . $aRow['lastname'] . '</a>' : '');
+    $row[] = ($aRow['contact_id'] ? '<a href="' . admin_url('target_markets/client/' . $aRow['userid'] . '?contactid=' . $aRow['contact_id']) . '" target="_blank">' . $aRow['firstname'] . ' ' . $aRow['lastname'] . '</a>' : '');
 
     // Primary contact email
     // $row[] = ($aRow['email'] ? '<a href="mailto:' . $aRow['email'] . '">' . $aRow['email'] . '</a>' : '');

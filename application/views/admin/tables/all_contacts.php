@@ -37,6 +37,12 @@ foreach ($custom_fields as $key => $field) {
 $where = [];
 array_push($where, 'AND ' . db_prefix() . 'clients.deleted_at IS NULL');
 
+if (isset($this->ci->clients_model->is_target_market_mode) && $this->ci->clients_model->is_target_market_mode == 1) {
+    array_push($where, 'AND ' . db_prefix() . 'clients.is_target_market=1');
+} else {
+    array_push($where, 'AND ' . db_prefix() . 'clients.is_target_market=0');
+}
+
 if (!has_permission('customers', '', 'view')) {
     array_push($where, 'AND ' . db_prefix() . 'contacts.userid IN (SELECT customer_id FROM ' . db_prefix() . 'customer_admins WHERE staff_id=' . get_staff_user_id() . ')');
 }

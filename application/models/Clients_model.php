@@ -13,6 +13,10 @@ class Clients_model extends App_Model
         $this->contact_columns = hooks()->apply_filters('contact_columns', ['firstname', 'lastname', 'email', 'phonenumber', 'title', 'password', 'send_set_password_email', 'donotsendwelcomeemail', 'permissions', 'direction', 'invoice_emails', 'estimate_emails', 'credit_note_emails', 'contract_emails', 'task_emails', 'project_emails', 'ticket_emails', 'is_primary']);
 
         $this->load->model(['client_vault_entries_model', 'client_groups_model', 'statement_model']);
+        
+        if (!$this->db->field_exists('is_target_market', db_prefix() . 'clients')) {
+            $this->db->query("ALTER TABLE `" . db_prefix() . "clients` ADD `is_target_market` TINYINT(1) NOT NULL DEFAULT '0' AFTER `userid`");
+        }
     }
 
     /**
@@ -30,6 +34,12 @@ class Clients_model extends App_Model
 
         if ((is_array($where) && count($where) > 0) || (is_string($where) && $where != '')) {
             $this->db->where($where);
+        }
+        
+        if (isset($this->is_target_market_mode) && $this->is_target_market_mode == 1) {
+            $this->db->where(db_prefix() . 'clients.is_target_market', 1);
+        } else {
+            $this->db->where(db_prefix() . 'clients.is_target_market', 0);
         }
 
         if (is_numeric($id)) {
@@ -120,6 +130,10 @@ class Clients_model extends App_Model
         $data = $this->check_zero_columns($data);
 
         $data['datecreated'] = date('Y-m-d H:i:s');
+        
+        if (isset($this->is_target_market_mode) && $this->is_target_market_mode == 1) {
+            $data['is_target_market'] = 1;
+        }
 
         if (is_staff_logged_in()) {
             $data['addedfrom'] = get_staff_user_id();

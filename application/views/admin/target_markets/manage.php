@@ -38,7 +38,7 @@
                     <div class="panel-body">
                         <div class="_buttons">
                             <!-- <?php if (has_permission('customers', '', 'create')) { ?>
-                            <a href="<?php echo admin_url('clients/client'); ?>"
+                            <a href="<?php echo admin_url('target_markets/client'); ?>"
                                 class="btn btn-info mright5 test pull-left display-block">
                                 <?php echo _l('new_client'); ?></a>
                             <a href="<?php echo admin_url('clients/import'); ?>"
@@ -50,28 +50,23 @@
                             if ($staff && $staff->admin == 1) { // check if admin
                             ?>
                                 <?php if (has_permission('customers', '', 'create')) { ?>
-                                    <a href="<?php echo admin_url('clients/client'); ?>"
+                                    <a href="<?php echo admin_url('target_markets/client'); ?>"
                                         class="btn btn-info mright5 test pull-left display-block">
-                                        <?php echo _l('new_client'); ?>
+                                        New Target Market
                                     </a>
-                                    <a href="<?php echo admin_url('clients/import'); ?>"
+                                    <a href="<?php echo admin_url('target_markets/import'); ?>"
                                         class="btn btn-info pull-left display-block mright5 hidden-xs">
-                                        <?php echo _l('import_customers'); ?>
+                                        Import Target Market
                                     </a>
                                 <?php } ?>
                             <?php } ?>
 
-                            <a href="<?php echo admin_url('clients/all_contacts'); ?>"
-                                class="btn btn-info pull-left display-block mright5">
-                                <?php echo _l('customer_contacts'); ?></a>
-                                
-                            
                             <a href="<?php echo admin_url('client_map'); ?>"
                                 class="btn btn-primary pull-left display-block mright5">
-                                <i class="fa fa-map-marker"></i> Customer Map View</a>
-                                  
-                        
-                                
+                                <i class="fa fa-map-marker"></i> Map View</a>
+
+
+
                             <div class="visible-xs">
                                 <div class="clearfix"></div>
                             </div>
@@ -226,7 +221,7 @@
                         </div>
                         <div class="clearfix"></div>
                         <?php if (has_permission('customers', '', 'view') || have_assigned_customers()) {
-                            $where_summary = ' AND userid IN (SELECT userid FROM ' . db_prefix() . 'clients WHERE is_target_market=0)';
+                            $where_summary = ' AND userid IN (SELECT userid FROM ' . db_prefix() . 'clients WHERE is_target_market=1)';
                             if (!has_permission('customers', '', 'view')) {
                                 if (manager_employee_data_access_permission_check("customers")) {
                                     $where_summary .= ' AND userid IN (SELECT customer_id FROM ' . db_prefix() . 'customer_admins WHERE staff_id IN (' . get_manager_assigned_staff_ids('', true) . '))';
@@ -238,63 +233,7 @@
                             <hr class="hr-panel-heading" />
                             <div class="row mbot15">
                                 <div class="col-md-12">
-                                    <h4 class="no-margin"><?php echo _l('customers_summary'); ?></h4>
-                                </div>
-                                <div class="col-md-2 col-xs-6 border-right">
-                                    <h3 class="bold">
-                                        <?php echo total_rows(db_prefix() . 'clients', ($where_summary != '' ? substr($where_summary, 5) : '')); ?>
-                                    </h3>
-                                    <span class="text-dark"><?php echo _l('customers_summary_total'); ?></span>
-                                </div>
-                                <div class="col-md-2 col-xs-6 border-right">
-                                    <h3 class="bold">
-                                        <?php echo total_rows(db_prefix() . 'clients', 'active=1' . $where_summary); ?>
-                                    </h3>
-                                    <span class="text-success"><?php echo _l('active_customers'); ?></span>
-                                </div>
-                                <div class="col-md-2 col-xs-6 border-right">
-                                    <h3 class="bold">
-                                        <?php echo total_rows(db_prefix() . 'clients', 'active=0' . $where_summary); ?>
-                                    </h3>
-                                    <span class="text-danger"><?php echo _l('inactive_active_customers'); ?></span>
-                                </div>
-                                <div class="col-md-2 col-xs-6 border-right">
-                                    <h3 class="bold">
-                                        <?php echo total_rows(db_prefix() . 'contacts', 'active=1' . $where_summary); ?>
-                                    </h3>
-                                    <span class="text-info"><?php echo _l('customers_summary_active'); ?></span>
-                                </div>
-                                <div class="col-md-2  col-xs-6 border-right">
-                                    <h3 class="bold">
-                                        <?php echo total_rows(db_prefix() . 'contacts', 'active=0' . $where_summary); ?>
-                                    </h3>
-                                    <span class="text-danger"><?php echo _l('customers_summary_inactive'); ?></span>
-                                </div>
-                                <div class="col-md-2 col-xs-6">
-                                    <h3 class="bold">
-                                        <?php echo total_rows(db_prefix() . 'contacts', 'last_login LIKE "' . date('Y-m-d') . '%"' . $where_summary); ?>
-                                    </h3>
-                                    <span class="text-muted">
-                                        <?php
-                                        $contactsTemplate = '';
-                                        if (count($contacts_logged_in_today) > 0) {
-                                            foreach ($contacts_logged_in_today as $contact) {
-                                                $url = admin_url('clients/client/' . $contact['userid'] . '?contactid=' . $contact['id']);
-                                                $fullName = $contact['firstname'] . ' ' . $contact['lastname'];
-                                                $dateLoggedIn = _dt($contact['last_login']);
-                                                $html = "<a href='$url' target='_blank'>$fullName</a><br /><small>$dateLoggedIn</small><br />";
-                                                $contactsTemplate .= html_escape('<p class="mbot5">' . $html . '</p>');
-                                            }
-                                        ?>
-                                        <?php } ?>
-                                        <span<?php if ($contactsTemplate != '') { ?> class="pointer text-has-action"
-                                            data-toggle="popover"
-                                            data-title="<?php echo _l('customers_summary_logged_in_today'); ?>"
-                                            data-html="true" data-content="<?php echo $contactsTemplate; ?>"
-                                            data-placement="bottom" <?php } ?>>
-                                            <?php echo _l('customers_summary_logged_in_today'); ?>
-                                    </span>
-                                    </span>
+                                    <h4 class="no-margin">Target market Summary</h4>
                                 </div>
                             </div>
                         <?php } ?>
@@ -340,7 +279,7 @@
                         <div class="checkbox">
                             <input type="checkbox" checked id="exclude_inactive" name="exclude_inactive">
                             <label for="exclude_inactive"><?php echo _l('exclude_inactive'); ?>
-                                <?php echo _l('clients'); ?></label>
+                                <?php echo _l('target_markets'); ?></label>
                         </div>
                         <div class="clearfix mtop20"></div>
                         <?php
@@ -421,7 +360,7 @@
         });
         CustomersServerParams['exclude_inactive'] = '[name="exclude_inactive"]:checked';
 
-        var tAPI = initDataTable('.table-clients', admin_url + 'clients/table', [0], [0], CustomersServerParams,
+        var tAPI = initDataTable('.table-clients', admin_url + 'target_markets/table', [0], [0], CustomersServerParams,
             <?php echo hooks()->apply_filters('customers_table_default_order', json_encode(array(2, 'asc'))); ?>
         );
         $('input[name="exclude_inactive"]').on('change', function() {
@@ -455,7 +394,7 @@
             data.ids = ids;
             $(event).addClass('disabled');
             setTimeout(function() {
-                $.post(admin_url + 'clients/bulk_action', data).done(function() {
+                $.post(admin_url + 'target_markets/bulk_action', data).done(function() {
                     window.location.reload();
                 });
             }, 50);

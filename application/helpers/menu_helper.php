@@ -78,6 +78,17 @@ function app_init_admin_sidebar_menu_items()
     }
 
     if (
+        has_permission('target_markets', '', 'view') || (have_assigned_customers() || (!have_assigned_customers() && has_permission('target_markets', '', 'create')))
+    ) {
+        $CI->app_menu->add_sidebar_menu_item('target_markets', [
+            'name' => _l('target_markets'),
+            'href' => admin_url('target_markets'),
+            'position' => 4,
+            'icon' => 'fa fa-bullseye',
+        ]);
+    }
+
+    if (
         has_permission('customers', '', 'view')
         || (have_assigned_customers()
             || (!have_assigned_customers() && has_permission('customers', '', 'create')))
@@ -89,6 +100,8 @@ function app_init_admin_sidebar_menu_items()
             'icon' => 'fa fa-user-o',
         ]);
     }
+
+
 
     $vendor_permission = has_permission('vendors', '', 'view') || has_permission('vendors', '', 'view_own');
     $purchase_permission = has_permission('purchase', '', 'view') || has_permission('purchase', '', 'view_own');

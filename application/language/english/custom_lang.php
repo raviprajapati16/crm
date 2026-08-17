@@ -11,3 +11,7 @@ $lang['tags_update_replace_warning'] 			= 'Some products are not updated because
 $lang['client_vat_number']                      = 'GST Number';
 $lang['clients_vat']       						= 'GST Number';
 $lang['company_vat_number']                     = 'GST Number';*/
+
+$lang['target_markets'] = 'Target Markets';
+$lang['target_market'] = 'Target Market';
+$lang['new_target_market'] = 'New Target Market';
