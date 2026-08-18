@@ -61,7 +61,7 @@
                                 <?php } ?>
                             <?php } ?>
 
-                            <a href="<?php echo admin_url('client_map'); ?>"
+                            <a href="<?php echo admin_url('client_map?is_target_market=1'); ?>"
                                 class="btn btn-primary pull-left display-block mright5">
                                 <i class="fa fa-map-marker"></i> Map View</a>
 

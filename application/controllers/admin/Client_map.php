@@ -22,8 +22,13 @@ class Client_map extends AdminController
           if (!has_permission('customer_map', '', 'view') && !has_permission('customer_map', '', 'view_own')) {
             access_denied('customer_map');
         }
-       
-        $data['title'] = _l('clients') . ' - Map View';
+        if ($this->input->get('is_target_market') == '1') {
+            $this->session->set_userdata('client_map_is_target_market', 1);
+            $data['title'] = 'Target Markets - Map View';
+        } else {
+            $this->session->set_userdata('client_map_is_target_market', 0);
+            $data['title'] = _l('clients') . ' - Map View';
+        }
 
         $this->load->model('clients_model');
         $data['groups'] = $this->clients_model->get_groups();
@@ -373,6 +378,7 @@ class Client_map extends AdminController
         return [
             'exclude_inactive' => $this->input->post('exclude_inactive'),
             'groups'           => $this->input->post('groups'),
+            'is_target_market' => $this->session->userdata('client_map_is_target_market'),
         ];
     }
 

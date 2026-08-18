@@ -9,7 +9,7 @@
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <i class="fa fa-map" aria-hidden="true"></i>
-                            Customer Map View
+                            <?php echo ($this->input->get('is_target_market') == '1' || $this->session->userdata('client_map_is_target_market') == '1') ? 'Target Market Map View' : 'Customer Map View'; ?>
                         </h4>
                     </div>
                     <div class="panel-body">

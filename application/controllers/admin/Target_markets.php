@@ -669,6 +669,29 @@ class Target_markets extends AdminController
         redirect(admin_url('target_markets'));
     }
 
+    public function convert_to_customer($id)
+    {
+        if (!has_permission('customers', '', 'edit')) {
+            access_denied('customers');
+        }
+        if (!$id) {
+            redirect(admin_url('target_markets'));
+        }
+        
+        $this->db->where('userid', $id);
+        $this->db->update(db_prefix() . 'clients', [
+            'is_target_market' => 0
+        ]);
+        
+        if ($this->db->affected_rows() > 0) {
+            set_alert('success', 'Converted to customer successfully');
+            redirect(admin_url('clients/client/' . $id));
+        } else {
+            set_alert('warning', 'Problem converting to customer');
+            redirect(admin_url('target_markets/client/' . $id));
+        }
+    }
+
     /* Staff can login as client */
     public function login_as_client($id)
     {

@@ -127,9 +127,10 @@
             <i class="fa fa-user-o"></i>
             <?php echo $text; ?>
          </a>
-         <a href="#" data-toggle="tooltip" data-title="New Module" class="btn btn-info pull-right lead-top-btn lead-view mright5">
-            <i class="fa fa-cube"></i> New Module
+         <a href="#" data-toggle="tooltip" data-title="Target Market" class="btn btn-info pull-right lead-top-btn lead-view mright5" onclick="convert_lead_to_target_market(<?php echo $lead->id; ?>); return false;">
+            <i class="fa fa-cube"></i> Target Market
          </a>
+
       <?php } ?>
    <?php } ?>
    <div class="pull-right lead-modal lead-top-btn lead-view" style="padding-right: 10px;">
@@ -575,3 +576,25 @@
       border-radius: 5px !important;
    }
 </style>
+<script>
+   function convert_lead_to_target_market(e) {
+      var t = $("#lead-modal"),
+         a = "hidden.bs.modal.convert_tm";
+      t.on(a, function() {
+         t.find(".data").html("");
+         requestGet("leads/get_convert_target_market_data/" + e).done(function(e) {
+            $("#lead_convert_to_customer").html(e);
+            $("#convert_lead_to_client_modal").modal({
+               show: !0,
+               backdrop: "static",
+               keyboard: !1
+            })
+         }).fail(function(e) {
+            alert_float("danger", e.responseText)
+         }).always(function() {
+            t.off(a)
+         })
+      });
+      t.modal("hide")
+   }
+</script>

@@ -243,6 +243,12 @@ class Client_map_model extends App_Model
                 $this->db->where("{$alias}.userid IN (SELECT customer_id FROM " . db_prefix() . "customer_groups WHERE groupid IN (" . implode(',', $groups) . "))");
             }
         }
+
+        if (isset($filters['is_target_market']) && $filters['is_target_market'] == 1) {
+            $this->db->where("{$alias}.is_target_market", 1);
+        } else {
+            $this->db->where("({$alias}.is_target_market = 0 OR {$alias}.is_target_market IS NULL)");
+        }
     }
 
     private function _city_where($iso2, $state, $city)

@@ -424,7 +424,11 @@
                      </div>
                      <div class="col-md-6">
                         <div class="pull-right" style="width: 250px;">
-                           <?php echo render_select('notify_staff_id', $members, array('staffid', array('firstname', 'lastname')), 'Select Staff to Notify', '', array('required' => 'true')); ?>
+                            <?php 
+                            $source_staff = isset($members) ? $members : (isset($staff) ? $staff : []);
+                            $filtered_notify_staff = get_staff_for_notification($source_staff);
+                            echo render_select('notify_staff_id', $filtered_notify_staff, array('staffid', array('firstname', 'lastname')), 'Select Staff to Notify', '', array('required' => 'true')); 
+                            ?>
                         </div>
                      </div>
                   </div>
