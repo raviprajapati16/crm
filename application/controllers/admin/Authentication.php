@@ -71,6 +71,8 @@ class Authentication extends App_Controller
                 $this->load->model('announcements_model');
                 $this->announcements_model->set_announcements_as_read_except_last_one(get_staff_user_id(), true);
 
+                $this->session->set_userdata('first_login_check_timer', true);
+
                 // is logged in
                 maybe_redirect_to_previous_url();
 

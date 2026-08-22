@@ -5262,21 +5262,21 @@ function timer_action(e, task_id, timer_id, adminStop) {
     if (task_id === '' && $timerSelectTask.is(':visible')) {
         return;
     }
-    if (timer_id !== '' && task_id == '0') {
+    if (timer_id !== '' && task_id == '0' && !$(e).data('force_stop')) {
         var popupData = {};
+        var note = $(e).data('note');
+        if (typeof note === 'undefined' || note === null) { note = ''; }
         popupData.content = '';
         popupData.content += '<div class="row">';
-        popupData.content += '<div class="form-group"><select id="timer_add_task_id" data-empty-title="' + app.lang.search_tasks + '" data-width="60%" class="ajax-search" data-live-search="true">';
-        popupData.content += '</select></div>';
         popupData.content += '<div class="form-group">';
-        popupData.content += '<textarea id="timesheet_note" placeholder="' + app.lang.note + '" style="margin:0 auto;width:60%;" rows="4" class="form-control"></textarea>';
+        popupData.content += '<textarea id="timesheet_note" placeholder="' + app.lang.note + '" style="margin:0 auto;width:60%;" rows="4" class="form-control">' + note + '</textarea>';
+        popupData.content += '<span id="timesheet_note_error" class="text-danger hide" style="display:block;width:60%;margin:5px auto 0 auto;">Note is required</span>';
         popupData.content += '</div>';
-        popupData.content += '<button type=\'button\' onclick=\'timer_action(this,document.getElementById("timer_add_task_id").value,' + timer_id + ');return false;\' class=\'btn btn-info\'>' + app.lang.confirm + '</button>';
+        popupData.content += '<button type=\'button\' onclick=\'if(document.getElementById("timesheet_note").value.trim() === ""){ document.getElementById("timesheet_note_error").classList.remove("hide"); return false; } $(this).data("force_stop", true); timer_action(this, 0, ' + timer_id + ');return false;\' class=\'btn btn-info\'>' + app.lang.confirm + '</button>';
 
         popupData.message = app.lang.task_stop_timer;
         var $popupHTML = system_popup(popupData);
         $popupHTML.attr('id', 'timer-select-task');
-        init_ajax_search('tasks', '#timer_add_task_id', undefined, admin_url + 'tasks/ajax_search_assign_task_to_timer');
         return false;
     }
 
@@ -5390,7 +5390,41 @@ function _init_timers_top_html(data) {
     var $ttIcon = $('#top-timers').find('.icon-started-timers');
     data.total_timers > 0 ? $ttIcon.removeClass('hide').html(data.total_timers) : $ttIcon.addClass('hide');
     $('#started-timers-top').html(data.html);
+
+    var $liveTimerContainer = $('#header-live-timer');
+    if (data.total_timers > 0 && data.timers && data.timers.length > 0) {
+        var activeTimer = data.timers[0];
+        $('#live-timer-countdown').attr('data-start-time', activeTimer.start_time);
+        var tId = activeTimer.task_id ? activeTimer.task_id : '0';
+        $('#live-timer-stop-btn').attr('onclick', 'timer_action(this, ' + tId + ', ' + activeTimer.id + '); return false;');
+        $('#live-timer-stop-btn').data('note', activeTimer.note ? activeTimer.note : '');
+        $liveTimerContainer.css('display', 'flex');
+    } else {
+        $liveTimerContainer.css('display', 'none');
+        $('#live-timer-countdown').attr('data-start-time', '');
+    }
 }
+
+$(function() {
+    setInterval(function() {
+        var $countdown = $('#live-timer-countdown');
+        if ($countdown.length === 0) return;
+        var startTime = $countdown.attr('data-start-time');
+        if (startTime && startTime !== '') {
+            var start = parseInt(startTime);
+            var now = Math.floor(Date.now() / 1000);
+            var elapsed = now - start;
+            if (elapsed < 0) elapsed = 0;
+            var hours = Math.floor(elapsed / 3600);
+            var minutes = Math.floor((elapsed % 3600) / 60);
+            var seconds = elapsed % 60;
+            var timeStr = (hours < 10 ? '0' : '') + hours + ':' + 
+                          (minutes < 10 ? '0' : '') + minutes + ':' + 
+                          (seconds < 10 ? '0' : '') + seconds;
+            $countdown.text(timeStr);
+        }
+    }, 1000);
+});
 
 // Init task edit comment
 function edit_task_comment(id) {

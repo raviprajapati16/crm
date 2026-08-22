@@ -5,17 +5,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $v = $this->ci->db->query('SELECT VERSION() as version')->row();
 // 5.6 mysql version don't have the ANY_VALUE function implemented.
 
-  $additionalSelect = [
+$additionalSelect = [
     db_prefix() . 'taskstimers.id',
+    db_prefix() . 'taskstimers.staff_id',
     'task_id',
     'rel_type',
     'rel_id',
     'billed',
-    'status', ];
+    'status',
+];
 
 $staffIdSelect = '';
 if ($v && strpos($v->version, '5.7') !== false) {
-    $staffIdSelect = 'ANY_VALUE(staff_id) as staff_id';
+    $staffIdSelect = 'ANY_VALUE(CONCAT(firstname, \' \', lastname)) as staff_name';
     foreach ($additionalSelect as $key => $column) {
         if ($key !== 0) {
             $additionalSelect[$key] = 'ANY_VALUE(' . $column . ') as ' . $column;
@@ -25,40 +27,39 @@ if ($v && strpos($v->version, '5.7') !== false) {
         }
     }
     $aColumns = [
-        'ANY_VALUE(name) as name',
+        'ANY_VALUE(' . db_prefix() . 'taskstimers.id) as id',
         'ANY_VALUE((SELECT GROUP_CONCAT(name SEPARATOR ",") FROM ' . db_prefix() . 'taggables JOIN ' . db_prefix() . 'tags ON ' . db_prefix() . 'taggables.tag_id = ' . db_prefix() . 'tags.id WHERE rel_id = ' . db_prefix() . 'taskstimers.id and rel_type="timesheet" ORDER by tag_order ASC)) as tags',
         'ANY_VALUE(start_time) as start_time',
         'ANY_VALUE(end_time) as end_time',
         'ANY_VALUE(note) as note',
-        'ANY_VALUE(' . tasks_rel_name_select_query() . ') as rel_name',
         'ANY_VALUE(end_time - start_time) as time_h',
         'ANY_VALUE(end_time - start_time) as time_d',
-        ];
+    ];
 } else {
-    $staffIdSelect = 'staff_id';
+    $staffIdSelect = 'CONCAT(firstname, \' \', lastname) as staff_name';
 
     $aColumns = [
-        'name as name',
+        db_prefix() . 'taskstimers.id as id',
         '(SELECT GROUP_CONCAT(name SEPARATOR ",") FROM ' . db_prefix() . 'taggables JOIN ' . db_prefix() . 'tags ON ' . db_prefix() . 'taggables.tag_id = ' . db_prefix() . 'tags.id WHERE rel_id = ' . db_prefix() . 'taskstimers.id and rel_type="timesheet" ORDER by tag_order ASC) as tags',
         'start_time as start_time',
         'end_time as end_time',
         'note as note',
-        tasks_rel_name_select_query() . ' as rel_name',
         'end_time - start_time as time_h',
         'end_time - start_time as time_d',
     ];
 }
 
-$time_h_column = 6;
-$time_d_column = 7;
+$time_h_column = 5;
+$time_d_column = 6;
 
 if ($view_all == true) {
     array_unshift($aColumns, $staffIdSelect);
 
-    $time_h_column = 7;
-    $time_d_column = 8;
+    $time_h_column = 6;
+    $time_d_column = 7;
 }
 
+/*
 if ($this->ci->input->post('group_by_task')) {
     if ($v && strpos($v->version, '5.7') !== false) {
         $aColumns[$time_h_column] = 'ANY_VALUE((SUM(end_time - start_time))) as time_h';
@@ -68,12 +69,14 @@ if ($this->ci->input->post('group_by_task')) {
         $aColumns[$time_d_column] = 'SUM(end_time - start_time) as time_d';
     }
 }
+*/
 
 $sIndexColumn = 'id';
 $sTable       = db_prefix() . 'taskstimers';
 
 $join = [
     'LEFT JOIN ' . db_prefix() . 'tasks ON ' . db_prefix() . 'tasks.id = ' . db_prefix() . 'taskstimers.task_id',
+    'LEFT JOIN ' . db_prefix() . 'staff ON ' . db_prefix() . 'staff.staffid = ' . db_prefix() . 'taskstimers.staff_id',
 ];
 
 $where = [];
@@ -88,8 +91,8 @@ if ($this->ci->input->post('staff_id')) {
 
 if ($staff_id != false) {
     $where = [
-        'AND staff_id=' . $staff_id,
-        ];
+        'AND ' . db_prefix() . 'taskstimers.staff_id=' . $staff_id,
+    ];
 }
 
 $project_ids = $this->ci->input->post('project_id');
@@ -126,7 +129,7 @@ if ($this->ci->input->post('clientid') && !$this->ci->input->post('project_id'))
                 )');
 }
 
-array_push($where, 'AND task_id != 0');
+// array_push($where, 'AND task_id != 0');
 
 $filter = $this->ci->input->post('range');
 if ($filter != 'period') {
@@ -164,7 +167,7 @@ $result = data_tables_init(
     $join,
     $where,
     $additionalSelect,
-    ($this->ci->input->post('group_by_task') ? 'GROUP BY task_id' : '')
+    '' // ($this->ci->input->post('group_by_task') ? 'GROUP BY task_id' : '')
 );
 
 $output  = $result['output'];
@@ -281,20 +284,15 @@ foreach ($chartData as $timer) {
     $footer_data['total_logged_time_d'] += $total_logged_time_d;
 }
 
+$sno = 1;
 foreach ($rResult as $aRow) {
     $row = [];
 
+    $row[] = $sno++; // S.No
     if ($view_all === true) {
-        $row[] = '<a href="' . admin_url('staff/member/' . $aRow['staff_id']) . '" target="_blank">' . get_staff_full_name($aRow['staff_id']) . '</a>';
+        $row[] = '<a href="' . admin_url('staff/member/' . $aRow['staff_id']) . '" target="_blank">' . $aRow['staff_name'] . '</a>';
     }
 
-    $taskName = '<a href="' . admin_url('tasks/view/' . $aRow['task_id']) . '" onclick="init_task_modal(' . $aRow['task_id'] . '); return false;">' . $aRow['name'] . '</a>';
-
-    $status = get_task_status_by_id($aRow['status']);
-
-    $taskName .= '<span class="hidden"> - </span><span class="inline-block pull-right mright5 label" style="border:1px solid ' . $status['color'] . ';color:' . $status['color'] . '" task-status-table="' . $aRow['status'] . '">' . $status['name'] . '</span>';
-
-    $row[] = $taskName;
 
     $row[] = render_tags($aRow['tags']);
 
@@ -313,7 +311,7 @@ foreach ($rResult as $aRow) {
         <button type="button"
         onclick="timer_action(this, ' . $aRow['task_id'] . ', ' . $aRow['id'] . ', 1);"
         class="btn btn-info btn-xs">' . _l('save')
-        . "</button>'
+            . "</button>'
         class=\"text-danger\"
         onclick=\"return false;\">
                 <i class=\"fa fa-clock-o\"></i> " . _l('task_stop_timer') . '
@@ -321,14 +319,6 @@ foreach ($rResult as $aRow) {
     }
     $row[] = $endTimeOutput;
     $row[] = $aRow['note'];
-
-    if ($aRow['rel_name']) {
-        $relName = task_rel_name($aRow['rel_name'], $aRow['rel_id'], $aRow['rel_type']);
-        $link    = task_rel_link($aRow['rel_id'], $aRow['rel_type']);
-        $row[]   = '<a href="' . $link . '">' . $relName . '</a>';
-    } else {
-        $row[] = '';
-    }
 
     $total_logged_time = 0;
     if ($aRow['time_h'] == null) {

@@ -538,6 +538,7 @@ class Tasks extends AdminController
         $data['startedTimers'] = $this->misc_model->get_staff_started_timers();
         $_data['html']         = $this->load->view('admin/tasks/started_timers', $data, true);
         $_data['total_timers'] = count($data['startedTimers']);
+        $_data['timers']       = $data['startedTimers'];
 
         $timers = json_encode($_data);
         if ($return) {
@@ -1004,6 +1005,9 @@ class Tasks extends AdminController
         if ($adminStop) {
             $this->session->set_flashdata('task_single_timesheets_open', true);
         }
+
+        // Timer is being started or stopped; either way, they satisfied the requirement of interacting with the timer on first login.
+        $this->session->unset_userdata('first_login_check_timer');
 
         echo json_encode([
             'success' => $this->tasks_model->timer_tracking(

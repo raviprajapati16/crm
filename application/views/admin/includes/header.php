@@ -84,6 +84,19 @@ ob_end_clean();
                 echo $top_search_area; ?>
             <?php hooks()->do_action('after_render_top_search'); ?>
 
+            <!-- Live Timer -->
+            <?php 
+                $has_active_timer = count($startedTimers) > 0;
+                $active_timer = $has_active_timer ? $startedTimers[0] : null;
+                $timer_display_style = $has_active_timer ? 'display: flex;' : 'display: none;';
+            ?>
+            <li class="icon header-live-timer" style="padding-top: 15px; margin-right: 15px; <?php echo $timer_display_style; ?> align-items: center;" id="header-live-timer">
+                <span id="live-timer-countdown" data-start-time="<?php echo $has_active_timer ? $active_timer['start_time'] : ''; ?>" class="label bg-success" style="font-size: 14px; padding: 6px 10px; margin-right: 5px;">00:00:00</span>
+                <button type="button" id="live-timer-stop-btn" class="btn btn-danger btn-xs" onclick="timer_action(this, <?php echo $has_active_timer ? $active_timer['task_id'] : '0'; ?>, <?php echo $has_active_timer ? $active_timer['id'] : '0'; ?>); return false;" data-note="<?php echo $has_active_timer ? htmlspecialchars($active_timer['note'] ?? '') : ''; ?>" style="padding: 4px 8px;">
+                    <i class="fa fa-stop"></i>
+                </button>
+            </li>
+
             <!-- Profile Image -->
             <li class="icon header-user-profile" data-toggle="tooltip" title="<?php echo get_staff_full_name(); ?>"
                 data-placement="bottom">
@@ -230,3 +243,49 @@ ob_end_clean();
         } ?>
     </ul>
 </div>
+<?php if ($this->session->userdata('first_login_check_timer')): ?>
+<?php 
+    if (count($startedTimers) == 0): 
+?>
+    <div class="modal fade" id="startTimerModalLogin" tabindex="-1" role="dialog" aria-labelledby="startTimerModalLoginLabel" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="startTimerModalLoginLabel"><?php echo _l('task_start_timer'); ?></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="timer_note_login"><?php echo _l('note'); ?> (<?php echo _l('optional'); ?>)</label>
+                        <textarea id="timer_note_login" class="form-control" rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer text-center">
+                    <button type="button" class="btn btn-success" onclick="start_timer_login(); return false;"><?php echo _l('task_start_timer'); ?></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            setTimeout(function() {
+                $('#startTimerModalLogin').modal('show');
+            }, 1000);
+        });
+
+        function start_timer_login() {
+            var note = $('#timer_note_login').val();
+            $.post(admin_url + 'tasks/timer_tracking', {
+                task_id: 0,
+                timer_id: '',
+                note: note
+            }).done(function (response) {
+                response = JSON.parse(response);
+                if (response.success === true || response.success == 'true') {
+                    $('#startTimerModalLogin').modal('hide');
+                    window.location.reload();
+                }
+            });
+        }
+    </script>
+<?php endif; ?>
+<?php endif; ?>
