@@ -516,7 +516,6 @@ class Misc extends AdminController
             $notify_staff_id = '';
             if (isset($data['notify_staff_id'])) {
                 $notify_staff_id = $data['notify_staff_id'];
-                unset($data['notify_staff_id']);
             }
             
             $data['is_private'] = isset($data['is_private']) ? 1 : 0;

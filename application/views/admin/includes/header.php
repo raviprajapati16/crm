@@ -47,7 +47,7 @@ ob_end_clean();
                             <i class="fa fa-clock-o fa-fw fa-lg"></i>
                             <span
                                 class="label bg-success icon-total-indicator icon-started-timers<?php if (count($startedTimers) == 0)
-                                    echo ' hide'; ?>">
+                                                                                                    echo ' hide'; ?>">
                                 <?php echo count($startedTimers); ?>
                             </span>
                         </a>
@@ -104,57 +104,57 @@ ob_end_clean();
                             <a href="#" tabindex="-1"><?php echo _l('language'); ?></a>
                             <ul class="dropdown-menu">
                                 <li class="<?php if ($current_user->default_language == "")
-                                    echo 'active'; ?>">
+                                                echo 'active'; ?>">
                                     <a
                                         href="<?php echo admin_url('staff/change_language'); ?>"><?php echo _l('system_default_string'); ?></a>
                                 </li>
                                 <?php foreach ($this->app->get_available_languages() as $user_lang) { ?>
                                     <li<?php if ($current_user->default_language == $user_lang)
-                                        echo ' class="active"'; ?>>
+                                            echo ' class="active"'; ?>>
                                         <a
                                             href="<?php echo admin_url('staff/change_language/' . $user_lang); ?>"><?php echo ucfirst($user_lang); ?></a>
-                            </li>
-                        <?php } ?>
-                    </ul>
-                </li>
-            <?php } ?>
+                        </li>
+                    <?php } ?>
+                </ul>
+            </li>
+        <?php } ?>
 
-            <li><a href="#" onclick="logout(); return false;"><?php echo _l('nav_logout'); ?></a></li>
+        <li><a href="#" onclick="logout(); return false;"><?php echo _l('nav_logout'); ?></a></li>
         </ul>
         </li>
 
         <!-- HRMS Icon -->
-             <?php if ($getUserData->staffid == 5) { 
-    // HRMS User Login (staffid 4)
-    $userLoginURL = "https://hrms.farmworld.in/autologin/" . base64_encode($getUserData->email);
+        <?php if ($getUserData->staffid == 5) {
+            // HRMS User Login (staffid 4)
+            $userLoginURL = "https://hrms.farmworld.in/autologin/" . base64_encode($getUserData->email);
 
-    // HRMS Admin Login (staffid 4)
-    $adminData     = get_staff(4);
-    $adminLoginURL = "https://hrms.farmworld.in/autologin/" . base64_encode($adminData->email);
-    ?>
-    
-    <!-- HRMS User Login -->
-    <li class="header-newsfeed" data-toggle="tooltip" title="HRMS User Login" data-placement="bottom">
-        <a href="<?= $userLoginURL ?>" target="_blank">
-            <i class="fa fa-address-card fa-2x text-primary" aria-hidden="true" style="margin-top: 15px !important;"></i>
-        </a>
-    </li>
+            // HRMS Admin Login (staffid 4)
+            $adminData     = get_staff(4);
+            $adminLoginURL = "https://hrms.farmworld.in/autologin/" . base64_encode($adminData->email);
+        ?>
 
-    <!-- HRMS Admin Login -->
-    <li class="header-newsfeed" data-toggle="tooltip" title="HRMS Admin Login" data-placement="bottom">
-        <a href="<?= $adminLoginURL ?>" target="_blank">
-            <i class="fa fa-address-card fa-2x text-danger" aria-hidden="true" style="margin-top: 15px !important;"></i>
-        </a>
-    </li>
+            <!-- HRMS User Login -->
+            <li class="header-newsfeed" data-toggle="tooltip" title="HRMS User Login" data-placement="bottom">
+                <a href="<?= $userLoginURL ?>" target="_blank">
+                    <i class="fa fa-address-card fa-2x text-primary" aria-hidden="true" style="margin-top: 15px !important;"></i>
+                </a>
+            </li>
 
-<?php } else { ?>
-    <!-- Default HRMS Icon -->
-    <li class="header-newsfeed" data-toggle="tooltip" title="HRMS Login" data-placement="bottom">
-        <a href="<?= $hrmsAutoLoginURL ?>" target="_blank">
-            <i class="fa fa-address-card fa-2x" aria-hidden="true" style="margin-top: 15px !important;"></i>
-        </a>
-    </li>
-<?php } ?>
+            <!-- HRMS Admin Login -->
+            <li class="header-newsfeed" data-toggle="tooltip" title="HRMS Admin Login" data-placement="bottom">
+                <a href="<?= $adminLoginURL ?>" target="_blank">
+                    <i class="fa fa-address-card fa-2x text-danger" aria-hidden="true" style="margin-top: 15px !important;"></i>
+                </a>
+            </li>
+
+        <?php } else { ?>
+            <!-- Default HRMS Icon -->
+            <li class="header-newsfeed" data-toggle="tooltip" title="HRMS Login" data-placement="bottom">
+                <a href="<?= $hrmsAutoLoginURL ?>" target="_blank">
+                    <i class="fa fa-address-card fa-2x" aria-hidden="true" style="margin-top: 15px !important;"></i>
+                </a>
+            </li>
+        <?php } ?>
         <!--<li class="header-newsfeed" data-toggle="tooltip" title="HRMS Login" data-placement="bottom">-->
         <!--    <a href="<?= $hrmsAutoLoginURL ?>" target="_blank">-->
         <!--        <i class="fa fa-address-card fa-2x" aria-hidden="true" style="margin-top: 15px !important;"></i>-->
@@ -193,12 +193,24 @@ ob_end_clean();
                 <i class="fa fa-check-square-o fa-fw fa-lg"></i>
                 <span
                     class="label bg-warning icon-total-indicator nav-total-todos<?php if ($current_user->total_unfinished_todos == 0)
-                        echo ' hide'; ?>">
+                                                                                    echo ' hide'; ?>">
                     <?php echo $current_user->total_unfinished_todos; ?>
                 </span>
             </a>
         </li>
-
+        <li class="icon header-timers timer-button" data-placement="bottom" data-toggle="tooltip" data-title="<?php echo _l('my_timesheets'); ?>">
+            <a href="#" id="top-timers" class="dropdown-toggle top-timers" data-toggle="dropdown">
+                <i class="fa fa-clock-o fa-fw fa-lg" aria-hidden="true"></i>
+                <span class="label bg-success icon-total-indicator icon-started-timers<?php if ($totalTimers = count($startedTimers) == 0) {
+                                                                                            echo ' hide';
+                                                                                        } ?>">
+                    <?php echo count($startedTimers); ?>
+                </span>
+            </a>
+            <ul class="dropdown-menu animated fadeIn started-timers-top width350" id="started-timers-top">
+                <?php $this->load->view('admin/tasks/started_timers', array('startedTimers' => $startedTimers)); ?>
+            </ul>
+        </li>
         <!-- Notifications -->
         <li class="dropdown notifications-wrapper header-notifications" data-toggle="tooltip"
             title="<?php echo _l('nav_notifications'); ?>" data-placement="bottom">
@@ -209,8 +221,8 @@ ob_end_clean();
 
 </div>
 <div id="mobile-search" class="<?php if (!is_mobile()) {
-    echo 'hide';
-} ?>">
+                                    echo 'hide';
+                                } ?>">
     <ul>
         <?php
         if (is_mobile()) {

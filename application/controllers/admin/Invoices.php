@@ -190,7 +190,6 @@ class Invoices extends AdminController
             $notify_staff_id = '';
             if (isset($data['notify_staff_id'])) {
                 $notify_staff_id = $data['notify_staff_id'];
-                unset($data['notify_staff_id']);
             }
             
             $this->misc_model->add_note($data, 'invoice', $rel_id);
@@ -200,7 +199,7 @@ class Invoices extends AdminController
                 $invoice = $this->invoices_model->get($rel_id);
                 if ($staff && $invoice) {
                     $note_desc = strip_tags($data['description']);
-                    $invoice_url = admin_url('invoices#' . $invoice->id);
+                    $invoice_url = admin_url('invoices/list_invoices/' . $invoice->id);
                     $invoice_title = format_invoice_number($invoice->id);
                     $message = "A new note has been added to Invoice: " . $invoice_title . "\n\nNote: " . $note_desc . "\n\nInvoice Link: " . $invoice_url;
 
@@ -210,7 +209,7 @@ class Invoices extends AdminController
                         'touserid'        => $notify_staff_id,
                         'fromcompany'     => 1,
                         'fromuserid'      => get_staff_user_id(),
-                        'link'            => 'invoices#' . $invoice->id,
+                        'link'            => 'invoices/list_invoices/' . $invoice->id,
                     ]);
                     if ($notified) {
                         pusher_trigger_notification([$notify_staff_id]);

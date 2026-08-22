@@ -81,6 +81,9 @@
                             </td>
                             <td>
                                 <?php echo '<a href="' . admin_url('profile/' . $note['addedfrom']) . '">' . $note['firstname'] . ' ' . $note['lastname'] . '</a>' ?>
+                                <?php if(isset($note['notify_staff_id']) && !empty($note['notify_staff_id'])){ ?>
+                                    <span style="color:#03a9f4 !important; font-size:12px;"> | Notify to: <?php echo get_staff_full_name($note['notify_staff_id']); ?></span>
+                                <?php } ?>
                             </td>
                             <td data-order="<?php echo $note['dateadded']; ?>">
                                 <?php if (!empty($note['date_contacted'])) { ?>

@@ -461,7 +461,6 @@ class Proposals extends AdminController
             $notify_staff_id = '';
             if (isset($data['notify_staff_id'])) {
                 $notify_staff_id = $data['notify_staff_id'];
-                unset($data['notify_staff_id']);
             }
             
             $this->misc_model->add_note($data, 'proposal', $rel_id);
@@ -471,7 +470,7 @@ class Proposals extends AdminController
                 $proposal = $this->proposals_model->get($rel_id);
                 if ($staff && $proposal) {
                     $note_desc = strip_tags($data['description']);
-                    $proposal_url = admin_url('proposals#' . $proposal->id);
+                    $proposal_url = admin_url('proposals/list_proposals/' . $proposal->id);
                     $proposal_title = format_proposal_number($proposal->id);
                     $message = "A new note has been added to Proposal: " . $proposal_title . "\n\nNote: " . $note_desc . "\n\nProposal Link: " . $proposal_url;
 
@@ -481,7 +480,7 @@ class Proposals extends AdminController
                         'touserid'        => $notify_staff_id,
                         'fromcompany'     => 1,
                         'fromuserid'      => get_staff_user_id(),
-                        'link'            => 'proposals#' . $proposal->id,
+                        'link'            => 'proposals/list_proposals/' . $proposal->id,
                     ]);
                     if ($notified) {
                         pusher_trigger_notification([$notify_staff_id]);

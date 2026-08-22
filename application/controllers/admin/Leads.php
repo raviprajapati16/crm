@@ -575,6 +575,7 @@ class Leads extends AdminController
                             'addedfrom' => $note['addedfrom'],
                             'description' => $note['description'],
                             'date_contacted' => $note['date_contacted'],
+                            'notify_staff_id' => isset($note['notify_staff_id']) ? $note['notify_staff_id'] : null,
                         ]);
                     }
                 }
@@ -861,6 +862,7 @@ class Leads extends AdminController
                             'addedfrom' => $note['addedfrom'],
                             'description' => $note['description'],
                             'date_contacted' => $note['date_contacted'],
+                            'notify_staff_id' => isset($note['notify_staff_id']) ? $note['notify_staff_id'] : null,
                         ]);
                     }
                 }
@@ -1481,7 +1483,6 @@ class Leads extends AdminController
             $notify_staff_id = '';
             if (isset($data['notify_staff_id'])) {
                 $notify_staff_id = $data['notify_staff_id'];
-                unset($data['notify_staff_id']);
             }
 
             if (isset($data['contacted_indicator']) && $data['contacted_indicator'] == 'yes') {

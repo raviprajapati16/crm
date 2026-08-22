@@ -16,7 +16,12 @@ $i = 0;
         <a href="#" class="pull-right text-danger" onclick="delete_sales_note(this,<?php echo $note['id']; ?>);return false;"><i class="fa fa fa-times"></i></a>
         <a href="#" class="pull-right mright5" onclick="toggle_edit_note(<?php echo $note['id']; ?>);return false;"><i class="fa fa-pencil-square-o"></i></a>
         <?php } ?>
-        <h5 class="media-heading bold"><a href="<?php echo admin_url('profile/'.$note["addedfrom"]); ?>"><?php echo get_staff_full_name($note['addedfrom']); ?></a></h5>
+        <h5 class="media-heading bold">
+            <a href="<?php echo admin_url('profile/'.$note["addedfrom"]); ?>"><?php echo get_staff_full_name($note['addedfrom']); ?></a>
+            <?php if(isset($note['notify_staff_id']) && !empty($note['notify_staff_id'])){ ?>
+                <span style="color:#03a9f4 !important; font-size:12px; font-weight:normal;"> | Notify to: <?php echo get_staff_full_name($note['notify_staff_id']); ?></span>
+            <?php } ?>
+        </h5>
         <div data-note-description="<?php echo $note['id']; ?>">
            <?php echo check_for_links($note['description']); ?>
         </div>

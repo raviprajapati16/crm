@@ -456,9 +456,14 @@
                                  </span>
                               <?php } ?>
                               <small><?php echo _l('lead_note_date_added', _dt($note['dateadded'])); ?></small>
-                              <a href="<?php echo admin_url('profile/' . $note["addedfrom"]); ?>" target="_blank">
-                                 <h5 class="media-heading bold"><?php echo get_staff_full_name($note['addedfrom']); ?></h5>
-                              </a>
+                              <h5 class="media-heading bold">
+                                 <a href="<?php echo admin_url('profile/' . $note["addedfrom"]); ?>" target="_blank">
+                                    <?php echo get_staff_full_name($note['addedfrom']); ?>
+                                 </a>
+                                 <?php if(isset($note['notify_staff_id']) && !empty($note['notify_staff_id'])){ ?>
+                                    <span style="color:#03a9f4 !important; font-size:12px; font-weight:normal;"> | Notify to: <?php echo get_staff_full_name($note['notify_staff_id']); ?></span>
+                                 <?php } ?>
+                              </h5>
                               <div data-note-description="<?php echo $note['id']; ?>" class="text-muted">
                                  <?php echo check_for_links(app_happy_text($note['description'])); ?>
                               </div>
