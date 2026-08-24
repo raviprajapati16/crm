@@ -12,16 +12,11 @@ function my_change_default_url_to_admin()
 
 function get_staff_for_notification($source_staff)
 {
-    $allowed_roles_names = ['Managing Director', 'Director', 'Sales & Marketing'];
-    $CI =& get_instance();
-    $CI->db->select('roleid');
-    $CI->db->from(db_prefix() . 'roles');
-    $CI->db->where_in('name', $allowed_roles_names);
-    $role_ids_res = $CI->db->get()->result_array();
+    $roles_setting = get_option('staff_notification_roles');
+    $allowed_role_ids = !empty($roles_setting) ? unserialize($roles_setting) : [];
     
-    $allowed_role_ids = [];
-    foreach($role_ids_res as $r) {
-        $allowed_role_ids[] = $r['roleid'];
+    if(!is_array($allowed_role_ids)) {
+        $allowed_role_ids = [];
     }
     
     $filtered_notify_staff = [];

@@ -35,6 +35,12 @@
         <hr />
         <?php echo render_select('settings[default_staff_role]',$roles,array('roleid','name'),'settings_general_default_staff_role',get_option('default_staff_role'),array(),array('data-toggle'=>'tooltip','title'=>'settings_general_default_staff_role_tooltip')); ?>
         <hr />
+        <?php 
+        $staff_notification_roles = get_option('staff_notification_roles');
+        $staff_notification_roles = !empty($staff_notification_roles) ? unserialize($staff_notification_roles) : [];
+        echo render_select('settings[staff_notification_roles][]', $roles, array('roleid', 'name'), 'Staff Notification Roles', $staff_notification_roles, array('multiple' => true), array(), '', '', false); 
+        ?>
+        <hr />
         <?php echo render_input('settings[delete_activity_log_older_then]','delete_activity_log_older_then',get_option('delete_activity_log_older_then'),'number'); ?>
         <hr />
         <?php echo render_yes_no_option('show_setup_menu_item_only_on_hover','show_setup_menu_item_only_on_hover'); ?>

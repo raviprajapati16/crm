@@ -81,10 +81,14 @@ class Settings_model extends App_Model
             $this->db->where('name', $name);
             $exists = $this->db->count_all_results(db_prefix() . 'options');
             if ($exists == 0) {
-                continue;
+                if ($name == 'staff_notification_roles') {
+                    add_option($name, '');
+                } else {
+                    continue;
+                }
             }
 
-            if ($name == 'default_contact_permissions') {
+            if ($name == 'default_contact_permissions' || $name == 'staff_notification_roles') {
                 $val = serialize($val);
             } elseif ($name == 'lead_unique_validation') {
                 $val = json_encode($val);
@@ -165,6 +169,19 @@ class Settings_model extends App_Model
             $this->db->update(db_prefix() . 'options', [
                 'value' => json_encode([]),
             ]);
+            if ($this->db->affected_rows() > 0) {
+                $affectedRows++;
+            }
+        } elseif (!in_array('staff_notification_roles', $all_settings_looped)
+                && in_array('limit_top_search_bar_results_to', $all_settings_looped)) {
+            if (get_option('staff_notification_roles') === false || get_option('staff_notification_roles') === '') {
+                add_option('staff_notification_roles', serialize([]));
+            } else {
+                $this->db->where('name', 'staff_notification_roles');
+                $this->db->update(db_prefix() . 'options', [
+                    'value' => serialize([]),
+                ]);
+            }
             if ($this->db->affected_rows() > 0) {
                 $affectedRows++;
             }
