@@ -90,16 +90,16 @@
             <?php echo format_proposal_status($proposal->status, 'pull-left mright5 mtop5'); ?>
          </div>
          <div class="col-md-9 text-right _buttons proposal_buttons">
-       <?php if (has_permission('proposals', '', 'edit') && ($proposal->status == 6 || $proposal->status == 4)) { ?>
-    <a href="<?php echo admin_url('proposals/proposal/' . $proposal->id); ?>" 
-       data-placement="left" 
-       data-toggle="tooltip" 
-       title="<?php echo _l('proposal_edit'); ?>" 
-       class="btn btn-default btn-with-tooltip" 
-       data-placement="bottom">
-       <i class="fa fa-pencil-square-o"></i>
-    </a>
-<?php } ?>
+            <?php if (has_permission('proposals', '', 'edit') && ($proposal->status == 6 || $proposal->status == 4)) { ?>
+               <a href="<?php echo admin_url('proposals/proposal/' . $proposal->id); ?>"
+                  data-placement="left"
+                  data-toggle="tooltip"
+                  title="<?php echo _l('proposal_edit'); ?>"
+                  class="btn btn-default btn-with-tooltip"
+                  data-placement="bottom">
+                  <i class="fa fa-pencil-square-o"></i>
+               </a>
+            <?php } ?>
             <div class="btn-group">
                <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-file-pdf-o"></i><?php if (is_mobile()) {
                                                                                                                                                                         echo ' PDF';
@@ -250,7 +250,7 @@
                      <?php } ?>
                   </div>
                   <!--<hr class="hr-panel-heading" />-->
-                                  <!-- Nested tabs within proposal tab -->
+                  <!-- Nested tabs within proposal tab -->
                   <div class="row">
                      <div class="col-md-12">
                         <ul class="nav nav-tabs" role="tablist" id="proposal-nested-tabs">
@@ -359,14 +359,23 @@
                   <?php echo form_open(admin_url('proposals/add_note/' . $proposal->id), array('id' => 'sales-notes', 'class' => 'proposal-notes-form')); ?>
                   <?php echo render_textarea('description'); ?>
                   <div class="row mtop15 mbot15">
-                     <div class="col-md-6"></div>
+                     <div class="col-md-6">
+                        <div class="checkbox checkbox-primary">
+                           <input type="checkbox" name="notify_via_email" id="notify_via_email_prop" value="yes">
+                           <label for="notify_via_email_prop">Email Notification</label>
+                        </div>
+                        <div class="checkbox checkbox-primary">
+                           <input type="checkbox" name="notify_via_whatsapp" id="notify_via_whatsapp_prop" value="yes">
+                           <label for="notify_via_whatsapp_prop">WhatsApp Notification</label>
+                        </div>
+                     </div>
                      <div class="col-md-6 text-right">
                         <div class="pull-right" style="width: 250px; text-align: left;">
-                            <?php 
-                            $source_staff = isset($members) ? $members : (isset($staff) ? $staff : []);
-                            $filtered_notify_staff = get_staff_for_notification($source_staff);
-                            echo render_select('notify_staff_id', $filtered_notify_staff, array('staffid', array('firstname', 'lastname')), 'Select Staff to Notify', '', array('required' => 'true')); 
-                            ?>
+                           <?php
+                           $source_staff = isset($members) ? $members : (isset($staff) ? $staff : []);
+                           $filtered_notify_staff = get_staff_for_notification($source_staff);
+                           echo render_select('notify_staff_id', $filtered_notify_staff, array('staffid', array('firstname', 'lastname')), 'Select Staff to Notify', '', array('required' => 'true'));
+                           ?>
                         </div>
                         <div class="clearfix"></div>
                         <button type="submit" class="btn btn-info pull-right mtop15"><?php echo _l('estimate_add_note'); ?></button>
@@ -374,30 +383,30 @@
                   </div>
                   <?php echo form_close(); ?>
                   <script>
-                  $(document).ajaxComplete(function(event, xhr, settings) {
-                      if (settings.url.indexOf("proposals/add_note") > -1) {
-                          $.get(admin_url + 'proposals/get_whatsapp_link', function(res) {
+                     $(document).ajaxComplete(function(event, xhr, settings) {
+                        if (settings.url.indexOf("proposals/add_note") > -1) {
+                           $.get(admin_url + 'proposals/get_whatsapp_link', function(res) {
                               if (res && res.link) {
-                                  if (typeof swal !== 'undefined') {
-                                      swal({
-                                          title: "Notification Ready",
-                                          text: "Email sent successfully! Click below to send the WhatsApp message.",
-                                          type: "success",
-                                          showCancelButton: true,
-                                          confirmButtonText: "Send WhatsApp",
-                                          cancelButtonText: "Close"
-                                      }, function(isConfirm) {
-                                          if (isConfirm) {
-                                              window.open(res.link, '_blank');
-                                          }
-                                      });
-                                  } else {
-                                      window.open(res.link, '_blank');
-                                  }
+                                 if (typeof swal !== 'undefined') {
+                                    swal({
+                                       title: "Notification Ready",
+                                       text: "Email sent successfully! Click below to send the WhatsApp message.",
+                                       type: "success",
+                                       showCancelButton: true,
+                                       confirmButtonText: "Send WhatsApp",
+                                       cancelButtonText: "Close"
+                                    }, function(isConfirm) {
+                                       if (isConfirm) {
+                                          window.open(res.link, '_blank');
+                                       }
+                                    });
+                                 } else {
+                                    window.open(res.link, '_blank');
+                                 }
                               }
-                          }, 'json');
-                      }
-                  });
+                           }, 'json');
+                        }
+                     });
                   </script>
                   <hr />
                   <div class="panel_s mtop20 no-shadow" id="sales_notes_area">
@@ -558,13 +567,13 @@
 
 
    $(document).ready(function() {
-    //   $(document).on('click', '.btn-payment-create', function() {
-    //      get_payment_modal();
-    //   });
-    $(document).on('click', '.btn-payment-create', function() {
-    console.log("✅ Create Payment button clicked!");
-    get_payment_modal();
-});
+      //   $(document).on('click', '.btn-payment-create', function() {
+      //      get_payment_modal();
+      //   });
+      $(document).on('click', '.btn-payment-create', function() {
+         console.log("✅ Create Payment button clicked!");
+         get_payment_modal();
+      });
 
 
       $(document).on('click', '.btn-edit-payment', function() {

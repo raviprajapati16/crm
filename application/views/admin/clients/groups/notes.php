@@ -24,11 +24,19 @@
                 </div>
                 <div class="col-md-6">
                     <div class="pull-right" style="width: 250px;">
-                            <?php 
-                            $source_staff = isset($members) ? $members : (isset($staff) ? $staff : []);
-                            $filtered_notify_staff = get_staff_for_notification($source_staff);
-                            echo render_select('notify_staff_id', $filtered_notify_staff, array('staffid', array('firstname', 'lastname')), 'Select Staff to Notify', '', array('required' => 'true')); 
-                            ?>
+                        <?php
+                        $source_staff = isset($members) ? $members : (isset($staff) ? $staff : []);
+                        $filtered_notify_staff = get_staff_for_notification($source_staff);
+                        echo render_select('notify_staff_id', $filtered_notify_staff, array('staffid', array('firstname', 'lastname')), 'Select Staff to Notify', '', array('required' => 'true'));
+                        ?>
+                        <div class="checkbox checkbox-primary">
+                            <input type="checkbox" name="notify_via_email" id="notify_via_email_client" value="yes">
+                            <label for="notify_via_email_client">Email Notification</label>
+                        </div>
+                        <div class="checkbox checkbox-primary">
+                            <input type="checkbox" name="notify_via_whatsapp" id="notify_via_whatsapp_client" value="yes">
+                            <label for="notify_via_whatsapp_client">WhatsApp Notification</label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -62,10 +70,10 @@
                 </thead>
                 <tbody>
                     <?php foreach ($user_notes as $note) {
-                        if(!is_admin() && $note['is_private'] == 1){
+                        if (!is_admin() && $note['is_private'] == 1) {
                             continue;
                         }
-                        ?>
+                    ?>
                         <tr>
                             <td width="50%">
                                 <div data-note-description="<?php echo $note['id']; ?>">
@@ -81,7 +89,7 @@
                             </td>
                             <td>
                                 <?php echo '<a href="' . admin_url('profile/' . $note['addedfrom']) . '">' . $note['firstname'] . ' ' . $note['lastname'] . '</a>' ?>
-                                <?php if(isset($note['notify_staff_id']) && !empty($note['notify_staff_id'])){ ?>
+                                <?php if (isset($note['notify_staff_id']) && !empty($note['notify_staff_id'])) { ?>
                                     <span style="color:#03a9f4 !important; font-size:12px;"> | Notify to: <?php echo get_staff_full_name($note['notify_staff_id']); ?></span>
                                 <?php } ?>
                             </td>
@@ -115,32 +123,33 @@
             </table>
         </div>
     <?php } ?>
-<script>
-    window.addEventListener('load', function() {
-        if (typeof appValidateForm === 'function') {
-            appValidateForm($('#customer-notes-form'), {
-                notify_staff_id: 'required',
-                description: 'required'
-            });
-        }
-
-        <?php $wa_link = $this->session->flashdata('whatsapp_link'); if ($wa_link) { ?>
-            if (typeof swal !== 'undefined') {
-                swal({
-                    title: "Notification Ready",
-                    text: "Email sent successfully! Click below to send the WhatsApp message.",
-                    type: "success",
-                    showCancelButton: true,
-                    confirmButtonText: "Send WhatsApp",
-                    cancelButtonText: "Close"
-                }, function(isConfirm) {
-                    if (isConfirm) {
-                        window.open("<?php echo $wa_link; ?>", '_blank');
-                    }
+    <script>
+        window.addEventListener('load', function() {
+            if (typeof appValidateForm === 'function') {
+                appValidateForm($('#customer-notes-form'), {
+                    notify_staff_id: 'required',
+                    description: 'required'
                 });
-            } else {
-                window.open("<?php echo $wa_link; ?>", '_blank');
             }
-        <?php } ?>
-    });
-</script>
+
+            <?php $wa_link = $this->session->flashdata('whatsapp_link');
+            if ($wa_link) { ?>
+                if (typeof swal !== 'undefined') {
+                    swal({
+                        title: "Notification Ready",
+                        text: "Email sent successfully! Click below to send the WhatsApp message.",
+                        type: "success",
+                        showCancelButton: true,
+                        confirmButtonText: "Send WhatsApp",
+                        cancelButtonText: "Close"
+                    }, function(isConfirm) {
+                        if (isConfirm) {
+                            window.open("<?php echo $wa_link; ?>", '_blank');
+                        }
+                    });
+                } else {
+                    window.open("<?php echo $wa_link; ?>", '_blank');
+                }
+            <?php } ?>
+        });
+    </script>

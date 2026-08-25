@@ -462,6 +462,14 @@ class Proposals extends AdminController
             if (isset($data['notify_staff_id'])) {
                 $notify_staff_id = $data['notify_staff_id'];
             }
+            $notify_via_email = isset($data['notify_via_email']) ? true : false;
+            $notify_via_whatsapp = isset($data['notify_via_whatsapp']) ? true : false;
+            if (isset($data['notify_via_email'])) {
+                unset($data['notify_via_email']);
+            }
+            if (isset($data['notify_via_whatsapp'])) {
+                unset($data['notify_via_whatsapp']);
+            }
             
             $this->misc_model->add_note($data, 'proposal', $rel_id);
             
@@ -487,18 +495,22 @@ class Proposals extends AdminController
                     }
 
                     // Send Email Notification
-                    $this->load->library('email');
-                    $this->email->from(get_option('smtp_email'), get_option('companyname'));
-                    $this->email->to($staff->email);
-                    $this->email->subject("New Note Added to Proposal: " . $proposal_title);
-                    $this->email->message(nl2br($message));
-                    $this->email->send();
+                    if ($notify_via_email) {
+                        $this->load->library('email');
+                        $this->email->from(get_option('smtp_email'), get_option('companyname'));
+                        $this->email->to($staff->email);
+                        $this->email->subject("New Note Added to Proposal: " . $proposal_title);
+                        $this->email->message(nl2br($message));
+                        $this->email->send();
+                    }
 
                     // WhatsApp link Generation
-                    if (!empty($staff->phonenumber)) {
-                        $whatsappMessage = urlencode($message);
-                        $whatsapp_link = "https://api.whatsapp.com/send?phone=" . $staff->phonenumber . "&text=" . $whatsappMessage;
-                        $this->session->set_userdata('proposal_whatsapp_link', $whatsapp_link);
+                    if ($notify_via_whatsapp) {
+                        if (!empty($staff->phonenumber)) {
+                            $whatsappMessage = urlencode($message);
+                            $whatsapp_link = "https://api.whatsapp.com/send?phone=" . $staff->phonenumber . "&text=" . $whatsappMessage;
+                            $this->session->set_flashdata('whatsapp_link', $whatsapp_link);
+                        }
                     }
                 }
             }

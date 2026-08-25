@@ -62,12 +62,12 @@
                               </a>
                            </li>
                         <?php } ?>
-                          <li role="presentation">
+                        <li role="presentation">
                            <a href="#lead_notes" aria-controls="lead_notes" role="tab">
                               <?php echo _l('lead_add_edit_notes'); ?>
                            </a>
                         </li>
-                            <li role="presentation">
+                        <li role="presentation">
                            <a href="#lead_reminders" onclick="initReminderTable();" aria-controls="lead_reminders" role="tab">
                               <?php echo _l('leads_reminders_tab'); ?>
                               <?php
@@ -119,8 +119,8 @@
                               <?php echo _l('lead_attachments'); ?>
                            </a>
                         </li>
-                    
-                      
+
+
                         <li role="presentation">
                            <a href="#lead_activity" aria-controls="lead_activity" role="tab">
                               <?php echo _l('lead_add_edit_activity'); ?>
@@ -323,7 +323,7 @@
                               class="btn btn-info mb-2">
                               <?php echo _l('new_proposal'); ?>
                            </a>
-                          <?php if (
+                           <?php if (
                               total_rows(db_prefix() . 'proposals', array('rel_type' => 'lead', 'rel_id' => $lead->id)) > 0 &&
                               (has_permission('proposals', '', 'create') || has_permission('proposals', '', 'edit'))
                            ) { ?>
@@ -339,7 +339,7 @@
                            <?php } ?>
                            <?= tutorialLinkButtonRender('lead-propsal-create-btn', 'right'); ?>
                         </div>
-                     <?php } ?> 
+                     <?php } ?>
 
                      <?php
                      $table_data = array(
@@ -410,7 +410,7 @@
                   </div>
                   <div class="row">
                      <div class="col-md-6">
-                        <div class="lead-select-date-contacted hide">
+                        <!-- <div class="lead-select-date-contacted hide">
                            <?php echo render_datetime_input('custom_contact_date', 'lead_add_edit_datecontacted', '', array('data-date-end-date' => date('Y-m-d'))); ?>
                         </div>
                         <div class="radio radio-primary">
@@ -420,15 +420,23 @@
                         <div class="radio radio-primary">
                            <input type="radio" name="contacted_indicator" id="contacted_indicator_no" value="no" checked>
                            <label for="contacted_indicator_no"><?php echo _l('lead_not_contacted'); ?></label>
+                        </div> -->
+                        <div class="checkbox checkbox-primary">
+                           <input type="checkbox" name="notify_via_email" id="notify_via_email_lead" value="yes">
+                           <label for="notify_via_email_lead">Email Notification</label>
+                        </div>
+                        <div class="checkbox checkbox-primary">
+                           <input type="checkbox" name="notify_via_whatsapp" id="notify_via_whatsapp_lead" value="yes">
+                           <label for="notify_via_whatsapp_lead">WhatsApp Notification</label>
                         </div>
                      </div>
                      <div class="col-md-6">
                         <div class="pull-right" style="width: 250px;">
-                            <?php 
-                            $source_staff = isset($members) ? $members : (isset($staff) ? $staff : []);
-                            $filtered_notify_staff = get_staff_for_notification($source_staff);
-                            echo render_select('notify_staff_id', $filtered_notify_staff, array('staffid', array('firstname', 'lastname')), 'Select Staff to Notify', '', array('required' => 'true')); 
-                            ?>
+                           <?php
+                           $source_staff = isset($members) ? $members : (isset($staff) ? $staff : []);
+                           $filtered_notify_staff = get_staff_for_notification($source_staff);
+                           echo render_select('notify_staff_id', $filtered_notify_staff, array('staffid', array('firstname', 'lastname')), 'Select Staff to Notify', '', array('required' => 'true'));
+                           ?>
                         </div>
                      </div>
                   </div>
@@ -460,7 +468,7 @@
                                  <a href="<?php echo admin_url('profile/' . $note["addedfrom"]); ?>" target="_blank">
                                     <?php echo get_staff_full_name($note['addedfrom']); ?>
                                  </a>
-                                 <?php if(isset($note['notify_staff_id']) && !empty($note['notify_staff_id'])){ ?>
+                                 <?php if (isset($note['notify_staff_id']) && !empty($note['notify_staff_id'])) { ?>
                                     <span style="color:#03a9f4 !important; font-size:12px; font-weight:normal;"> | Notify to: <?php echo get_staff_full_name($note['notify_staff_id']); ?></span>
                                  <?php } ?>
                               </h5>
@@ -707,19 +715,19 @@
       $('#sync_data_proposal_data').modal('hide');
    });
 
-   $(document).on('hidden.bs.modal', '.modal', function () {
-    if($('.modal:visible').length) {
-        $('body').addClass('modal-open'); // Keep scroll disabled
-    }
-});
+   $(document).on('hidden.bs.modal', '.modal', function() {
+      if ($('.modal:visible').length) {
+         $('body').addClass('modal-open'); // Keep scroll disabled
+      }
+   });
 
-$(document).on('show.bs.modal', '.modal', function () {
-    var zIndex = 1040 + (10 * $('.modal:visible').length);
-    $(this).css('z-index', zIndex);
-    setTimeout(function() {
-        $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
-    }, 0);
-});
+   $(document).on('show.bs.modal', '.modal', function() {
+      var zIndex = 1040 + (10 * $('.modal:visible').length);
+      $(this).css('z-index', zIndex);
+      setTimeout(function() {
+         $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+      }, 0);
+   });
 
 
 
