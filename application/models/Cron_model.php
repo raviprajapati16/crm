@@ -71,6 +71,7 @@ class Cron_model extends App_Model
 
             $this->googlesheet_assignleads();
 
+            $this->stop_forgotten_timers();
             $this->staff_reminders();
             $this->events();
             $this->tasks_reminders();
@@ -2093,5 +2094,44 @@ class Cron_model extends App_Model
         $this->db->where('is_temp', '1');
         $this->db->where('created_at <', $date);
         $this->db->delete(db_prefix() . 'lead_inquiry_forms');
+    }
+
+    public function stop_forgotten_timers()
+    {
+        $today_midnight = strtotime('today');
+        $yesterday_midnight = strtotime('yesterday');
+        
+        $this->db->where('end_time IS NULL', null, false);
+        $this->db->where('start_time <', $today_midnight);
+        $this->db->where('start_time >=', $yesterday_midnight);
+        $timers = $this->db->get(db_prefix() . 'taskstimers')->result_array();
+
+        foreach ($timers as $timer) {
+            $staff_name = get_staff_full_name($timer['staff_id']);
+            $date_start = date('Y-m-d 00:00:00', $timer['start_time']);
+            $date_end = date('Y-m-d 23:59:59', $timer['start_time']);
+
+            $this->db->where('staffid', $staff_name);
+            $this->db->where('staffid !=', '[CRON]');
+            $this->db->where('staffid IS NOT NULL', null, false);
+            $this->db->where('date >=', $date_start);
+            $this->db->where('date <=', $date_end);
+            $this->db->order_by('date', 'DESC');
+            $this->db->limit(1);
+            $activity = $this->db->get(db_prefix() . 'activity_log')->row();
+
+            if ($activity) {
+                $end_time = strtotime($activity->date);
+            } else {
+                $end_time = $timer['start_time'];
+            }
+
+            $this->db->where('id', $timer['id']);
+            $this->db->update(db_prefix() . 'taskstimers', [
+                'end_time' => $end_time
+            ]);
+            
+            log_activity("Cron: Automatically stopped forgotten timer [ID: " . $timer['id'] . ", Staff: " . $staff_name . "]");
+        }
     }
 }
