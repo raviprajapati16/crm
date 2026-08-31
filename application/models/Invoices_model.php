@@ -1640,7 +1640,12 @@ class Invoices_model extends App_Model
 
     public function get_invoices_years()
     {
-        return $this->db->query('SELECT DISTINCT(YEAR(date)) as year FROM ' . db_prefix() . 'invoices ORDER BY year DESC')->result_array();
+        $years = $this->db->query('SELECT DISTINCT(YEAR(date)) as year FROM ' . db_prefix() . 'invoices ORDER BY year DESC')->result_array();
+        if (!has_explicit_financial_year_permission()) {
+            $current_year = date('Y');
+            return [['year' => $current_year]];
+        }
+        return $years;
     }
 
     private function map_shipping_columns($data, $expense = false)

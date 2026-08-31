@@ -336,6 +336,13 @@ function get_available_staff_permissions($data = [])
         ],
     ];
 
+    $corePermissions['financial_years_filter'] = [
+        'name'         => "Financial Years Filter",
+        'capabilities' => [
+            'view'   => "View All Years",
+        ],
+    ];
+
     return hooks()->apply_filters('staff_permissions', $corePermissions, $data);
 }
 /**

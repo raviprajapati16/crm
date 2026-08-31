@@ -91,6 +91,11 @@ if (count($yearArray) > 0) {
     array_push($where, 'AND YEAR(date) IN (' . implode(', ', $yearArray) . ')');
 }
 
+if (!has_explicit_financial_year_permission()) {
+    array_push($where, 'AND YEAR(date) = ' . date('Y'));
+}
+
+
 // Branch / GST filter
 $this->ci->load->model('proposals_model');
 $branches_gst  = $this->ci->proposals_model->get_proposals_branches_gst();

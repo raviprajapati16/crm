@@ -67,6 +67,10 @@ if (count($yearsArray) > 0) {
     array_push($filter, 'AND YEAR(date) IN (' . implode(', ', $yearsArray) . ')');
 }
 
+if (!has_explicit_financial_year_permission()) {
+    array_push($filter, 'AND YEAR(date) = ' . date('Y'));
+}
+
 // Branch / GST filter
 $branches_gst  = $this->ci->proposals_model->get_proposals_branches_gst();
 $gstFilterVals = [];
