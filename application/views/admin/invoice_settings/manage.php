@@ -6,7 +6,7 @@
             <div class="col-md-12">
                 <div class="panel_s">
                     <div class="panel-body">
-                        <?= form_open(
+                        <?= form_open_multipart(
                             admin_url('invoice_settings/save'),
                             array(
                                 'id' => 'invoiceSettingForm'
@@ -234,7 +234,7 @@
                             if (!is_array($all_branches)) {
                                 $all_branches = [];
                             }
-                            $active_branches = array_filter($all_branches, function($branch) {
+                            $active_branches = array_filter($all_branches, function ($branch) {
                                 return empty($branch['deleted']);
                             });
                             $active_branches = array_values($active_branches);
@@ -246,51 +246,51 @@
                             foreach ($active_branches as $idx => $branch):
                                 $is_primary = ($idx === 0);
                             ?>
-                            <div class="branch-row" data-index="<?= $idx ?>"
-                                 style="background:#f9f9f9; border:1px solid #e3e3e3; border-radius:6px; padding:15px 15px 5px; margin-bottom:12px; position:relative;">
-                                <input type="hidden" name="branch_id[]" value="<?= htmlspecialchars($branch['id'] ?? '') ?>">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Branch Name <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control branch-name-input"
-                                                   name="branch_name[]"
-                                                   placeholder="<?= $is_primary ? 'e.g. Head Office' : 'e.g. Branch Office' ?>"
-                                                   value="<?= htmlspecialchars($branch['branch_name'] ?? '') ?>" required>
+                                <div class="branch-row" data-index="<?= $idx ?>"
+                                    style="background:#f9f9f9; border:1px solid #e3e3e3; border-radius:6px; padding:15px 15px 5px; margin-bottom:12px; position:relative;">
+                                    <input type="hidden" name="branch_id[]" value="<?= htmlspecialchars($branch['id'] ?? '') ?>">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Branch Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control branch-name-input"
+                                                    name="branch_name[]"
+                                                    placeholder="<?= $is_primary ? 'e.g. Head Office' : 'e.g. Branch Office' ?>"
+                                                    value="<?= htmlspecialchars($branch['branch_name'] ?? '') ?>" required>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Invoice Prefix <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control invoice-prefix-input"
-                                                   name="invoice_prefix[]"
-                                                   placeholder="e.g. INV-{financial_year_short}-"
-                                                   value="<?= htmlspecialchars($branch['invoice_prefix'] ?? '') ?>" required>
-                                            <small class="text-muted" style="font-size:11px;">Click a variable above then click inside this field to insert.</small>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Invoice Prefix <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control invoice-prefix-input"
+                                                    name="invoice_prefix[]"
+                                                    placeholder="e.g. INV-{financial_year_short}-"
+                                                    value="<?= htmlspecialchars($branch['invoice_prefix'] ?? '') ?>" required>
+                                                <small class="text-muted" style="font-size:11px;">Click a variable above then click inside this field to insert.</small>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>GST Number</label>
-                                            <input type="text" class="form-control gst-number-input"
-                                                   name="gst_number[]"
-                                                   placeholder="e.g. 22AAAAA0000A1Z5"
-                                                   value="<?= htmlspecialchars($branch['gst_number'] ?? '') ?>">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>GST Number</label>
+                                                <input type="text" class="form-control gst-number-input"
+                                                    name="gst_number[]"
+                                                    placeholder="e.g. 22AAAAA0000A1Z5"
+                                                    value="<?= htmlspecialchars($branch['gst_number'] ?? '') ?>">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-1" style="padding-top:25px; text-align:center;">
-                                        <?php if ($is_primary): ?>
-                                            <span class="label label-default" style="font-size:11px; padding:4px 7px;"
-                                                  title="Primary row cannot be removed">Primary</span>
-                                        <?php else: ?>
-                                            <button type="button" class="btn btn-danger btn-sm remove-branch-row"
+                                        <div class="col-md-1" style="padding-top:25px; text-align:center;">
+                                            <?php if ($is_primary): ?>
+                                                <span class="label label-default" style="font-size:11px; padding:4px 7px;"
+                                                    title="Primary row cannot be removed">Primary</span>
+                                            <?php else: ?>
+                                                <button type="button" class="btn btn-danger btn-sm remove-branch-row"
                                                     title="Remove this row">
-                                                 <i class="fa fa-trash"></i>
-                                            </button>
-                                        <?php endif; ?>
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                             <?php endforeach; ?>
 
                         </div><!-- /#branch-rows-container -->
@@ -313,14 +313,14 @@
                                         <div class="form-group">
                                             <label>Branch Name <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control branch-name-input"
-                                                   name="branch_name[]" placeholder="e.g. Branch Office" required>
+                                                name="branch_name[]" placeholder="e.g. Branch Office" required>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>Invoice Prefix <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control invoice-prefix-input"
-                                                   name="invoice_prefix[]" placeholder="e.g. BR-{financial_year_short}-" required>
+                                                name="invoice_prefix[]" placeholder="e.g. BR-{financial_year_short}-" required>
                                             <small class="text-muted" style="font-size:11px;">Click a variable above then click inside this field to insert.</small>
                                         </div>
                                     </div>
@@ -328,12 +328,12 @@
                                         <div class="form-group">
                                             <label>GST Number</label>
                                             <input type="text" class="form-control gst-number-input"
-                                                   name="gst_number[]" placeholder="e.g. 22AAAAA0000A1Z5">
+                                                name="gst_number[]" placeholder="e.g. 22AAAAA0000A1Z5">
                                         </div>
                                     </div>
                                     <div class="col-md-1" style="padding-top:25px; text-align:center;">
                                         <button type="button" class="btn btn-danger btn-sm remove-branch-row"
-                                                title="Remove this row">
+                                            title="Remove this row">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
@@ -352,6 +352,173 @@
 
                         <div class="row">
                             <div class="col-md-12">
+                                <h5 class="section-subtitle" style="margin-bottom:10px; font-weight:600; color:#555;">
+                                    <i class="fa fa-file-text-o"></i> Annexure Details
+                                </h5>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_shipping_bill_no">Shipping Bill No.</label>
+                                    <input type="text" class="form-control" id="annexure_shipping_bill_no" name="annexure_shipping_bill_no" value="<?= get_option('annexure_shipping_bill_no') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_shipping_bill_date">Shipping Bill Date</label>
+                                    <input type="date" class="form-control" id="annexure_shipping_bill_date" name="annexure_shipping_bill_date" value="<?= get_option('annexure_shipping_bill_date') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_range_of_customs">Range of Customs</label>
+                                    <input type="text" class="form-control" id="annexure_range_of_customs" name="annexure_range_of_customs" value="<?= get_option('annexure_range_of_customs') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_commissionerate_of_customs">Commissionerate of Customs</label>
+                                    <input type="text" class="form-control" id="annexure_commissionerate_of_customs" name="annexure_commissionerate_of_customs" value="<?= get_option('annexure_commissionerate_of_customs') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_division_of_customs">Division of Customs</label>
+                                    <input type="text" class="form-control" id="annexure_division_of_customs" name="annexure_division_of_customs" value="<?= get_option('annexure_division_of_customs') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_exporter_name">Name of Exporter</label>
+                                    <input type="text" class="form-control" id="annexure_exporter_name" name="annexure_exporter_name" value="<?= get_option('annexure_exporter_name') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_exporter_address">Address of Exporter</label>
+                                    <!-- <textarea class="form-control" id="annexure_exporter_address" name="annexure_exporter_address" rows="4"><?= get_option('annexure_exporter_address') ?></textarea> -->
+                                    <input type="text" class="form-control" id="annexure_exporter_address" name="annexure_exporter_address" value="<?= get_option('annexure_exporter_address') ?>">
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_iec_number">IEC Number</label>
+                                    <input type="text" class="form-control" id="annexure_iec_number" name="annexure_iec_number" value="<?= get_option('annexure_iec_number') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_gstin">GSTIN</label>
+                                    <input type="text" class="form-control" id="annexure_gstin" name="annexure_gstin" value="<?= get_option('annexure_gstin') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_pan_number">PAN Number</label>
+                                    <input type="text" class="form-control" id="annexure_pan_number" name="annexure_pan_number" value="<?= get_option('annexure_pan_number') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_cin_number">CIN Number</label>
+                                    <input type="text" class="form-control" id="annexure_cin_number" name="annexure_cin_number" value="<?= get_option('annexure_cin_number') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_stuffing_address">Stuffing Address</label>
+                                    <!-- <textarea class="form-control" id="annexure_stuffing_address" name="annexure_stuffing_address" rows="4"><?= get_option('annexure_stuffing_address') ?></textarea> -->
+                                    <input type="text" class="form-control" id="annexure_stuffing_address" name="annexure_stuffing_address" value="<?= get_option('annexure_stuffing_address') ?>">
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_aeo_certificate_number">AEO Certificate Number</label>
+                                    <input type="text" class="form-control" id="annexure_aeo_certificate_number" name="annexure_aeo_certificate_number" value="<?= get_option('annexure_aeo_certificate_number') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_permission_order_no">Permission Order No.</label>
+                                    <input type="text" class="form-control" id="annexure_permission_order_no" name="annexure_permission_order_no" value="<?= get_option('annexure_permission_order_no') ?>">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_authorised_signatory_name">Name of Authorised Signatory</label>
+                                    <input type="text" class="form-control" id="annexure_authorised_signatory_name" name="annexure_authorised_signatory_name" value="<?= get_option('annexure_authorised_signatory_name') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_authorised_signatory_designation">Designation of Authorised Signatory</label>
+                                    <input type="text" class="form-control" id="annexure_authorised_signatory_designation" name="annexure_authorised_signatory_designation" value="<?= get_option('annexure_authorised_signatory_designation') ?>">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="annexure_examination_agency_name">Examination Agency/Officer Name</label>
+                                    <input type="text" class="form-control" id="annexure_examination_agency_name" name="annexure_examination_agency_name" value="<?= get_option('annexure_examination_agency_name') ?>">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="annexure_declaration">Declaration</label>
+                                    <textarea class="form-control" id="annexure_declaration" name="annexure_declaration" rows="5"><?= get_option('annexure_declaration') ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5 class="section-subtitle" style="margin-bottom:10px; font-weight:600; color:#555;">
+                                    <i class="fa fa-sticky-note"></i> Invoice Notes
+                                </h5>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="notes_gst_invoice">GST Invoice Notes</label>
+                                    <textarea class="form-control" id="notes_gst_invoice" name="notes_gst_invoice" rows="4"><?= get_option('notes_gst_invoice') ?></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="notes_custom_invoice">Custom Invoice Notes</label>
+                                    <textarea class="form-control" id="notes_custom_invoice" name="notes_custom_invoice" rows="4"><?= get_option('notes_custom_invoice') ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="notes_packing_weight_list">Packing / Weight List Notes</label>
+                                    <textarea class="form-control" id="notes_packing_weight_list" name="notes_packing_weight_list" rows="4"><?= get_option('notes_packing_weight_list') ?></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="notes_commercial_invoice">Commercial Invoice Notes</label>
+                                    <textarea class="form-control" id="notes_commercial_invoice" name="notes_commercial_invoice" rows="4"><?= get_option('notes_commercial_invoice') ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-12">
                                 <div class="form-group text-right">
                                     <button type="submit" class="btn btn-primary">
                                         Save
@@ -359,7 +526,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <?= form_close() ?>
                     </div>
                 </div>
@@ -372,7 +539,11 @@
             $(window).off('beforeunload');
 
             init_editor('textarea[name="invoice_terms_and_condition"]');
-
+            init_editor('textarea[name="notes_gst_invoice"]');
+            init_editor('textarea[name="notes_custom_invoice"]');
+            init_editor('textarea[name="notes_packing_weight_list"]');
+            init_editor('textarea[name="notes_commercial_invoice"]');
+            init_editor('textarea[name="annexure_declaration"]');
             // Track the last focused invoice prefix input
             var $lastFocusedPrefix = null;
             $(document).on('focus', '.invoice-prefix-input', function() {
@@ -384,15 +555,15 @@
                 var variable = $(this).data('variable');
 
                 // Use last focused prefix, or fall back to the first prefix input
-                var $target = ($lastFocusedPrefix && $lastFocusedPrefix.length)
-                    ? $lastFocusedPrefix
-                    : $('.invoice-prefix-input').first();
+                var $target = ($lastFocusedPrefix && $lastFocusedPrefix.length) ?
+                    $lastFocusedPrefix :
+                    $('.invoice-prefix-input').first();
 
                 if ($target && $target.length) {
                     var inputField = $target[0];
                     var cursorPos = inputField.selectionStart;
                     var textBefore = inputField.value.substring(0, cursorPos);
-                    var textAfter  = inputField.value.substring(cursorPos);
+                    var textAfter = inputField.value.substring(cursorPos);
 
                     inputField.value = textBefore + variable + textAfter;
                     inputField.focus();
@@ -427,20 +598,28 @@
             // ── Add More Branch Row ──────────────────────────────────────
             $('#add-branch-row').on('click', function() {
                 var template = document.getElementById('branch-row-template');
-                var clone    = document.importNode(template.content, true);
-                var $clone   = $(clone);
+                var clone = document.importNode(template.content, true);
+                var $clone = $(clone);
 
                 // Animate entry
-                $clone.find('.branch-row').css({ opacity: 0, marginTop: '-10px' });
+                $clone.find('.branch-row').css({
+                    opacity: 0,
+                    marginTop: '-10px'
+                });
                 $('#branch-rows-container').append($clone);
                 $('#branch-rows-container .branch-row').last()
-                    .animate({ opacity: 1, marginTop: '0px' }, 300);
+                    .animate({
+                        opacity: 1,
+                        marginTop: '0px'
+                    }, 300);
             });
 
             // ── Remove Branch Row ────────────────────────────────────────
             $(document).on('click', '.remove-branch-row', function() {
                 var $row = $(this).closest('.branch-row');
-                $row.fadeOut(250, function() { $(this).remove(); });
+                $row.fadeOut(250, function() {
+                    $(this).remove();
+                });
             });
 
             // ── Form Validator ───────────────────────────────────────────
@@ -455,4 +634,5 @@
         });
     </script>
     </body>
-</html>
+
+    </html>

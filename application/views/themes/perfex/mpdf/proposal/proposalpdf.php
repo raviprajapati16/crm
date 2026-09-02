@@ -29,7 +29,7 @@ $getTax = get_tax_by_relation($proposal->id, "proposal");
             font-size: 14px;
             text-align: center;
             padding: 8px;
-            border-bottom: 1px solid #000;
+            border: 1px solid #000;
         }
 
         .info-row {
@@ -127,50 +127,148 @@ $getTax = get_tax_by_relation($proposal->id, "proposal");
     <table class="invoice-container">
         <!-- Header -->
         <tr>
-            <td colspan="4" class="header-title">Sales Contract Cum Proforma Invoice</td>
-        </tr>
-        <tr>
-            <td class="info-cell label" colspan="2">Contract No.
-                <?= $proposal->proposal_number_prefix . $proposal->proposal_number ?>
-            </td>
-            <td class="info-cell label" colspan="2">Contract Date <?= _d($proposal->date); ?></td>
+            <td colspan="3" class="header-title">Sales Contract Cum Proforma Invoice</td>
         </tr>
 
-        <!-- Seller and Buyer Info -->
-        <tr class="info-row">
-            <td class="info-cell label" colspan="2">Seller:</td>
-            <td class="info-cell label" colspan="2">Buyer:</td>
+        <!-- Row 1: Labels -->
+        <tr>
+            <td class="info-cell" style="width: 50%; background-color: #e6e6e6;"><i><b>Seller:</b></i></td>
+            <td class="info-cell" style="width: 25%; background-color: #e6e6e6;"><i><b>Contract No.:</b></i></td>
+            <td class="info-cell" style="width: 25%; background-color: #e6e6e6;"><i><b>Contract Date:</b></i></td>
         </tr>
-        <tr class="info-row">
-            <td class="info-cell" colspan="2">
+
+        <!-- Row 2: Values (Seller spans down) -->
+        <tr>
+            <td class="info-cell" rowspan="5" style="width: 50%; vertical-align: top;">
+                <!-- <b><?php echo get_option('invoice_company_name'); ?></b><br> -->
                 <?php
-                    // Show the proposal-specific GST number in the Seller block
-                    // format_organization_info() always inserts company_vat; override it here
-                    $seller_info = format_organization_info();
-                    if (!empty($proposal->proposal_gst_number) && !empty(get_option('company_vat'))) {
-                        $seller_info = str_replace(get_option('company_vat'), $proposal->proposal_gst_number, $seller_info);
-                    } elseif (!empty($proposal->proposal_gst_number) && empty(get_option('company_vat'))) {
-                        $seller_info .= '<br/>GST Number: ' . $proposal->proposal_gst_number;
-                    }
-                    echo $seller_info;
+                $seller_info = format_organization_info();
+                if (!empty($proposal->proposal_gst_number) && !empty(get_option('company_vat'))) {
+                    $seller_info = str_replace(get_option('company_vat'), $proposal->proposal_gst_number, $seller_info);
+                } elseif (!empty($proposal->proposal_gst_number) && empty(get_option('company_vat'))) {
+                    $seller_info .= '<br/>GST Number: ' . $proposal->proposal_gst_number;
+                }
+                echo $seller_info;
                 ?>
             </td>
-            <td class="info-cell" colspan="2">
-                <?= format_proposal_info($proposal, 'pdf'); ?>
+            <td class="info-cell" style="vertical-align: top;">
+                <?= $proposal->proposal_number_prefix . $proposal->proposal_number ?>
+            </td>
+            <td class="info-cell" style="vertical-align: top;">
+                <?= _d($proposal->date); ?>
             </td>
         </tr>
 
-        <tr class="info-row">
-            <td class="info-cell label " width="25%">Place of Loading:</td>
-            <td class="info-cell label " width="25%">Place of Discharge:</td>
-            <td class="info-cell label " width="25%">Payment Term:</td>
-            <td class="info-cell label " width="25%">Shipment Term:</td>
+        <!-- Row 3: Labels for Place -->
+        <tr>
+            <td class="info-cell" style="background-color: #e6e6e6;"><i><b>Place of Loading:</b></i></td>
+            <td class="info-cell" style="background-color: #e6e6e6;"><i><b>Place of Discharge:</b></i></td>
         </tr>
-        <tr class="info-row">
-            <td class="info-cell"><?= $proposal->loading_place ?></td>
-            <td class="info-cell"><?= $proposal->discharge_place ?></td>
-            <td class="info-cell"><?= $proposal->payment_term ?></td>
-            <td class="info-cell"><?= $proposal->shipment_term ?></td>
+
+        <!-- Row 4: Values for Place -->
+        <tr>
+            <td class="info-cell" style="vertical-align: top;"><?= $proposal->loading_place ?></td>
+            <td class="info-cell" style="vertical-align: top;"><?= $proposal->discharge_place ?></td>
+        </tr>
+
+        <!-- Row 5: Labels for Terms -->
+        <tr>
+            <td class="info-cell" style="background-color: #e6e6e6;"><i><b>Payment Term:</b></i></td>
+            <td class="info-cell" style="background-color: #e6e6e6;"><i><b>Shipment Term:</b></i></td>
+        </tr>
+
+        <!-- Row 6: Values for Terms -->
+        <tr>
+            <td class="info-cell" style="vertical-align: top;"><?= $proposal->payment_term ?></td>
+            <td class="info-cell" style="vertical-align: top;"><?= $proposal->shipment_term ?></td>
+        </tr>
+
+        <!-- Row 7: Buyer & Notify Party Labels -->
+        <tr>
+            <td class="info-cell" style="background-color: #e6e6e6;"><i><b>Buyer (Bill To):</b></i></td>
+            <td class="info-cell" colspan="2" style="background-color: #e6e6e6;"><i><b>Notify Party (Ship To):</b></i></td>
+        </tr>
+
+        <!-- Row 8: Buyer & Notify Party Values -->
+        <?php
+        $billing_info = '';
+        $shipping_info = '';
+
+        if ($proposal->rel_type == 'customer') {
+            $CI = &get_instance();
+            $CI->load->model('clients_model');
+            $client = $CI->clients_model->get($proposal->rel_id);
+
+            if ($client) {
+                // Build Billing Info (Buyer)
+                if (!empty($client->billing_buyer)) {
+                    $billing_info .= '<i><b>' . $client->billing_buyer . '</b></i><br>';
+                }
+
+                if (!empty($client->billing_street)) {
+                    $billing_info .= nl2br($client->billing_street) . '<br>';
+                }
+
+                $billing_country = get_country($client->billing_country);
+                $billing_location = [];
+                if (!empty($client->billing_city)) $billing_location[] = $client->billing_city;
+                if (!empty($client->billing_state)) $billing_location[] = $client->billing_state;
+                if ($billing_country) $billing_location[] = $billing_country->short_name;
+
+                if (!empty($billing_location)) {
+                    $billing_info .= implode(', ', $billing_location) . '<br>';
+                }
+                if (!empty($client->billing_mobile_number)) {
+                    $billing_info .= 'Mobile: ' . $client->billing_mobile_number . '<br>';
+                }
+                if (!empty($client->billing_email)) {
+                    $billing_info .= 'Email: ' . $client->billing_email . '<br>';
+                }
+                if (!empty($client->billing_gst_number)) {
+                    $billing_info .= 'GST IN: ' . $client->billing_gst_number . '<br>';
+                }
+
+                // Build Shipping Info (Notify Party)
+                if (!empty($client->shipping_notify_party)) {
+                    $shipping_info .= '<i><b>' . $client->shipping_notify_party . '</b></i><br>';
+                }
+                if (!empty($client->shipping_street)) {
+                    $shipping_info .= nl2br($client->shipping_street) . '<br>';
+                }
+
+                $shipping_country = get_country($client->shipping_country);
+                $shipping_location = [];
+                if (!empty($client->shipping_city)) $shipping_location[] = $client->shipping_city;
+                if (!empty($client->shipping_state)) $shipping_location[] = $client->shipping_state;
+                if ($shipping_country) $shipping_location[] = $shipping_country->short_name;
+
+                if (!empty($shipping_location)) {
+                    $shipping_info .= implode(', ', $shipping_location) . '<br>';
+                }
+                if (!empty($client->shipping_mobile_number)) {
+                    $shipping_info .= 'Mobile: ' . $client->shipping_mobile_number . '<br>';
+                }
+                if (!empty($client->shipping_email)) {
+                    $shipping_info .= 'Email: ' . $client->shipping_email . '<br>';
+                }
+                if (!empty($client->shipping_gst_number)) {
+                    $shipping_info .= 'GST IN: ' . $client->shipping_gst_number . '<br>';
+                }
+            }
+        }
+
+        // Fallback for leads or if client is missing
+        if (empty($billing_info)) {
+            $billing_info = format_proposal_info($proposal, 'pdf');
+        }
+        ?>
+        <tr>
+            <td class="info-cell" style="vertical-align: top;">
+                <?= $billing_info; ?>
+            </td>
+            <td class="info-cell" colspan="2" style="vertical-align: top;">
+                <?= $shipping_info; ?>
+            </td>
         </tr>
     </table>
 
@@ -183,13 +281,13 @@ $getTax = get_tax_by_relation($proposal->id, "proposal");
     ?>
     <table class="product-table">
         <tr>
-            <td class="product-header" style="width: 6%;"><span class="">Sr. No.</span></td>
-            <td class="product-header" style="width: 30%;" colspan="2"><span class="">Product Name & Description</span>
+            <td class="product-header" style="width: 6%;">Sr. No.</td>
+            <td class="product-header" style="width: 30%;" colspan="2">Product
             </td>
-            <td class="product-header" style="width: 12%;"><span class="">HS Code</span></td>
-            <td class="product-header" style="width: 10%;"><span class="">Quantity<br>(<?= $qtyunit ?>)</span></td>
-            <td class="product-header" style="width: 17%;"><span class="">Amount/Unit<br>(In
-                    <?= $currencyData->name ?>)</span></td>
+            <td class="product-header" style="width: 12%;">HSC</td>
+            <td class="product-header" style="width: 10%;">Quantity<br>(<?= $qtyunit ?>)</td>
+            <td class="product-header" style="width: 17%;">Amount/Unit<br>(In
+                <?= $currencyData->name ?>)</span></td>
             <td class="product-header" style="width: 17%;"><span class="">Total Amount<br>(In
                     <?= $currencyData->name ?>)</span></td>
         </tr>
@@ -305,50 +403,111 @@ $getTax = get_tax_by_relation($proposal->id, "proposal");
         </tr>
     </table>
 
-    <!-- Banking Details -->
-    <table class="bank-details">
+    <!-- Details Grid -->
+    <table class="invoice-container" style="margin-top: 2px;">
+        <!-- Weight and Shipping Labels -->
+        <!-- <tr>
+            <td class="info-cell" colspan="2" style="width: 50%; background-color: #e6e6e6;"><i><b>Weight Details:</b></i></td>
+            <td class="info-cell" colspan="2" style="width: 50%; background-color: #e6e6e6;"><i><b>Shipping Details:</b></i></td>
+        </tr> -->
+        <!-- Weight and Shipping Row 1 -->
+        <!-- <tr>
+            <td class="info-cell" style="width: 25%;">Total Net Weight</td>
+            <td class="info-cell" style="width: 25%;"></td>
+            <td class="info-cell" style="width: 25%;">Vessel/Transport Name</td>
+            <td class="info-cell" style="width: 25%;"></td>
+        </tr> -->
+        <!-- Weight and Shipping Row 2 -->
+        <!-- <tr>
+            <td class="info-cell">Total Gross Weight</td>
+            <td class="info-cell"></td>
+            <td class="info-cell">Container/Truck No.</td>
+            <td class="info-cell"></td>
+        </tr> -->
+        <!-- Weight and Shipping Row 3 -->
+        <!-- <tr>
+            <td class="info-cell">Total No. of Packages</td>
+            <td class="info-cell"></td>
+            <td class="info-cell">BL / LR No.</td>
+            <td class="info-cell"></td>
+        </tr> -->
+
+        <!-- Banking and Registration Labels -->
         <tr>
-            <td class="bank-cell label " colspan="2" style="width: 12%;">Banking Details:</td>
-            <td class="bank-cell label" colspan="2" style="width: 12%;">Company Details:</td>
+            <td class="info-cell" colspan="2" style="background-color: #e6e6e6; width: 50%;"><i><b>Banking Details:</b></i></td>
+            <td class="info-cell" colspan="2" style="background-color: #e6e6e6; width: 50%;"><i><b>Registration Details:</b></i></td>
         </tr>
+        <!-- Banking and Registration Row 1 -->
         <tr>
-            <td class="bank-cell" width="25%">Name:</td>
-            <td class="bank-cell" width="25%"><?= $proposal->bank_ac_name ?></td>
-            <td class="bank-cell" width="25%">GST Number:</td>
-            <td class="bank-cell" width="25%"><?= !empty($proposal->proposal_gst_number) ? $proposal->proposal_gst_number : get_option('company_vat') ?></td>
+            <td class="info-cell" style="width: 20%;">Name</td>
+            <td class="info-cell" style="width: 30%;"><?= $proposal->bank_ac_name ?></td>
+            <td class="info-cell" style="width: 20%;">GSTIN</td>
+            <td class="info-cell" style="width: 30%;"><?= !empty($proposal->proposal_gst_number) ? $proposal->proposal_gst_number : get_option('company_vat') ?></td>
         </tr>
+        <!-- Row 2 -->
         <tr>
-            <td class="bank-cell">Account No.:</td>
-            <td class="bank-cell"><?= $proposal->bank_ac_no ?></td>
-            <td class="bank-cell">PAN/IEC Number:</td>
-            <td class="bank-cell"><?= get_option('company_pan_number') ?></td>
+            <td class="info-cell" style="width: 20%;">Account No.</td>
+            <td class="info-cell" style="width: 30%;"><?= $proposal->bank_ac_no ?></td>
+            <td class="info-cell" style="width: 20%;">CIN</td>
+            <td class="info-cell" style="width: 30%;"><?= get_option('company_cin_number') ?? '' ?></td>
         </tr>
+        <!-- Row 3 -->
         <tr>
-            <td class="bank-cell">Bank Name:</td>
-            <td class="bank-cell"><?= $proposal->bank_name ?></td>
-            <td class="bank-cell">TAN Number:</td>
-            <td class="bank-cell"><?= get_option('company_tan_number') ?></td>
+            <td class="info-cell" style="width: 20%;">Bank Name</td>
+            <td class="info-cell" style="width: 30%;"><?= $proposal->bank_name ?></td>
+            <td class="info-cell" style="width: 20%;">PAN</td>
+            <td class="info-cell" style="width: 30%;"><?= get_option('company_pan_number') ?? '' ?></td>
         </tr>
+        <!-- Row 4 -->
         <tr>
-            <td class="bank-cell">IFSC Code:</td>
-            <td class="bank-cell"><?= $proposal->bank_ifsc_code ?></td>
-            <td class="bank-cell" colspan="2" rowspan="3"><strong>Notes:</strong> <?= $proposal->notes ?></td>
+            <td class="info-cell" style="width: 20%;">IFSC Code</td>
+            <td class="info-cell" style="width: 30%;"><?= $proposal->bank_ifsc_code ?></td>
+            <td class="info-cell" style="width: 20%;">IEC</td>
+            <td class="info-cell" style="width: 30%;"></td>
         </tr>
+        <!-- Row 5 -->
         <tr>
-            <td class="bank-cell">Swift Code:</td>
-            <td class="bank-cell"><?= $proposal->bank_swift_code ?></td>
+            <td class="info-cell" style="width: 20%;">Bank Swift Code</td>
+            <td class="info-cell" style="width: 30%;"><?= $proposal->bank_swift_code ?></td>
+            <td class="info-cell" style="width: 20%;">TAN</td>
+            <td class="info-cell" style="width: 30%;"><?= get_option('company_tan_number') ?? '' ?></td>
         </tr>
+
+        <!-- Notes and Signatory Labels -->
         <tr>
-            <td class="bank-cell">Address:</td>
-            <td class="bank-cell"><?= $proposal->bank_address ?></td>
+            <td class="info-cell" colspan="4" style="background-color: #e6e6e6;"><i><b>Notes:</b></i></td>
+            <!-- <td class="info-cell" colspan="2" style="background-color: #e6e6e6;"><i><b>Authorized Signatory:</b></i></td> -->
+        </tr>
+        <!-- Notes and Signatory Values -->
+        <tr>
+            <td class="info-cell" colspan="4" style="vertical-align: top; font-size: 9px; height: 100px;">
+                <?= !empty($proposal->notes) ? $proposal->notes . '<br><br>' : '' ?>
+                <?= get_option('proposal_pdf_notes') ?>
+            </td>
+            <!-- <td class="info-cell" colspan="2" style="vertical-align: bottom; text-align: center;">
+                <?php
+                $company_signature_path = 'uploads/company/' . get_option('signature_image');
+                if (file_exists($company_signature_path) && !empty(get_option('signature_image'))) {
+                ?>
+                    <img src="<?= base_url('uploads/company/' . get_option('signature_image')) ?>" width="140" height="130" alt="Company Signature">
+                <?php } else {
+                    echo "<br><br><br><br><br><br>";
+                } ?>
+            </td> -->
         </tr>
     </table>
 
-    <!-- Signature Section -->
-    <?php
-    $company_signature_path = 'uploads/company/' . get_option('signature_image');
-    $customer_sign_path = protected_file_url_by_path(get_upload_path_by_type('proposal') . $proposal->id . '/' . $proposal->signature);
-    ?>
+    <!-- NEW PAGE SECTION -->
+    <?php if (get_option('show_pdf_terms_and_conditions') == '1') { ?>
+        <div class="new-page">
+            <div>
+                <?php echo $proposal->content ?>
+            </div>
+            <div>
+
+            </div>
+        </div>
+    <?php } ?>
     <table class="signature-section">
         <tr>
             <td class="signature-cell" style="width: 50%;">
@@ -361,8 +520,8 @@ $getTax = get_tax_by_relation($proposal->id, "proposal");
                         <table style="width: 100%; border: none; margin: 0; padding: 0; border-collapse: collapse;">
                             <tr>
                                 <td style="text-align: center; border: none; padding: 0; margin: 0;">
-                                    <img src="<?= base_url('uploads/company/' . get_option('signature_image')) ?>" width="140"
-                                        height="130" alt="Company Signature">
+                                    <img src="<?= base_url('uploads/company/' . get_option('signature_image')) ?>"
+                                        width="140" height="130" alt="Company Signature">
                                 </td>
                             </tr>
                         </table>
@@ -391,57 +550,6 @@ $getTax = get_tax_by_relation($proposal->id, "proposal");
             </td>
         </tr>
     </table>
-
-    <!-- NEW PAGE SECTION -->
-    <div class="new-page">
-        <div>
-            <?php echo $proposal->content ?>
-        </div>
-        <div>
-            <table class="signature-section">
-                <tr>
-                    <td class="signature-cell" style="width: 50%;">
-                        <strong>The Seller:</strong><br>
-                        For and On Behalf of:<br><br>
-                        <?php
-                        if (file_exists($company_signature_path) && !empty(get_option('signature_image'))) {
-                        ?>
-                            <?php if (file_exists($company_signature_path) && !empty(get_option('signature_image'))) { ?>
-                                <table style="width: 100%; border: none; margin: 0; padding: 0; border-collapse: collapse;">
-                                    <tr>
-                                        <td style="text-align: center; border: none; padding: 0; margin: 0;">
-                                            <img src="<?= base_url('uploads/company/' . get_option('signature_image')) ?>"
-                                                width="140" height="130" alt="Company Signature">
-                                        </td>
-                                    </tr>
-                                </table>
-                            <?php } else {
-                                echo str_repeat("<br>", 10);
-                            } ?>
-                        <?php
-                        } else {
-                            echo "<br><br><br><br><br><br><br><br><br><br>";
-                        }
-                        ?>
-                    </td>
-                    <td class="signature-cell" style="width: 50%;">
-                        <strong>The Buyer:</strong><br>
-                        For and On Behalf of:<br><br>
-                        <?php
-                        if (file_exists($customer_sign_path) && !empty($proposal->signature)) {
-                            $customer_sign_url = site_url('download/preview_image?path=' . protected_file_url_by_path(get_upload_path_by_type('proposal') . $proposal->id . '/' . $proposal->signature));
-                        ?>
-                            <img src="<?= $customer_sign_url ?>" alt="Company Signature" width="120" height="80">
-                        <?php
-                        } else {
-                            echo "<br><br><br><br><br><br><br><br><br><br>";
-                        }
-                        ?>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
 
 
 </body>

@@ -241,6 +241,10 @@
 
         $('.billing-same-as-customer').on('click', function(e) {
             e.preventDefault();
+            $('input[name="billing_buyer"]').val($('input[name="company"]').val());
+            $('input[name="billing_mobile_number"]').val($('input[name="mobile_number"]').val());
+            $('input[name="billing_email"]').val($('input[name="email"]').val());
+            $('input[name="billing_gst_number"]').val($('input[name="vat"]').val());
             $('textarea[name="billing_street"]').val($('textarea[name="address"]').val());
             $('input[name="billing_zip"]').val($('input[name="zip"]').val());
             copyClientLocationGroup('profile', 'billing');
@@ -248,6 +252,10 @@
 
         $('.customer-copy-billing-address').on('click', function(e) {
             e.preventDefault();
+            $('input[name="shipping_notify_party"]').val($('input[name="billing_buyer"]').val());
+            $('input[name="shipping_mobile_number"]').val($('input[name="billing_mobile_number"]').val());
+            $('input[name="shipping_email"]').val($('input[name="billing_email"]').val());
+            $('input[name="shipping_gst_number"]').val($('input[name="billing_gst_number"]').val());
             $('textarea[name="shipping_street"]').val($('textarea[name="billing_street"]').val());
             $('input[name="shipping_zip"]').val($('input[name="billing_zip"]').val());
             copyClientLocationGroup('billing', 'shipping');

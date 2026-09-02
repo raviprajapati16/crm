@@ -90,6 +90,10 @@
                   } ?>
                   <?php $value = (isset($client) ? $client->phonenumber : ''); ?>
                   <?php echo render_input('phonenumber', 'client_phonenumber', $value); ?>
+                  <?php $value = (isset($client) ? $client->mobile_number : ''); ?>
+                  <?php echo render_input('mobile_number', 'Customer Mobile Number', $value); ?>
+                  <?php $value = (isset($client) ? $client->email : ''); ?>
+                  <?php echo render_input('email', 'Customer Email', $value, 'email'); ?>
                   <?php if ((isset($client) && empty($client->website)) || !isset($client)) {
                      $value = (isset($client) ? $client->website : '');
                      echo render_input('website', 'client_website', $value);
@@ -264,6 +268,14 @@
                                  class="font-medium-xs"><?php echo _l('customer_billing_same_as_profile'); ?></small></a>
                         </h4>
                         <hr />
+                        <?php $value = (isset($client) ? $client->billing_buyer : ''); ?>
+                        <?php echo render_input('billing_buyer', 'Buyer (Bill To)', $value); ?>
+                        <?php $value = (isset($client) ? $client->billing_mobile_number : ''); ?>
+                        <?php echo render_input('billing_mobile_number', 'Billing Mobile Number', $value); ?>
+                        <?php $value = (isset($client) ? $client->billing_email : ''); ?>
+                        <?php echo render_input('billing_email', 'Billing Email', $value, 'email'); ?>
+                        <?php $value = (isset($client) ? $client->billing_gst_number : ''); ?>
+                        <?php echo render_input('billing_gst_number', 'Billing GST Number', $value); ?>
                         <?php $value = (isset($client) ? $client->billing_street : ''); ?>
                         <?php echo render_textarea('billing_street', 'billing_street', $value); ?>
                         <?php
@@ -323,6 +335,14 @@
                                  class="font-medium-xs"><?php echo _l('customer_billing_copy'); ?></small></a>
                         </h4>
                         <hr />
+                        <?php $value = (isset($client) ? $client->shipping_notify_party : ''); ?>
+                        <?php echo render_input('shipping_notify_party', 'Notify Party (Ship To)', $value); ?>
+                        <?php $value = (isset($client) ? $client->shipping_mobile_number : ''); ?>
+                        <?php echo render_input('shipping_mobile_number', 'Shipping Mobile Number', $value); ?>
+                        <?php $value = (isset($client) ? $client->shipping_email : ''); ?>
+                        <?php echo render_input('shipping_email', 'Shipping Email', $value, 'email'); ?>
+                        <?php $value = (isset($client) ? $client->shipping_gst_number : ''); ?>
+                        <?php echo render_input('shipping_gst_number', 'Shipping GST Number', $value); ?>
                         <?php $value = (isset($client) ? $client->shipping_street : ''); ?>
                         <?php echo render_textarea('shipping_street', 'shipping_street', $value); ?>
                         <?php

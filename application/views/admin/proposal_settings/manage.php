@@ -234,7 +234,7 @@
                             if (!is_array($all_branches)) {
                                 $all_branches = [];
                             }
-                            $active_branches = array_filter($all_branches, function($branch) {
+                            $active_branches = array_filter($all_branches, function ($branch) {
                                 return empty($branch['deleted']);
                             });
                             $active_branches = array_values($active_branches);
@@ -247,51 +247,51 @@
                             foreach ($active_branches as $idx => $branch):
                                 $is_primary = ($idx === 0);
                             ?>
-                            <div class="proposal-branch-row" data-index="<?= $idx ?>"
-                                 style="background:#f9f9f9; border:1px solid #e3e3e3; border-radius:6px; padding:15px 15px 5px; margin-bottom:12px; position:relative;">
-                                <input type="hidden" name="branch_id[]" value="<?= htmlspecialchars($branch['id'] ?? '') ?>">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Branch Name <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control branch-name-input"
-                                                   name="branch_name[]"
-                                                   placeholder="<?= $is_primary ? 'e.g. Head Office' : 'e.g. Branch Office' ?>"
-                                                   value="<?= htmlspecialchars($branch['branch_name'] ?? '') ?>" required>
+                                <div class="proposal-branch-row" data-index="<?= $idx ?>"
+                                    style="background:#f9f9f9; border:1px solid #e3e3e3; border-radius:6px; padding:15px 15px 5px; margin-bottom:12px; position:relative;">
+                                    <input type="hidden" name="branch_id[]" value="<?= htmlspecialchars($branch['id'] ?? '') ?>">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Branch Name <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control branch-name-input"
+                                                    name="branch_name[]"
+                                                    placeholder="<?= $is_primary ? 'e.g. Head Office' : 'e.g. Branch Office' ?>"
+                                                    value="<?= htmlspecialchars($branch['branch_name'] ?? '') ?>" required>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Proposal Prefix <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control proposal-prefix-input"
-                                                   name="proposal_prefix[]"
-                                                   placeholder="e.g. PROP-{financial_year_short}-"
-                                                   value="<?= htmlspecialchars($branch['proposal_prefix'] ?? '') ?>" required>
-                                            <small class="text-muted" style="font-size:11px;">Click a variable above then click inside this field to insert.</small>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Proposal Prefix <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control proposal-prefix-input"
+                                                    name="proposal_prefix[]"
+                                                    placeholder="e.g. PROP-{financial_year_short}-"
+                                                    value="<?= htmlspecialchars($branch['proposal_prefix'] ?? '') ?>" required>
+                                                <small class="text-muted" style="font-size:11px;">Click a variable above then click inside this field to insert.</small>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label>GST Number</label>
-                                            <input type="text" class="form-control gst-number-input"
-                                                   name="gst_number[]"
-                                                   placeholder="e.g. 22AAAAA0000A1Z5"
-                                                   value="<?= htmlspecialchars($branch['gst_number'] ?? '') ?>">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>GST Number</label>
+                                                <input type="text" class="form-control gst-number-input"
+                                                    name="gst_number[]"
+                                                    placeholder="e.g. 22AAAAA0000A1Z5"
+                                                    value="<?= htmlspecialchars($branch['gst_number'] ?? '') ?>">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-1" style="padding-top:25px; text-align:center;">
-                                        <?php if ($is_primary): ?>
-                                            <span class="label label-default" style="font-size:11px; padding:4px 7px;"
-                                                  title="Primary row cannot be removed">Primary</span>
-                                        <?php else: ?>
-                                            <button type="button" class="btn btn-danger btn-sm remove-proposal-branch-row"
+                                        <div class="col-md-1" style="padding-top:25px; text-align:center;">
+                                            <?php if ($is_primary): ?>
+                                                <span class="label label-default" style="font-size:11px; padding:4px 7px;"
+                                                    title="Primary row cannot be removed">Primary</span>
+                                            <?php else: ?>
+                                                <button type="button" class="btn btn-danger btn-sm remove-proposal-branch-row"
                                                     title="Remove this row">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        <?php endif; ?>
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                             <?php endforeach; ?>
 
                         </div><!-- /#proposal-branch-rows-container -->
@@ -314,14 +314,14 @@
                                         <div class="form-group">
                                             <label>Branch Name <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control branch-name-input"
-                                                   name="branch_name[]" placeholder="e.g. Branch Office" required>
+                                                name="branch_name[]" placeholder="e.g. Branch Office" required>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label>Proposal Prefix <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control proposal-prefix-input"
-                                                   name="proposal_prefix[]" placeholder="e.g. PROP-{financial_year_short}-" required>
+                                                name="proposal_prefix[]" placeholder="e.g. PROP-{financial_year_short}-" required>
                                             <small class="text-muted" style="font-size:11px;">Click a variable above then click inside this field to insert.</small>
                                         </div>
                                     </div>
@@ -329,12 +329,12 @@
                                         <div class="form-group">
                                             <label>GST Number</label>
                                             <input type="text" class="form-control gst-number-input"
-                                                   name="gst_number[]" placeholder="e.g. 22AAAAA0000A1Z5">
+                                                name="gst_number[]" placeholder="e.g. 22AAAAA0000A1Z5">
                                         </div>
                                     </div>
                                     <div class="col-md-1" style="padding-top:25px; text-align:center;">
                                         <button type="button" class="btn btn-danger btn-sm remove-proposal-branch-row"
-                                                title="Remove this row">
+                                            title="Remove this row">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </div>
@@ -518,29 +518,48 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="proposal_international_terms">Terms and Conditions</label>
-                                        <textarea class="form-control" id="proposal_international_terms" name="proposal_international_terms" rows="5" required placeholder="Enter terms and conditions for international transactions..."><?= get_option('proposal_international_terms') ?></textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Submit Button -->
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group text-right">
-                                        <button type="submit" class="btn btn-primary">
-                                            Save
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <?= form_close() ?>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="proposal_international_terms">Terms and Conditions</label>
+                                    <textarea class="form-control" id="proposal_international_terms" name="proposal_international_terms" rows="5" required placeholder="Enter terms and conditions for international transactions..."><?= get_option('proposal_international_terms') ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- General Settings Section -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="checkbox checkbox-primary">
+                                        <input type="hidden" name="show_pdf_terms_and_conditions" value="0">
+                                        <input type="checkbox" name="show_pdf_terms_and_conditions" id="show_pdf_terms_and_conditions" value="1" <?= get_option('show_pdf_terms_and_conditions') == '1' ? 'checked' : '' ?>>
+                                        <label for="show_pdf_terms_and_conditions">Display Team and Conditions in PDF</label>
+                                    </div>
+                                    <p class="text-muted"><small>Check this box to display the Terms and Conditions section on a new page in the generated PDF.</small></p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="proposal_pdf_notes">Global PDF Notes</label>
+                                    <textarea class="form-control" id="proposal_pdf_notes" name="proposal_pdf_notes" rows="4"><?= get_option('proposal_pdf_notes') ?></textarea>
+                                    <p class="text-muted"><small>These notes will be displayed in the Notes section of the PDF.</small></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group text-right">
+                                    <button type="submit" class="btn btn-primary">
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <?= form_close() ?>
                     </div>
                 </div>
             </div>
@@ -553,6 +572,7 @@
 
             init_editor('textarea[name="proposal_international_terms"]');
             init_editor('textarea[name="proposal_domestic_terms"]');
+            init_editor('textarea[name="proposal_pdf_notes"]');
 
             // Track the last focused proposal prefix input
             var $lastFocusedProposalPrefix = null;
@@ -563,11 +583,11 @@
             // Handle variable insertion for prefix
             $(document).on('click', '.variable-insert', function() {
                 var variable = $(this).data('variable');
-                
+
                 // Use last focused proposal prefix input, or fall back to the first one
-                var $target = ($lastFocusedProposalPrefix && $lastFocusedProposalPrefix.length)
-                    ? $lastFocusedProposalPrefix
-                    : $('.proposal-prefix-input').first();
+                var $target = ($lastFocusedProposalPrefix && $lastFocusedProposalPrefix.length) ?
+                    $lastFocusedProposalPrefix :
+                    $('.proposal-prefix-input').first();
 
                 if ($target && $target.length) {
                     var inputField = $target[0];
@@ -600,20 +620,28 @@
             // ── Add More Proposal Branch Row ────────────────────────────
             $('#add-proposal-branch-row').on('click', function() {
                 var template = document.getElementById('proposal-branch-row-template');
-                var clone    = document.importNode(template.content, true);
-                var $clone   = $(clone);
+                var clone = document.importNode(template.content, true);
+                var $clone = $(clone);
 
                 // Animate entry
-                $clone.find('.proposal-branch-row').css({ opacity: 0, marginTop: '-10px' });
+                $clone.find('.proposal-branch-row').css({
+                    opacity: 0,
+                    marginTop: '-10px'
+                });
                 $('#proposal-branch-rows-container').append($clone);
                 $('#proposal-branch-rows-container .proposal-branch-row').last()
-                    .animate({ opacity: 1, marginTop: '0px' }, 300);
+                    .animate({
+                        opacity: 1,
+                        marginTop: '0px'
+                    }, 300);
             });
 
             // ── Remove Proposal Branch Row ──────────────────────────────
             $(document).on('click', '.remove-proposal-branch-row', function() {
                 var $row = $(this).closest('.proposal-branch-row');
-                $row.fadeOut(250, function() { $(this).remove(); });
+                $row.fadeOut(250, function() {
+                    $(this).remove();
+                });
             });
 
             // Handle merge field insertion

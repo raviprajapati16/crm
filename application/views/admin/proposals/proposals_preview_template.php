@@ -303,7 +303,17 @@
                            <?php } ?>
                            <div class="row mtop15">
                               <div class="col-md-12">
-                                 <div class="editable proposal tc-content" id="proposal_content_area" style="border:1px solid #d2d2d2;min-height:70px;border-radius:4px;">
+                                 <style>
+                                    #nested_tab_terms_conditions .tc-content, 
+                                    #nested_tab_terms_conditions .tc-content *,
+                                    #proposal_content_area, 
+                                    #proposal_content_area * {
+                                       max-height: none !important;
+                                       overflow: visible !important;
+                                       height: auto !important;
+                                    }
+                                 </style>
+                                 <div class="editable proposal tc-content" id="proposal_content_area" style="border:1px solid #d2d2d2;min-height:70px;border-radius:4px; max-height:none !important; overflow:visible !important; height:auto !important;">
                                     <?php if (empty($proposal->content)) {
                                        echo '<span class="text-danger text-uppercase mtop15 editor-add-content-notice"> ' . _l('click_to_add_content') . '</span>';
                                     } else {
