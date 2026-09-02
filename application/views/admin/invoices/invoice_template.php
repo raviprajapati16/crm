@@ -434,7 +434,7 @@
                </div>
 
                <div class="row">
-                  <div class="col-md-6">
+                  <div class="col-md-4" id="currency_field_wrapper">
                      <?php
                      $currency_attr = array('disabled' => true, 'data-show-subtext' => true);
                      $currency_attr = apply_filters_deprecated('invoice_currency_disabled', [$currency_attr], '2.3.0', 'invoice_currency_attributes');
@@ -456,6 +456,15 @@
                      $currency_attr = hooks()->apply_filters('invoice_currency_attributes', $currency_attr);
                      ?>
                      <?php echo render_select('currency', $currencies, array('id', 'name', 'symbol'), 'invoice_add_edit_currency', $selected, $currency_attr); ?>
+                  </div>
+                  <div class="col-md-4 non_inr_fields_wrapper hide">
+                     <?php $value = (isset($invoice) ? $invoice->exchange_rate : ''); ?>
+                     <?php echo render_input('exchange_rate', 'Exchange Rate', $value); ?>
+                     <a href="https://www.cbic.gov.in/entities/cbic-content-mst/MzEzMTg%3D" target="_blank" style="display:block; margin-top:-10px; margin-bottom:15px;"><small>(check exchange rate)</small></a>
+                  </div>
+                  <div class="col-md-4 non_inr_fields_wrapper hide">
+                     <?php $value = (isset($invoice) ? $invoice->notification_number : ''); ?>
+                     <?php echo render_input('notification_number', 'Notification Number', $value); ?>
                   </div>
                   <div class="col-md-6">
                      <?php
@@ -698,3 +707,36 @@
       </div>
    </div>
 </div>
+<script>
+   var currencies_map = <?php echo json_encode($currencies); ?>;
+   
+   document.addEventListener('DOMContentLoaded', function() {
+      function toggle_non_inr_fields() {
+         var currency_id = $('select[name="currency"]').val();
+         var is_inr = false;
+         
+         if(currencies_map) {
+             for(var i = 0; i < currencies_map.length; i++) {
+                 if(currencies_map[i].id == currency_id && currencies_map[i].name.toUpperCase() === 'INR') {
+                     is_inr = true;
+                     break;
+                 }
+             }
+         }
+         
+         if(is_inr) {
+            $('.non_inr_fields_wrapper').addClass('hide');
+            $('#currency_field_wrapper').removeClass('col-md-4').addClass('col-md-6');
+         } else {
+            $('.non_inr_fields_wrapper').removeClass('hide');
+            $('#currency_field_wrapper').removeClass('col-md-6').addClass('col-md-4');
+         }
+      }
+
+      $('select[name="currency"]').on('change', toggle_non_inr_fields);
+      
+      setTimeout(function() {
+         toggle_non_inr_fields();
+      }, 500);
+   });
+</script>
