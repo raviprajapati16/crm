@@ -194,7 +194,7 @@
             <input type="password" class="fake-autofill-field" name="fakepasswordremembered" value='' tabindex="-1" />
 
             <input type="password" class="fake-autofill-field" name="fakepasswordremembered" value='' tabindex="-1" />
-            <?php if (total_rows(db_prefix() . 'emailtemplates', array('slug' => 'new-client-created', 'active' => 0)) == 0) { ?>
+            <!-- <?php if (total_rows(db_prefix() . 'emailtemplates', array('slug' => 'new-client-created', 'active' => 0)) == 0) { ?>
                <div class="checkbox checkbox-primary">
                   <input type="checkbox" name="donotsendwelcomeemail" id="donotsendwelcomeemail">
                   <label for="donotsendwelcomeemail"><?php echo _l('client_do_not_send_welcome_email'); ?></label>
@@ -205,7 +205,7 @@
                   <input type="checkbox" name="transfer_notes" id="transfer_notes">
                   <label for="transfer_notes"><?php echo _l('transfer_lead_notes_to_customer'); ?></label>
                </div>
-            <?php } ?>
+            <?php } ?> -->
             <?php if (is_gdpr() && get_option('gdpr_enable_consent_for_contacts') == '1' && count($purposes) > 0) { ?>
                <div class="checkbox checkbox-primary">
                   <input type="checkbox" name="transfer_consent" id="transfer_consent">

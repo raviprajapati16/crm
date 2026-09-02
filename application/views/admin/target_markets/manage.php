@@ -50,10 +50,10 @@
                             if ($staff && $staff->admin == 1) { // check if admin
                             ?>
                                 <?php if (has_permission('customers', '', 'create')) { ?>
-                                    <a href="<?php echo admin_url('target_markets/client'); ?>"
+                                    <!-- <a href="<?php echo admin_url('target_markets/client'); ?>"
                                         class="btn btn-info mright5 test pull-left display-block">
                                         New Target Market
-                                    </a>
+                                    </a> -->
                                     <a href="<?php echo admin_url('target_markets/import'); ?>"
                                         class="btn btn-info pull-left display-block mright5 hidden-xs">
                                         Import Target Market
