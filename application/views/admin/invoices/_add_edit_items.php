@@ -1,119 +1,119 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <style>
-/* Dynamic Fields Responsive Styles */
-.dynamic-fields-wrapper {
-    width: 50%;
-    margin: 15px 0;
-    float: inline-end;
-}
-
-.dynamic-fields-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.dynamic-fields-header h5 {
-    margin: 0;
-    font-weight: bold;
-}
-
-.dynamic-field-row {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 10px;
-    width: 100%;
-}
-
-.dynamic-field-label {
-    flex: 2;
-    min-width: 200px;
-}
-
-.dynamic-field-amount {
-    flex: 1;
-    min-width: 120px;
-}
-
-.dynamic-field-remove {
-    flex-shrink: 0;
-    width: 40px;
-}
-
-.dynamic-field-row input {
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.dynamic-field-row button {
-    width: 100%;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Responsive breakpoints */
-@media (max-width: 768px) {
-
+    /* Dynamic Fields Responsive Styles */
     .dynamic-fields-wrapper {
-        width: 100%;
-        margin: 15px 0;
-        float: inline-end;
-    }
-
-    .dynamic-field-row {
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .dynamic-field-label,
-    .dynamic-field-amount,
-    .dynamic-field-remove {
-        flex: none;
-        width: 100%;
-    }
-
-    .dynamic-field-remove {
-        max-width: 100px;
-        align-self: flex-end;
-    }
-}
-
-@media (max-width: 480px) {
-
-    .dynamic-fields-wrapper {
-        width: 100%;
+        width: 50%;
         margin: 15px 0;
         float: inline-end;
     }
 
     .dynamic-fields-header {
-        flex-direction: column;
-        gap: 10px;
-        align-items: stretch;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
     }
 
-    .dynamic-fields-header button {
-        align-self: flex-end;
-        width: auto;
+    .dynamic-fields-header h5 {
+        margin: 0;
+        font-weight: bold;
     }
-}
+
+    .dynamic-field-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .dynamic-field-label {
+        flex: 2;
+        min-width: 200px;
+    }
+
+    .dynamic-field-amount {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .dynamic-field-remove {
+        flex-shrink: 0;
+        width: 40px;
+    }
+
+    .dynamic-field-row input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .dynamic-field-row button {
+        width: 100%;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Responsive breakpoints */
+    @media (max-width: 768px) {
+
+        .dynamic-fields-wrapper {
+            width: 100%;
+            margin: 15px 0;
+            float: inline-end;
+        }
+
+        .dynamic-field-row {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .dynamic-field-label,
+        .dynamic-field-amount,
+        .dynamic-field-remove {
+            flex: none;
+            width: 100%;
+        }
+
+        .dynamic-field-remove {
+            max-width: 100px;
+            align-self: flex-end;
+        }
+    }
+
+    @media (max-width: 480px) {
+
+        .dynamic-fields-wrapper {
+            width: 100%;
+            margin: 15px 0;
+            float: inline-end;
+        }
+
+        .dynamic-fields-header {
+            flex-direction: column;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .dynamic-fields-header button {
+            align-self: flex-end;
+            width: auto;
+        }
+    }
 </style>
 <div class="panel-body mtop10">
     <div class="row">
         <!-- <div class="col-md-4">
           <?php $this->load->view('admin/invoice_items/item_select'); ?>
       </div> -->
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
             <button type="button" style="margin-top: 5px;" data-toggle="modal" data-target="#sales_item_modal"
                 class="btn btn-info"><i class="fa fa-plus"></i> <?php echo _l('add_item'); ?></button>
-        </div>
+        </div> -->
         <!-- <div class="col-md-8 text-right show_quantity_as_wrapper">
             <div class="mtop10">
                 <span><?php echo _l('show_quantity_as'); ?></span>
@@ -152,8 +152,8 @@
             <input type="hidden" name="capacity" id="capacity">
             <input type="hidden" name="hsn_code" id="hsn_code">
             <?php if ($is_invoice) { ?>
-            <input type="hidden" name="gross_weight" id="gross_weight">
-            <input type="hidden" name="net_weight" id="net_weight">
+                <input type="hidden" name="gross_weight" id="gross_weight">
+                <input type="hidden" name="net_weight" id="net_weight">
             <?php } ?>
         </div>
         <!-- <div class="col-md-2">
@@ -191,17 +191,17 @@
         </div>
 
         <?php if ($proposal_status != 3 && $estimate_status != 4) { ?>
-        <div class="col-md-1">
-            <?php
+            <div class="col-md-1">
+                <?php
                 $new_item = 'undefined';
                 if (isset($estimate)) {
                     $new_item = true;
                 }
                 ?>
-            <button type="button" style="margin-top: 25px;"
-                onclick="add_item_to_tables('undefined','undefined',<?php echo $new_item; ?>); return false;"
-                class="btn pull-right btn-info add-product-btn"><i class="fa fa-check"></i></button>
-        </div>
+                <button type="button" style="margin-top: 25px;"
+                    onclick="add_item_to_tables('undefined','undefined',<?php echo $new_item; ?>); return false;"
+                    class="btn pull-right btn-info add-product-btn"><i class="fa fa-check"></i></button>
+            </div>
         <?php } ?>
     </div>
 
@@ -211,7 +211,7 @@
                 <tr>
                     <th width="2%"></th>
                     <?php if ($is_invoice) { ?>
-                    <th width="8%" align="left">Kind Of Packages</th>
+                        <th width="8%" align="left">Kind Of Packages</th>
                     <?php } ?>
                     <th width="18%" align="left">
                         <i class="fa fa-exclamation-circle" aria-hidden="true" data-toggle="tooltip"
@@ -235,10 +235,10 @@
                     ?>
                     <th width="8%" class="qty" align="left"><?php echo $qty_heading; ?></th>
                     <?php if ($is_invoice) { ?>
-                    <th width="8%" align="left">Net Weight <br> (Kg / Qty)</th>
-                    <th width="8%" align="left">Total Net Weight <br> (In Kgs)</th>
-                    <th width="8%" align="left">Gross Weight <br> (Kg / Qty)</th>
-                    <th width="8%" align="left">Total Gross Weight <br> (In Kgs)</th>
+                        <th width="8%" align="left">Net Weight <br> (Kg / Qty)</th>
+                        <th width="8%" align="left">Total Net Weight <br> (In Kgs)</th>
+                        <th width="8%" align="left">Gross Weight <br> (Kg / Qty)</th>
+                        <th width="8%" align="left">Total Gross Weight <br> (In Kgs)</th>
                     <?php } ?>
                     <th width="10%" align="left"><?php echo _l('estimate_table_rate_heading'); ?></th>
                     <th width="8%" align="left"><?php echo _l('estimate_table_amount_heading'); ?></th>
@@ -309,39 +309,39 @@
         </table>
     </div>
     <?php if (isset($is_invoice)) { ?>
-    <div class="col-md-12">
-        <table class="table">
-            <tbody>
-                <tr>
-                    <td width="15%"><span class="bold">Total No. Of Packages</span></td>
-                    <td width="45%"></td>
-                    <td><span class="bold">Total Net Weight (In Kgs)</span></td>
-                    <td><span class="bold">Total Gross Weight (In Kgs)</span></td>
-                </tr>
-                <tr>
-                    <td width="15%">
-                        <input type="number" name="total_packages" value="<?= $estimate->total_packages ?>"
-                            class="form-control total_packages" />
-                    </td>
-                    <td width="45%"></td>
-                    <td>
-                        <span class="bold">
-                            <input type="number" id="total_net_weight" name="total_net_weight"
-                                value="<?= $estimate->total_net_weight ?>" class="form-control total_net_weight"
-                                readonly />
-                        </span>
-                    </td>
-                    <td>
-                        <span class="bold">
-                            <input type="number" id="total_gross_weight" name="total_gross_weight"
-                                value="<?= $estimate->total_gross_weight ?>" class="form-control total_gross_weight"
-                                readonly />
-                        </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        <div class="col-md-12">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td width="15%"><span class="bold">Total No. Of Packages</span></td>
+                        <td width="45%"></td>
+                        <td><span class="bold">Total Net Weight (In Kgs)</span></td>
+                        <td><span class="bold">Total Gross Weight (In Kgs)</span></td>
+                    </tr>
+                    <tr>
+                        <td width="15%">
+                            <input type="number" name="total_packages" value="<?= $estimate->total_packages ?>"
+                                class="form-control total_packages" />
+                        </td>
+                        <td width="45%"></td>
+                        <td>
+                            <span class="bold">
+                                <input type="number" id="total_net_weight" name="total_net_weight"
+                                    value="<?= $estimate->total_net_weight ?>" class="form-control total_net_weight"
+                                    readonly />
+                            </span>
+                        </td>
+                        <td>
+                            <span class="bold">
+                                <input type="number" id="total_gross_weight" name="total_gross_weight"
+                                    value="<?= $estimate->total_gross_weight ?>" class="form-control total_gross_weight"
+                                    readonly />
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     <?php } ?>
     <div class="col-md-8 col-md-offset-4">
         <table class="table text-right">
@@ -364,16 +364,16 @@
                                     <input type="number"
                                         value="<?php echo (isset($estimate) ? $estimate->discount_percent : 0); ?>"
                                         class="form-control pull-left input-discount-percent<?php if (isset($estimate) && !is_sale_discount($estimate, 'percent') && is_sale_discount_applied($estimate)) {
-                                                                                                                                                                                                echo ' hide';
-                                                                                                                                                                                            } ?>"
+                                                                                                echo ' hide';
+                                                                                            } ?>"
                                         min="0" max="100" name="discount_percent">
 
                                     <input type="number" data-toggle="tooltip"
                                         data-title="<?php echo _l('numbers_not_formatted_while_editing'); ?>"
                                         value="<?php echo (isset($estimate) ? $estimate->discount_total : 0); ?>"
                                         class="form-control pull-left input-discount-fixed<?php if (!isset($estimate) || (isset($estimate) && !is_sale_discount($estimate, 'fixed'))) {
-                                                                                                                                                                                                                                                                                        echo ' hide';
-                                                                                                                                                                                                                                                                                    } ?>"
+                                                                                                echo ' hide';
+                                                                                            } ?>"
                                         min="0" name="discount_total">
 
                                     <div class="input-group-addon">
@@ -395,8 +395,8 @@
                                                 <li>
                                                     <a href="#"
                                                         class="discount-total-type discount-type-percent<?php if (!isset($estimate) || (isset($estimate) && is_sale_discount($estimate, 'percent')) || (isset($estimate) && !is_sale_discount_applied($estimate))) {
-                                                                                                                    echo ' selected';
-                                                                                                                } ?>">%</a>
+                                                                                                            echo ' selected';
+                                                                                                        } ?>">%</a>
                                                 </li>
                                                 <li>
                                                     <a href="#" class="discount-total-type discount-type-fixed<?php if (isset($estimate) && is_sale_discount($estimate, 'fixed')) {
@@ -480,11 +480,11 @@
                                                 $getTax = get_tax_by_relation($estimate->id, $rel_type);
                                             }
                                         ?>
-                                        <option value="<?php echo $tax['id']; ?>"
-                                            data-subtext="<?php echo $tax['name']; ?>"
-                                            data-taxrate="<?php echo $tax['taxrate']; ?>"
-                                            <?= ($getTax && $getTax->taxrate == $tax['taxrate']) ? "selected" : "" ?>>
-                                            <?php echo $tax['taxrate']; ?>%</option>
+                                            <option value="<?php echo $tax['id']; ?>"
+                                                data-subtext="<?php echo $tax['name']; ?>"
+                                                data-taxrate="<?php echo $tax['taxrate']; ?>"
+                                                <?= ($getTax && $getTax->taxrate == $tax['taxrate']) ? "selected" : "" ?>>
+                                                <?php echo $tax['taxrate']; ?>%</option>
                                         <?php }
                                         ?>
                                     </select>
@@ -506,10 +506,10 @@
                                 <input type="number" data-toggle="tooltip"
                                     data-title="<?php echo _l('numbers_not_formatted_while_editing'); ?>"
                                     value="<?php if (isset($estimate)) {
-                                                                                                                                                            echo $estimate->adjustment;
-                                                                                                                                                        } else {
-                                                                                                                                                            echo 0;
-                                                                                                                                                        } ?>" class="form-control pull-left"
+                                                echo $estimate->adjustment;
+                                            } else {
+                                                echo 0;
+                                            } ?>" class="form-control pull-left"
                                     name="adjustment">
                             </div>
                         </div>
