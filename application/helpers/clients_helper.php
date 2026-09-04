@@ -267,12 +267,12 @@ function app_init_customer_profile_tabs()
         'position' => 60,
     ]);
 
-    $CI->app_tabs->add_customer_profile_tab('projects', [
-        'name' => _l('projects'),
-        'icon' => 'fa fa-bars',
-        'view' => 'admin/clients/groups/projects',
-        'position' => 65,
-    ]);
+    // $CI->app_tabs->add_customer_profile_tab('projects', [
+    //     'name' => _l('projects'),
+    //     'icon' => 'fa fa-bars',
+    //     'view' => 'admin/clients/groups/projects',
+    //     'position' => 65,
+    // ]);
 
     $CI->app_tabs->add_customer_profile_tab('tasks', [
         'name' => _l('tasks'),

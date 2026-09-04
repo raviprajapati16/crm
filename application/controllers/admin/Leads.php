@@ -805,7 +805,7 @@ class Leads extends AdminController
         if ($this->input->post()) {
             $default_country = get_option('customer_default_country');
             $data = $this->input->post();
-            $data['password'] = $this->input->post('password', false);
+            // $data['password'] = $this->input->post('password', false);
 
             $original_lead_email = $data['original_lead_email'];
             unset($data['original_lead_email']);
