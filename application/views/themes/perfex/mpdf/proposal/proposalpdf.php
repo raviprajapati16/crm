@@ -350,21 +350,23 @@ $getTax = get_tax_by_relation($proposal->id, "proposal");
             ?>
         <?php } ?>
 
-        <?php if ($proposal->type == "0") { ?>
-            <?php if (!empty($getTax)) { ?>
-                <?php if ($getTax->taxrate != 0) { ?>
-                    <tr class="amount-row">
-                        <td class="product-cell" colspan="6" style="text-align: right;"><strong>Taxable Amount</strong></td>
-                        <td class="product-cell"><?= number_format($proposal->taxable_amount, 2, '.', ''); ?></td>
-                    </tr>
-                    <tr class="amount-row">
-                        <td class="product-cell" colspan="6" style="text-align: right;"><?= $getTax->taxname ?>
-                            (<?= $getTax->taxrate ?>%)</td>
-                        <td class="product-cell"><?= number_format($proposal->total_tax, 2, '.', ''); ?></td>
-                    </tr>
-                <?php } ?>
+        <?php //if ($proposal->type == "0") { 
+        ?>
+        <?php if (!empty($getTax)) { ?>
+            <?php if ($getTax->taxrate != 0) { ?>
+                <tr class="amount-row">
+                    <td class="product-cell" colspan="6" style="text-align: right;"><strong>Taxable Amount</strong></td>
+                    <td class="product-cell"><?= number_format($proposal->taxable_amount, 2, '.', ''); ?></td>
+                </tr>
+                <tr class="amount-row">
+                    <td class="product-cell" colspan="6" style="text-align: right;"><?= $getTax->taxname ?>
+                        (<?= $getTax->taxrate ?>%)</td>
+                    <td class="product-cell"><?= number_format($proposal->total_tax, 2, '.', ''); ?></td>
+                </tr>
             <?php } ?>
         <?php } ?>
+        <?php //} 
+        ?>
         <?php
         if (is_sale_discount_applied($proposal) && $proposal->discount_type == 'after_tax') {
         ?>

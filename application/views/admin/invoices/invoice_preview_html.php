@@ -82,7 +82,6 @@ if ($invoice->status == Invoices_model::STATUS_DRAFT) { ?>
       <?php } ?>
       <?php
       $currencyData = get_currency($invoice->currency);
-      echo $currencyData->name;
       ?>
       <div class="col-md-12 col-sm-12">
          <div class="row">
@@ -95,7 +94,7 @@ if ($invoice->status == Invoices_model::STATUS_DRAFT) { ?>
                      </a>
                   </li>
                   <?php
-                  if ($currencyData->name != 'INR') {
+                  if ($invoice->billing_country != 102) {
                   ?>
                      <li role="presentation">
                         <a href="#nested_tab_custom_invoice" aria-controls="nested_tab_custom_invoice" role="tab" data-toggle="tab" onclick="invoice_preview('custom-invoice')">
@@ -111,7 +110,7 @@ if ($invoice->status == Invoices_model::STATUS_DRAFT) { ?>
                      </a>
                   </li>
                   <?php
-                  if ($currencyData->name != 'INR') {
+                  if ($invoice->billing_country != 102) {
                   ?>
                      <li role="presentation">
                         <a href="#nested_tab_commercial_invoice" aria-controls="nested_tab_commercial_invoice" role="tab" data-toggle="tab" onclick="invoice_preview('commercial-invoice')">

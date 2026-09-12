@@ -467,7 +467,10 @@
                      <div class="col-md-4 non_inr_fields_wrapper">
                         <?php $value = (isset($invoice) ? $invoice->exchange_rate : ''); ?>
                         <?php echo render_input('exchange_rate', 'Exchange Rate', $value); ?>
-                        <a href="https://www.cbic.gov.in/entities/cbic-content-mst/MzEzMTg%3D" target="_blank" style="display:block; margin-top:-10px; margin-bottom:15px;"><small>(check exchange rate)</small></a>
+                        <?php $exchange_rate_url = get_option('exchange_rate_url');
+                        if (!empty($exchange_rate_url)) { ?>
+                           <a href="<?= htmlspecialchars($exchange_rate_url) ?>" target="_blank" style="display:block; margin-top:-10px; margin-bottom:15px;"><small>(check exchange rate)</small></a>
+                        <?php } ?>
                      </div>
                      <div class="col-md-4 non_inr_fields_wrapper">
                         <?php $value = (isset($invoice) ? $invoice->notification_number : ''); ?>

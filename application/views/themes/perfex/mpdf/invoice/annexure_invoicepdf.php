@@ -279,20 +279,26 @@
                     </tr>
                     <?php
                     $container_rows = count($containers);
-                    for ($i = 0; $i < $container_rows; $i++) {
-                        $c = isset($containers[$i]) ? $containers[$i] : [];
-                        // Last row has no bottom border inside the table structure
-                        $b_bottom = ($i == $container_rows - 1) ? 'border-bottom: none;' : 'border-bottom: 1px solid #000;';
+                    if ($container_rows > 0) {
+                        for ($i = 0; $i < $container_rows; $i++) {
+                            $c = isset($containers[$i]) ? $containers[$i] : [];
+                            // Last row has no bottom border inside the table structure
+                            $b_bottom = ($i == $container_rows - 1) ? 'border-bottom: none;' : 'border-bottom: 1px solid #000;';
                     ?>
+                            <tr>
+                                <td class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: 1px solid #000; <?php echo $b_bottom; ?>"><?php echo isset($c['container_no']) ? htmlspecialchars($c['container_no']) : '&nbsp;'; ?></td>
+                                <td class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: 1px solid #000; <?php echo $b_bottom; ?>"><?php echo (isset($c['stuffing_date']) && !empty($c['stuffing_date'])) ? _d($c['stuffing_date']) : '&nbsp;'; ?></td>
+                                <td class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: 1px solid #000; <?php echo $b_bottom; ?>"><?php echo isset($c['size']) ? htmlspecialchars($c['size']) : '&nbsp;'; ?></td>
+                                <td class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: 1px solid #000; <?php echo $b_bottom; ?>"><?php echo isset($c['shipping_line_seal_no']) ? htmlspecialchars($c['shipping_line_seal_no']) : '&nbsp;'; ?></td>
+                                <td class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: 1px solid #000; <?php echo $b_bottom; ?>"><?php echo isset($c['rfid_seal_no']) ? htmlspecialchars($c['rfid_seal_no']) : '&nbsp;'; ?></td>
+                                <td class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: 1px solid #000; <?php echo $b_bottom; ?>"><?php echo isset($c['total_packages']) ? htmlspecialchars($c['total_packages']) : '&nbsp;'; ?></td>
+                                <td class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: 1px solid #000; <?php echo $b_bottom; ?>"><?php echo isset($c['net_weight']) ? htmlspecialchars($c['net_weight']) : '&nbsp;'; ?></td>
+                                <td class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: none; <?php echo $b_bottom; ?>"><?php echo isset($c['gross_weight']) ? htmlspecialchars($c['gross_weight']) : '&nbsp;'; ?></td>
+                            </tr>
+                        <?php }
+                    } else { ?>
                         <tr>
-                            <td class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: 1px solid #000; <?php echo $b_bottom; ?>"><?php echo isset($c['container_no']) ? htmlspecialchars($c['container_no']) : '&nbsp;'; ?></td>
-                            <td class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: 1px solid #000; <?php echo $b_bottom; ?>"><?php echo (isset($c['stuffing_date']) && !empty($c['stuffing_date'])) ? _d($c['stuffing_date']) : '&nbsp;'; ?></td>
-                            <td class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: 1px solid #000; <?php echo $b_bottom; ?>"><?php echo isset($c['size']) ? htmlspecialchars($c['size']) : '&nbsp;'; ?></td>
-                            <td class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: 1px solid #000; <?php echo $b_bottom; ?>"><?php echo isset($c['shipping_line_seal_no']) ? htmlspecialchars($c['shipping_line_seal_no']) : '&nbsp;'; ?></td>
-                            <td class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: 1px solid #000; <?php echo $b_bottom; ?>"><?php echo isset($c['rfid_seal_no']) ? htmlspecialchars($c['rfid_seal_no']) : '&nbsp;'; ?></td>
-                            <td class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: 1px solid #000; <?php echo $b_bottom; ?>"><?php echo isset($c['total_packages']) ? htmlspecialchars($c['total_packages']) : '&nbsp;'; ?></td>
-                            <td class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: 1px solid #000; <?php echo $b_bottom; ?>"><?php echo isset($c['net_weight']) ? htmlspecialchars($c['net_weight']) : '&nbsp;'; ?></td>
-                            <td class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: none; <?php echo $b_bottom; ?>"><?php echo isset($c['gross_weight']) ? htmlspecialchars($c['gross_weight']) : '&nbsp;'; ?></td>
+                            <td colspan="8" class="container-td" style="height: 20px; border-top: none; border-left: none; border-right: none; border-bottom: none; text-align: center;">No record found</td>
                         </tr>
                     <?php } ?>
                 </table>
@@ -303,7 +309,7 @@
         <tr>
             <td class="vertical-text" text-rotate="90">Declaration</td>
             <td colspan="2" class="declaration-box">
-                <?php echo nl2br(htmlspecialchars($declaration)); ?>
+                <?php echo $declaration; ?>
             </td>
         </tr>
 

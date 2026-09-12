@@ -14,6 +14,7 @@
     <?php echo render_input('settings[company_pan_number]','PAN Number',get_option('company_pan_number')); ?>
     <?php echo render_input('settings[company_tan_number]','TAN Number',get_option('company_tan_number')); ?>
     <?php echo render_input('settings[company_cin_number]','CIN Number',get_option('company_cin_number')); ?>
+    <?php echo render_input('settings[company_iec_number]','IEC Number',get_option('company_iec_number')); ?>
     <?php echo render_custom_fields('company',0); ?>
     <hr />
     <?php echo render_textarea('settings[company_info_format]','company_info_format',clear_textarea_breaks(get_option('company_info_format')),array('rows'=>8,'style'=>'line-height:20px;')); ?>

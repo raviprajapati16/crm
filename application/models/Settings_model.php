@@ -81,11 +81,7 @@ class Settings_model extends App_Model
             $this->db->where('name', $name);
             $exists = $this->db->count_all_results(db_prefix() . 'options');
             if ($exists == 0) {
-                if ($name == 'staff_notification_roles') {
-                    add_option($name, '');
-                } else {
-                    continue;
-                }
+                add_option($name, '');
             }
 
             if ($name == 'default_contact_permissions' || $name == 'staff_notification_roles') {

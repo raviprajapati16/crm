@@ -344,6 +344,15 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
+                                    <label for="exchange_rate_url">Exchange Rate URL</label>
+                                    <input type="url" class="form-control" id="exchange_rate_url" name="exchange_rate_url" value="<?= get_option('exchange_rate_url') ?>" placeholder="Enter Exchange Rate URL (e.g. https://www.xe.com)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
                                     <label for="invoice_terms_and_condition">Terms and Conditions</label>
                                     <textarea class="form-control" id="invoice_terms_and_condition" name="invoice_terms_and_condition" rows="5" required placeholder="Enter terms and conditions"><?= get_option('invoice_terms_and_condition') ?></textarea>
                                 </div>
