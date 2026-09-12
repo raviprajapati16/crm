@@ -1,5 +1,25 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<h4 class="customer-profile-group-heading"><?php echo _l('client_add_edit_profile'); ?></h4>
+<?php if (isset($client) && strtolower($this->router->class) === 'target_markets' && has_permission('customers', '', 'edit')) { ?>
+   <div class="row customer-profile-group-heading mbot15">
+      <div class="col-xs-6">
+         <h4><?php echo _l('client_add_edit_profile'); ?></h4>
+      </div>
+      <div class="col-xs-6 text-right">
+         <a href="<?php echo admin_url('target_markets/convert_to_customer/' . $client->userid); ?>"
+            class="btn btn-success btn-sm"
+            onclick="return confirm('Are you sure you want to convert this target market to a customer?');">
+            <i class="fa fa-user-plus"></i> Convert to Customer
+         </a>
+         <!-- <a href="<?php echo admin_url('target_markets/convert_to_lead/' . $client->userid); ?>"
+            class="btn btn-success btn-sm"
+            onclick="return confirm('Are you sure you want to convert this target market to a lead?');">
+            <i class="fa fa-flag"></i> Convert to Lead
+         </a> -->
+      </div>
+   </div>
+<?php } else { ?>
+   <h4 class="customer-profile-group-heading"><?php echo _l('client_add_edit_profile'); ?></h4>
+<?php } ?>
 <?php $countries = get_all_countries(); ?>
 <?php $customer_default_country = get_option('customer_default_country'); ?>
 <?php $location_select_attrs = ['data-none-selected-text' => _l('dropdown_non_selected_tex')]; ?>
@@ -13,9 +33,8 @@
          <div class="horizontal-tabs">
             <ul class="nav nav-tabs profile-tabs row customer-profile-tabs nav-tabs-horizontal" role="tablist">
                <li role="presentation" class="<?php if (!$this->input->get('tab')) {
-                  echo 'active';
-               }
-               ; ?>">
+                                                   echo 'active';
+                                                }; ?>">
                   <a href="#contact_info" aria-controls="contact_info" role="tab" data-toggle="tab">
                      <?php echo _l('customer_profile_details'); ?>
                   </a>
@@ -24,24 +43,25 @@
                $customer_custom_fields = false;
                if (total_rows(db_prefix() . 'customfields', array('fieldto' => 'customers', 'active' => 1)) > 0) {
                   $customer_custom_fields = true;
-                  ?>
+               ?>
                   <li role="presentation"
                      class="<?php if ($this->input->get('tab') == 'custom_fields') {
-                        echo 'active';
-                     }
-                     ; ?>">
+                                 echo 'active';
+                              }; ?>">
                      <a href="#custom_fields" aria-controls="custom_fields" role="tab" data-toggle="tab">
                         <?php echo hooks()->apply_filters('customer_profile_tab_custom_fields_text', _l('custom_fields')); ?>
                      </a>
                   </li>
                <?php } ?>
-               <li role="presentation">
-                  <a href="#billing_and_shipping" aria-controls="billing_and_shipping" role="tab" data-toggle="tab">
-                     <?php echo _l('billing_shipping'); ?>
-                  </a>
-               </li>
+               <?php if (isset($client) && strtolower($this->router->class) !== 'target_markets') { ?>
+                  <li role="presentation">
+                     <a href="#billing_and_shipping" aria-controls="billing_and_shipping" role="tab" data-toggle="tab">
+                        <?php echo _l('billing_shipping'); ?>
+                     </a>
+                  </li>
+               <?php } ?>
                <?php hooks()->do_action('after_customer_billing_and_shipping_tab', isset($client) ? $client : false); ?>
-               <?php if (isset($client)) { ?>
+               <?php if (isset($client) && strtolower($this->router->class) !== 'target_markets') { ?>
                   <li role="presentation">
                      <a href="#customer_admins" aria-controls="customer_admins" role="tab" data-toggle="tab">
                         <?php echo _l('customer_admins'); ?>
@@ -55,22 +75,21 @@
       <div class="tab-content">
          <?php hooks()->do_action('after_custom_profile_tab_content', isset($client) ? $client : false); ?>
          <div role="tabpanel" class="tab-pane<?php if (!$this->input->get('tab')) {
-            echo ' active';
-         }
-         ; ?>"
+                                                echo ' active';
+                                             }; ?>"
             id="contact_info">
             <div class="row">
                <div
                   class="col-md-12<?php if (isset($client) && (!is_empty_customer_company($client->userid) && total_rows(db_prefix() . 'contacts', array('userid' => $client->userid, 'is_primary' => 1)) > 0)) {
-                     echo '';
-                  } else {
-                     echo ' hide';
-                  } ?>"
+                                       echo '';
+                                    } else {
+                                       echo ' hide';
+                                    } ?>"
                   id="client-show-primary-contact-wrapper">
                   <div class="checkbox checkbox-info mbot20 no-mtop">
                      <input type="checkbox" name="show_primary_contact" <?php if (isset($client) && $client->show_primary_contact == 1) {
-                        echo ' checked';
-                     } ?> value="1" id="show_primary_contact">
+                                                                           echo ' checked';
+                                                                        } ?> value="1" id="show_primary_contact">
                      <label
                         for="show_primary_contact"><?php echo _l('show_primary_contact', _l('invoices') . ', ' . _l('payments') . ', ' . _l('credit_notes')); ?></label>
                   </div>
@@ -88,10 +107,14 @@
                      $value = (isset($client) ? $client->vat : '');
                      echo render_input('vat', 'client_vat_number', $value);
                   } ?>
-                  <?php $value = (isset($client) ? $client->phonenumber : ''); ?>
+                  <?php 
+                  $value = '';
+                  if (isset($client)) {
+                      $client_row = get_instance()->db->select('phonenumber')->where('userid', $client->userid)->get(db_prefix() . 'clients')->row();
+                      $value = $client_row ? $client_row->phonenumber : '';
+                  }
+                  ?>
                   <?php echo render_input('phonenumber', 'client_phonenumber', $value); ?>
-                  <?php $value = (isset($client) ? $client->mobile_number : ''); ?>
-                  <?php echo render_input('mobile_number', 'Customer Mobile Number', $value); ?>
                   <?php $value = (isset($client) ? $client->email : ''); ?>
                   <?php echo render_input('email', 'Customer Email', $value, 'email'); ?>
                   <?php if ((isset($client) && empty($client->website)) || !isset($client)) {
@@ -155,7 +178,7 @@
                                     $selected = 'selected';
                                  }
                               }
-                              ?>
+                           ?>
                               <option value="<?php echo $availableLanguage; ?>" <?php echo $selected; ?>>
                                  <?php echo ucfirst($availableLanguage); ?>
                               </option>
@@ -174,42 +197,42 @@
                   $state_options         = isset($profile_location['states']) ? $profile_location['states'] : [];
                   $city_options          = isset($profile_location['cities']) ? $profile_location['cities'] : [];
                   if (!empty($selected_state)) {
-                      $state_found = false;
-                      foreach ($state_options as $state_row) {
-                          if ($state_row['state'] === $selected_state) {
-                              $state_found = true;
-                              break;
-                          }
-                      }
-                      if (!$state_found) {
-                          $state_options[] = ['state' => $selected_state];
-                      }
+                     $state_found = false;
+                     foreach ($state_options as $state_row) {
+                        if ($state_row['state'] === $selected_state) {
+                           $state_found = true;
+                           break;
+                        }
+                     }
+                     if (!$state_found) {
+                        $state_options[] = ['state' => $selected_state];
+                     }
                   }
                   if (!empty($selected_city)) {
-                      $city_found = false;
-                      foreach ($city_options as $city_row) {
-                          if ($city_row['city'] === $selected_city) {
-                              $city_found = true;
-                              break;
-                          }
-                      }
-                      if (!$city_found) {
-                          $city_options[] = ['city' => $selected_city];
-                      }
+                     $city_found = false;
+                     foreach ($city_options as $city_row) {
+                        if ($city_row['city'] === $selected_city) {
+                           $city_found = true;
+                           break;
+                        }
+                     }
+                     if (!$city_found) {
+                        $city_options[] = ['city' => $selected_city];
+                     }
                   }
                   $state_wrapper_class = !empty($selected_country) ? 'client-location-state-wrapper location-group-profile' : 'client-location-state-wrapper location-group-profile hide';
                   $city_wrapper_class  = (!empty($selected_country) && !empty($selected_state) && country_uses_city_dropdown($selected_country)) ? 'client-location-city-wrapper location-group-profile' : 'client-location-city-wrapper location-group-profile hide';
                   echo render_select('country', $countries, ['country_id', ['short_name']], 'clients_country', $selected_country, array_merge($location_select_attrs, [
-                      'data-location-group' => 'profile',
-                      'data-location-role'  => 'country',
+                     'data-location-group' => 'profile',
+                     'data-location-role'  => 'country',
                   ]));
                   echo render_select('state', $state_options, ['state', 'state'], 'client_state', $selected_state, array_merge($location_select_attrs, [
-                      'data-location-group' => 'profile',
-                      'data-location-role'  => 'state',
+                     'data-location-group' => 'profile',
+                     'data-location-role'  => 'state',
                   ]), [], $state_wrapper_class);
                   echo render_select('city', $city_options, ['city', 'city'], 'District', $selected_city, array_merge($location_select_attrs, [
-                      'data-location-group' => 'profile',
-                      'data-location-role'  => 'city',
+                     'data-location-group' => 'profile',
+                     'data-location-role'  => 'city',
                   ]), [], $city_wrapper_class);
                   ?>
                   <?php $value = (isset($client) ? $client->zip : ''); ?>
@@ -268,62 +291,62 @@
                                  class="font-medium-xs"><?php echo _l('customer_billing_same_as_profile'); ?></small></a>
                         </h4>
                         <hr />
-                        <?php $value = (isset($client) ? $client->billing_buyer : ''); ?>
+                        <?php $value = (isset($client) ? ($client->billing_buyer ?: $client->company) : ''); ?>
                         <?php echo render_input('billing_buyer', 'Buyer (Bill To)', $value); ?>
-                        <?php $value = (isset($client) ? $client->billing_mobile_number : ''); ?>
+                        <?php $value = (isset($client) ? ($client->billing_mobile_number ?: ($client_row ? $client_row->phonenumber : '')) : ''); ?>
                         <?php echo render_input('billing_mobile_number', 'Billing Mobile Number', $value); ?>
-                        <?php $value = (isset($client) ? $client->billing_email : ''); ?>
+                        <?php $value = (isset($client) ? ($client->billing_email ?: $client->email) : ''); ?>
                         <?php echo render_input('billing_email', 'Billing Email', $value, 'email'); ?>
-                        <?php $value = (isset($client) ? $client->billing_gst_number : ''); ?>
+                        <?php $value = (isset($client) ? ($client->billing_gst_number ?: $client->vat) : ''); ?>
                         <?php echo render_input('billing_gst_number', 'Billing GST Number', $value); ?>
-                        <?php $value = (isset($client) ? $client->billing_street : ''); ?>
+                        <?php $value = (isset($client) ? ($client->billing_street ?: $client->address) : ''); ?>
                         <?php echo render_textarea('billing_street', 'billing_street', $value); ?>
                         <?php
-                        $selected_country      = (isset($client) ? $client->billing_country : '');
-                        $selected_state        = (isset($client) ? $client->billing_state : '');
-                        $selected_city         = (isset($client) ? $client->billing_city : '');
+                        $selected_country      = (isset($client) ? ($client->billing_country ?: $client->country) : '');
+                        $selected_state        = (isset($client) ? ($client->billing_state ?: $client->state) : '');
+                        $selected_city         = (isset($client) ? ($client->billing_city ?: $client->city) : '');
                         $state_options         = isset($billing_location['states']) ? $billing_location['states'] : [];
                         $city_options          = isset($billing_location['cities']) ? $billing_location['cities'] : [];
                         if (!empty($selected_state)) {
-                            $state_found = false;
-                            foreach ($state_options as $state_row) {
-                                if ($state_row['state'] === $selected_state) {
-                                    $state_found = true;
-                                    break;
-                                }
-                            }
-                            if (!$state_found) {
-                                $state_options[] = ['state' => $selected_state];
-                            }
+                           $state_found = false;
+                           foreach ($state_options as $state_row) {
+                              if ($state_row['state'] === $selected_state) {
+                                 $state_found = true;
+                                 break;
+                              }
+                           }
+                           if (!$state_found) {
+                              $state_options[] = ['state' => $selected_state];
+                           }
                         }
                         if (!empty($selected_city)) {
-                            $city_found = false;
-                            foreach ($city_options as $city_row) {
-                                if ($city_row['city'] === $selected_city) {
-                                    $city_found = true;
-                                    break;
-                                }
-                            }
-                            if (!$city_found) {
-                                $city_options[] = ['city' => $selected_city];
-                            }
+                           $city_found = false;
+                           foreach ($city_options as $city_row) {
+                              if ($city_row['city'] === $selected_city) {
+                                 $city_found = true;
+                                 break;
+                              }
+                           }
+                           if (!$city_found) {
+                              $city_options[] = ['city' => $selected_city];
+                           }
                         }
                         $state_wrapper_class = !empty($selected_country) ? 'client-location-state-wrapper location-group-billing' : 'client-location-state-wrapper location-group-billing hide';
                         $city_wrapper_class  = (!empty($selected_country) && !empty($selected_state) && country_uses_city_dropdown($selected_country)) ? 'client-location-city-wrapper location-group-billing' : 'client-location-city-wrapper location-group-billing hide';
                         echo render_select('billing_country', $countries, ['country_id', ['short_name']], 'billing_country', $selected_country, array_merge($location_select_attrs, [
-                            'data-location-group' => 'billing',
-                            'data-location-role'  => 'country',
+                           'data-location-group' => 'billing',
+                           'data-location-role'  => 'country',
                         ]));
                         echo render_select('billing_state', $state_options, ['state', 'state'], 'billing_state', $selected_state, array_merge($location_select_attrs, [
-                            'data-location-group' => 'billing',
-                            'data-location-role'  => 'state',
+                           'data-location-group' => 'billing',
+                           'data-location-role'  => 'state',
                         ]), [], $state_wrapper_class);
                         echo render_select('billing_city', $city_options, ['city', 'city'], 'District', $selected_city, array_merge($location_select_attrs, [
-                            'data-location-group' => 'billing',
-                            'data-location-role'  => 'city',
+                           'data-location-group' => 'billing',
+                           'data-location-role'  => 'city',
                         ]), [], $city_wrapper_class);
                         ?>
-                        <?php $value = (isset($client) ? $client->billing_zip : ''); ?>
+                        <?php $value = (isset($client) ? ($client->billing_zip ?: $client->zip) : ''); ?>
                         <?php echo render_input('billing_zip', 'billing_zip', $value); ?>
                      </div>
                      <div class="col-md-6">
@@ -335,62 +358,62 @@
                                  class="font-medium-xs"><?php echo _l('customer_billing_copy'); ?></small></a>
                         </h4>
                         <hr />
-                        <?php $value = (isset($client) ? $client->shipping_notify_party : ''); ?>
+                        <?php $value = (isset($client) ? ($client->shipping_notify_party ?: ($client->billing_buyer ?: $client->company)) : ''); ?>
                         <?php echo render_input('shipping_notify_party', 'Notify Party (Ship To)', $value); ?>
-                        <?php $value = (isset($client) ? $client->shipping_mobile_number : ''); ?>
+                        <?php $value = (isset($client) ? ($client->shipping_mobile_number ?: ($client->billing_mobile_number ?: ($client_row ? $client_row->phonenumber : ''))) : ''); ?>
                         <?php echo render_input('shipping_mobile_number', 'Shipping Mobile Number', $value); ?>
-                        <?php $value = (isset($client) ? $client->shipping_email : ''); ?>
+                        <?php $value = (isset($client) ? ($client->shipping_email ?: ($client->billing_email ?: $client->email)) : ''); ?>
                         <?php echo render_input('shipping_email', 'Shipping Email', $value, 'email'); ?>
-                        <?php $value = (isset($client) ? $client->shipping_gst_number : ''); ?>
+                        <?php $value = (isset($client) ? ($client->shipping_gst_number ?: ($client->billing_gst_number ?: $client->vat)) : ''); ?>
                         <?php echo render_input('shipping_gst_number', 'Shipping GST Number', $value); ?>
-                        <?php $value = (isset($client) ? $client->shipping_street : ''); ?>
+                        <?php $value = (isset($client) ? ($client->shipping_street ?: ($client->billing_street ?: $client->address)) : ''); ?>
                         <?php echo render_textarea('shipping_street', 'shipping_street', $value); ?>
                         <?php
-                        $selected_country      = (isset($client) ? $client->shipping_country : '');
-                        $selected_state        = (isset($client) ? $client->shipping_state : '');
-                        $selected_city         = (isset($client) ? $client->shipping_city : '');
+                        $selected_country      = (isset($client) ? ($client->shipping_country ?: ($client->billing_country ?: $client->country)) : '');
+                        $selected_state        = (isset($client) ? ($client->shipping_state ?: ($client->billing_state ?: $client->state)) : '');
+                        $selected_city         = (isset($client) ? ($client->shipping_city ?: ($client->billing_city ?: $client->city)) : '');
                         $state_options         = isset($shipping_location['states']) ? $shipping_location['states'] : [];
                         $city_options          = isset($shipping_location['cities']) ? $shipping_location['cities'] : [];
                         if (!empty($selected_state)) {
-                            $state_found = false;
-                            foreach ($state_options as $state_row) {
-                                if ($state_row['state'] === $selected_state) {
-                                    $state_found = true;
-                                    break;
-                                }
-                            }
-                            if (!$state_found) {
-                                $state_options[] = ['state' => $selected_state];
-                            }
+                           $state_found = false;
+                           foreach ($state_options as $state_row) {
+                              if ($state_row['state'] === $selected_state) {
+                                 $state_found = true;
+                                 break;
+                              }
+                           }
+                           if (!$state_found) {
+                              $state_options[] = ['state' => $selected_state];
+                           }
                         }
                         if (!empty($selected_city)) {
-                            $city_found = false;
-                            foreach ($city_options as $city_row) {
-                                if ($city_row['city'] === $selected_city) {
-                                    $city_found = true;
-                                    break;
-                                }
-                            }
-                            if (!$city_found) {
-                                $city_options[] = ['city' => $selected_city];
-                            }
+                           $city_found = false;
+                           foreach ($city_options as $city_row) {
+                              if ($city_row['city'] === $selected_city) {
+                                 $city_found = true;
+                                 break;
+                              }
+                           }
+                           if (!$city_found) {
+                              $city_options[] = ['city' => $selected_city];
+                           }
                         }
                         $state_wrapper_class = !empty($selected_country) ? 'client-location-state-wrapper location-group-shipping' : 'client-location-state-wrapper location-group-shipping hide';
                         $city_wrapper_class  = (!empty($selected_country) && !empty($selected_state) && country_uses_city_dropdown($selected_country)) ? 'client-location-city-wrapper location-group-shipping' : 'client-location-city-wrapper location-group-shipping hide';
                         echo render_select('shipping_country', $countries, ['country_id', ['short_name']], 'shipping_country', $selected_country, array_merge($location_select_attrs, [
-                            'data-location-group' => 'shipping',
-                            'data-location-role'  => 'country',
+                           'data-location-group' => 'shipping',
+                           'data-location-role'  => 'country',
                         ]));
                         echo render_select('shipping_state', $state_options, ['state', 'state'], 'shipping_state', $selected_state, array_merge($location_select_attrs, [
-                            'data-location-group' => 'shipping',
-                            'data-location-role'  => 'state',
+                           'data-location-group' => 'shipping',
+                           'data-location-role'  => 'state',
                         ]), [], $state_wrapper_class);
                         echo render_select('shipping_city', $city_options, ['city', 'city'], 'District', $selected_city, array_merge($location_select_attrs, [
-                            'data-location-group' => 'shipping',
-                            'data-location-role'  => 'city',
+                           'data-location-group' => 'shipping',
+                           'data-location-role'  => 'city',
                         ]), [], $city_wrapper_class);
                         ?>
-                        <?php $value = (isset($client) ? $client->shipping_zip : ''); ?>
+                        <?php $value = (isset($client) ? ($client->shipping_zip ?: ($client->billing_zip ?: $client->zip)) : ''); ?>
                         <?php echo render_input('shipping_zip', 'shipping_zip', $value); ?>
                      </div>
                      <?php if (

@@ -149,6 +149,7 @@ class Target_markets extends AdminController
 
             // Hide specific tabs for Target Markets module
             $tabs_to_hide = [
+                'contacts',
                 'statement',
                 'invoices',
                 'payments',
@@ -677,17 +678,104 @@ class Target_markets extends AdminController
         if (!$id) {
             redirect(admin_url('target_markets'));
         }
-        
+
         $this->db->where('userid', $id);
         $this->db->update(db_prefix() . 'clients', [
             'is_target_market' => 0
         ]);
-        
+
         if ($this->db->affected_rows() > 0) {
+            // Trigger New Client Created welcome email
+            $this->db->where('userid', $id);
+            $this->db->where('is_primary', 1);
+            $contact = $this->db->get(db_prefix() . 'contacts')->row();
+
+            if ($contact) {
+                send_mail_template('customer_created_welcome_mail', $contact->email, $id, $contact->id, '');
+            }
+
             set_alert('success', 'Converted to customer successfully');
             redirect(admin_url('clients/client/' . $id));
         } else {
             set_alert('warning', 'Problem converting to customer');
+            redirect(admin_url('target_markets/client/' . $id));
+        }
+    }
+
+    public function convert_to_lead($id)
+    {
+        if (!has_permission('customers', '', 'edit')) {
+            access_denied('customers');
+        }
+        if (!$id) {
+            redirect(admin_url('target_markets'));
+        }
+
+        // Fetch the target market client record
+        $this->db->where('userid', $id);
+        $client = $this->db->get(db_prefix() . 'clients')->row();
+
+        if (!$client) {
+            set_alert('warning', 'Target market record not found');
+            redirect(admin_url('target_markets'));
+        }
+
+        $this->load->model('leads_model');
+
+        // Fetch email from primary contact (email is in tblcontacts, not tblclients)
+        $this->db->where('userid', $id);
+        $this->db->where('is_primary', 1);
+        $this->db->where('deleted_at IS NULL', null, false);
+        $primary_contact = $this->db->get(db_prefix() . 'contacts')->row();
+        $email = $primary_contact ? $primary_contact->email : '';
+
+        // Get default lead status — order by statusorder ASC so we get the first pipeline
+        // status (e.g. NEW LEAD) not the last one (e.g. CUSTOMER)
+        $statuses = $this->db->order_by('statusorder', 'ASC')->get(db_prefix() . 'leads_status')->result_array();
+        $default_status = !empty($statuses) ? $statuses[0]['id'] : 2;
+
+        // Get default lead source (first source ordered by id)
+        $sources = $this->db->order_by('id', 'ASC')->get(db_prefix() . 'leads_sources')->result_array();
+        $default_source = !empty($sources) ? $sources[0]['id'] : 1;
+
+        // Build lead data from client fields
+        $lead_data = [
+            'name'        => $client->company,
+            'company'     => $client->company,
+            'email'       => $email,
+            'phonenumber' => $client->phonenumber,
+            'website'     => $client->website,
+            'address'     => $client->address,
+            'city'        => $client->city,
+            'state'       => $client->state,
+            'country'     => $client->country,
+            'zip'         => $client->zip,
+            'status'      => $default_status,
+            'source'      => $default_source,
+            'assigned'    => get_staff_user_id(),
+            'addedfrom'   => get_staff_user_id(),
+            'dateadded'   => date('Y-m-d H:i:s'),
+            'isDeleted'   => 'false',
+            'is_public'   => 0,
+        ];
+
+        $this->db->insert(db_prefix() . 'leads', $lead_data);
+        $lead_id = $this->db->insert_id();
+
+        if ($lead_id) {
+            // Permanently delete the target market record and its related data.
+            // Direct queries used to bypass clients_model->delete() which crashes
+            // on a missing 'clientid' column in tblexpenses.
+            $this->db->where('userid', $id)->delete(db_prefix() . 'contacts');
+            $this->db->where('customer_id', $id)->delete(db_prefix() . 'customer_admins');
+            $this->db->where('customer_id', $id)->delete(db_prefix() . 'customer_groups');
+            $this->db->where('userid', $id)->delete(db_prefix() . 'clients');
+
+            log_activity('Target Market Converted to Lead [Client ID: ' . $id . ', Lead ID: ' . $lead_id . ']');
+            set_alert('success', 'Target market converted to lead successfully');
+            redirect(admin_url('leads/index/' . $lead_id));
+        } else {
+            set_alert('warning', 'Problem converting to lead');
             redirect(admin_url('target_markets/client/' . $id));
         }
     }
@@ -853,7 +941,7 @@ class Target_markets extends AdminController
             $this->input->post()
             && isset($_FILES['file_csv']['name']) && $_FILES['file_csv']['name'] != ''
         ) {
-            hooks()->add_filter('before_client_added', function($data) {
+            hooks()->add_filter('before_client_added', function ($data) {
                 $data['is_target_market'] = 1;
                 return $data;
             });

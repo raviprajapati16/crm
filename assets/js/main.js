@@ -2360,15 +2360,48 @@ $(function () {
             for (var fsd in billingAndShippingFields) {
                 if (billingAndShippingFields[fsd].indexOf('shipping') > -1) {
                     if (billingAndShippingFields[fsd].indexOf('country') > -1) {
-                        $('select[name="' + billingAndShippingFields[fsd] + '"]').selectpicker('val', response['billing_shipping'][0][billingAndShippingFields[fsd]]);
+                        if ($('select[data-location-group="invoice-shipping"][data-location-role="country"]').length) {
+                            // Handled by setInvoiceShippingLocationValues below
+                        } else {
+                            $('select[name="' + billingAndShippingFields[fsd] + '"]').selectpicker('val', response['billing_shipping'][0][billingAndShippingFields[fsd]]);
+                        }
                     } else {
                         if (billingAndShippingFields[fsd].indexOf('shipping_street') > -1) {
                             $('textarea[name="' + billingAndShippingFields[fsd] + '"]').val(response['billing_shipping'][0][billingAndShippingFields[fsd]]);
+                        } else if (billingAndShippingFields[fsd] === 'shipping_state' || billingAndShippingFields[fsd] === 'shipping_city') {
+                            if (!$('select[data-location-group="invoice-shipping"][data-location-role="country"]').length) {
+                                $('input[name="' + billingAndShippingFields[fsd] + '"]').val(response['billing_shipping'][0][billingAndShippingFields[fsd]]);
+                            }
                         } else {
                             $('input[name="' + billingAndShippingFields[fsd] + '"]').val(response['billing_shipping'][0][billingAndShippingFields[fsd]]);
                         }
                     }
                 }
+            }
+
+            // Populate shipping location dropdowns (country/state/city selects)
+            if (typeof setInvoiceShippingLocationValues === 'function' && $('select[data-location-group="invoice-shipping"][data-location-role="country"]').length) {
+                setInvoiceShippingLocationValues(
+                    response['billing_shipping'][0]['shipping_country'],
+                    response['billing_shipping'][0]['shipping_state'],
+                    response['billing_shipping'][0]['shipping_city'],
+                    function() {
+                        if (typeof renderInvoiceShipToAddress === 'function') {
+                            renderInvoiceShipToAddress();
+                        }
+                    }
+                );
+            } else {
+                if (typeof renderInvoiceShipToAddress === 'function') {
+                    renderInvoiceShipToAddress();
+                }
+            }
+
+            // Populate shipping_street preview cache
+            if (typeof cacheInvoiceShippingField === 'function') {
+                var _sbs = response['billing_shipping'][0];
+                if (_sbs['shipping_street']) cacheInvoiceShippingField('shipping_street', _sbs['shipping_street']);
+                if (_sbs['shipping_zip'])    cacheInvoiceShippingField('shipping_zip',    _sbs['shipping_zip']);
             }
 
             var client_currency = response['client_currency'];
@@ -2379,6 +2412,9 @@ $(function () {
             response.customer_has_projects === true ? projectsWrapper.removeClass('hide') : projectsWrapper.addClass('hide');
             s_currency.selectpicker('refresh');
             init_currency();
+
+            // Allow other scripts to react after client data is loaded
+            $(document).trigger('_after_invoice_client_change', [response]);
         });
 
     });
@@ -5772,6 +5808,23 @@ function init_billing_and_shipping_details() {
             snapshotInvoiceBillingPreviewFields();
         }
         renderInvoiceBillToAddress();
+
+        // Also update Ship To preview
+        if (typeof snapshotInvoiceShippingPreviewFields === 'function') {
+            snapshotInvoiceShippingPreviewFields();
+        }
+        if (typeof renderInvoiceShipToAddress === 'function') {
+            renderInvoiceShipToAddress();
+        }
+
+        // Init shipping location dropdowns if not yet done
+        if (typeof initInvoiceShippingLocationDropdowns === 'function') {
+            initInvoiceShippingLocationDropdowns();
+        }
+        if (typeof initInvoiceBillingLocationDropdowns === 'function') {
+            initInvoiceBillingLocationDropdowns();
+        }
+
         $('#billing_and_shipping_details').modal('hide');
         return;
     }

@@ -265,6 +265,18 @@ function get_available_staff_permissions($data = [])
             'delete' => _l('permission_delete'),
         ]
     ];
+
+    $corePermissions['freights'] = [
+        'name'         => "Freight Master",
+        'capabilities' => [
+            'view_own' => _l('permission_view_own'),
+            'view'   => $viewGlobalName,
+            'create'   => _l('permission_create'),
+            'edit'   => _l('permission_edit'),
+            'delete' => _l('permission_delete'),
+        ]
+    ];
+
  $corePermissions['customer_map'] = [
         'name'         => "Customer Map",
         'capabilities' => [

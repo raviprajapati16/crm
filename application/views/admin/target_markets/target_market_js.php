@@ -203,11 +203,19 @@
         _table_customer_lead_assigne = initDataTable('.table-customer-assigned-leads', admin_url + 'leads/customer_assigned_leads_table/' + customer_id, '', '');
 
 
-        var vRules = {};
+        var vRules = {
+            city: 'required',
+            state: 'required',
+            country: 'required',
+            email: {
+                required: true,
+                email: true
+            },
+            phonenumber: 'required',
+            address: 'required'
+        };
         if (app.options.company_is_required == 1) {
-            vRules = {
-                company: 'required',
-            }
+            vRules.company = 'required';
         }
 
         appValidateForm($('.client-form'), vRules);
@@ -241,6 +249,10 @@
 
         $('.billing-same-as-customer').on('click', function(e) {
             e.preventDefault();
+            $('input[name="billing_buyer"]').val($('input[name="company"]').val());
+            $('input[name="billing_mobile_number"]').val($('input[name="phonenumber"]').val());
+            $('input[name="billing_email"]').val($('input[name="email"]').val());
+            $('input[name="billing_gst_number"]').val($('input[name="vat"]').val());
             $('textarea[name="billing_street"]').val($('textarea[name="address"]').val());
             $('input[name="billing_zip"]').val($('input[name="zip"]').val());
             copyClientLocationGroup('profile', 'billing');
@@ -248,6 +260,10 @@
 
         $('.customer-copy-billing-address').on('click', function(e) {
             e.preventDefault();
+            $('input[name="shipping_notify_party"]').val($('input[name="billing_buyer"]').val());
+            $('input[name="shipping_mobile_number"]').val($('input[name="billing_mobile_number"]').val());
+            $('input[name="shipping_email"]').val($('input[name="billing_email"]').val());
+            $('input[name="shipping_gst_number"]').val($('input[name="billing_gst_number"]').val());
             $('textarea[name="shipping_street"]').val($('textarea[name="billing_street"]').val());
             $('input[name="shipping_zip"]').val($('input[name="billing_zip"]').val());
             copyClientLocationGroup('billing', 'shipping');

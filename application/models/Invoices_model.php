@@ -92,6 +92,9 @@ class Invoices_model extends App_Model
 
                 $this->load->model('payments_model');
                 $invoice->payments = $this->payments_model->get_invoice_payments($id);
+
+                $this->db->where('invoice_id', $id);
+                $invoice->containers = $this->db->get('tblinvoice_containers')->result_array();
             }
 
             return $invoice;
@@ -320,6 +323,11 @@ class Invoices_model extends App_Model
             unset($data['dynamic_fields']);
         }
 
+        if (isset($data['containers'])) {
+            $containers = $data['containers'];
+            unset($data['containers']);
+        }
+
         if (isset($data['tax_id'])) {
             unset($data['tax_id']);
         }
@@ -494,6 +502,26 @@ class Invoices_model extends App_Model
             // }
 
             update_invoice_status($insert_id);
+
+            if (isset($containers) && is_array($containers) && isset($containers['container_no'])) {
+                $count = count($containers['container_no']);
+                for ($i = 0; $i < $count; $i++) {
+                    if (!empty($containers['container_no'][$i]) || !empty($containers['size'][$i]) || !empty($containers['total_packages'][$i])) {
+                        $container_data = [
+                            'invoice_id'            => $insert_id,
+                            'container_no'          => $containers['container_no'][$i],
+                            'stuffing_date'         => !empty($containers['stuffing_date'][$i]) ? to_sql_date($containers['stuffing_date'][$i]) : null,
+                            'size'                  => $containers['size'][$i],
+                            'shipping_line_seal_no' => $containers['shipping_line_seal_no'][$i],
+                            'rfid_seal_no'          => $containers['rfid_seal_no'][$i],
+                            'total_packages'        => $containers['total_packages'][$i] != '' ? $containers['total_packages'][$i] : null,
+                            'net_weight'            => $containers['net_weight'][$i] != '' ? $containers['net_weight'][$i] : null,
+                            'gross_weight'          => $containers['gross_weight'][$i] != '' ? $containers['gross_weight'][$i] : null,
+                        ];
+                        $this->db->insert('tblinvoice_containers', $container_data);
+                    }
+                }
+            }
 
             foreach ($items as $key => $item) {
                 if ($itemid = add_new_sales_item_post($item, $insert_id, 'invoice')) {
@@ -776,6 +804,11 @@ class Invoices_model extends App_Model
             unset($data['items']);
         }
 
+        if (isset($data['containers'])) {
+            $containers = $data['containers'];
+            unset($data['containers']);
+        }
+
         if (isset($data['dynamic_fields'])) {
             unset($data['dynamic_fields']);
         }
@@ -923,6 +956,30 @@ class Invoices_model extends App_Model
         unset($data['removed_items']);
         $this->db->where('id', $id);
         $this->db->update(db_prefix() . 'invoices', $data);
+
+        if (isset($containers) && is_array($containers) && isset($containers['container_no'])) {
+            $this->db->where('invoice_id', $id);
+            $this->db->delete('tblinvoice_containers');
+            
+            $count = count($containers['container_no']);
+            for ($i = 0; $i < $count; $i++) {
+                if (!empty($containers['container_no'][$i]) || !empty($containers['size'][$i]) || !empty($containers['total_packages'][$i])) {
+                    $container_data = [
+                        'invoice_id'            => $id,
+                        'container_no'          => $containers['container_no'][$i],
+                        'stuffing_date'         => !empty($containers['stuffing_date'][$i]) ? to_sql_date($containers['stuffing_date'][$i]) : null,
+                        'size'                  => $containers['size'][$i],
+                        'shipping_line_seal_no' => $containers['shipping_line_seal_no'][$i],
+                        'rfid_seal_no'          => $containers['rfid_seal_no'][$i],
+                        'total_packages'        => $containers['total_packages'][$i] != '' ? $containers['total_packages'][$i] : null,
+                        'net_weight'            => $containers['net_weight'][$i] != '' ? $containers['net_weight'][$i] : null,
+                        'gross_weight'          => $containers['gross_weight'][$i] != '' ? $containers['gross_weight'][$i] : null,
+                    ];
+                    $this->db->insert('tblinvoice_containers', $container_data);
+                    $affectedRows++;
+                }
+            }
+        }
 
         if ($this->db->affected_rows() > 0) {
             $affectedRows++;

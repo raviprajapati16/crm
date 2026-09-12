@@ -20,7 +20,7 @@
 <?php init_tail(); ?>
 <script>
 	$(function() {
-		init_editor('textarea[name="terms"]');
+		// init_editor('textarea[name="terms"]');
 		validate_invoice_form();
 		// Init accountacy currency symbol
 		init_currency();

@@ -45,7 +45,11 @@ class Invoice_pdf
 
     protected function renderHTML()
     {
-        $html_content = $this->ci->load->view('themes/' . active_clients_theme() . '/mpdf/invoice/invoicepdf', [
+        $template = 'invoicepdf';
+        if (isset($this->invoice->pdf_type) && $this->invoice->pdf_type === 'annexure-invoice') {
+            $template = 'annexure_invoicepdf';
+        }
+        $html_content = $this->ci->load->view('themes/' . active_clients_theme() . '/mpdf/invoice/' . $template, [
             'invoice' => $this->invoice,
         ], true);
         return $html_content ?: "<h1>Content Not Found</h1>";

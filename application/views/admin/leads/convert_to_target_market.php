@@ -35,6 +35,8 @@
                <div class="col-md-4">
                   <?php echo render_input('title', 'contact_position', $lead->title); ?>
                </div>
+            </div>
+            <div class="row">
                <div class="col-md-4">
                   <?php echo render_input('email', 'lead_convert_to_email', $lead->email); ?>
                </div>
@@ -44,6 +46,8 @@
                <div class="col-md-4">
                   <?php echo render_input('phonenumber', 'lead_convert_to_client_phone', $lead->phonenumber); ?>
                </div>
+            </div>
+            <div class="row">
                <div class="col-md-4">
                   <?php echo render_input('website', 'client_website', $lead->website); ?>
                </div>
@@ -74,6 +78,8 @@
                   echo render_select('state', $state_options, ['state', 'state'], 'client_state', $lead->state, ['data-none-selected-text' => _l('dropdown_non_selected_tex')], [], $state_wrapper_class);
                   ?>
                </div>
+            </div>
+            <div class="row">
                <div class="col-md-4">
                   <?php
                   $city_options = isset($initial_cities) ? $initial_cities : [];
@@ -96,6 +102,8 @@
                <div class="col-md-4">
                   <?php echo render_input('zip', 'clients_zip', $lead->zip); ?>
                </div>
+            </div>
+            <div class="row">
                <div class="col-md-12">
                   <?php echo render_textarea('address', 'client_address', $lead->address); ?>
                </div>
@@ -223,6 +231,14 @@
 </div>
 <script>
    validate_lead_convert_to_client_form();
+   
+   // Make phone number required
+   setTimeout(function() {
+       if ($('#lead_to_client_form').length) {
+           $('input[name="phonenumber"]').rules('add', {required: true});
+       }
+   }, 100);
+
    init_selectpicker();
 
    (function() {

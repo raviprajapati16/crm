@@ -21,7 +21,7 @@ function get_relation_data($type, $rel_id = '')
         $where_clients = '';
 
         if ($q) {
-            $where_clients .= '(company LIKE "%' . $q . '%" OR CONCAT(firstname, " ", lastname) LIKE "%' . $q . '%" OR email LIKE "%' . $q . '%" OR state LIKE "%' . $q . '%") AND ' . db_prefix() . 'clients.active = 1';
+            $where_clients .= '(' . db_prefix() . 'clients.company LIKE "%' . $q . '%" OR CONCAT(firstname, " ", lastname) LIKE "%' . $q . '%" OR ' . db_prefix() . 'clients.email LIKE "%' . $q . '%" OR ' . db_prefix() . 'clients.state LIKE "%' . $q . '%") AND ' . db_prefix() . 'clients.active = 1';
         }
 
         $data = $CI->clients_model->get($rel_id, $where_clients);

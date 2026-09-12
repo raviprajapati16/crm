@@ -277,6 +277,16 @@ function app_init_admin_sidebar_menu_items()
         ]);
     }
 
+
+    if (has_permission('freights', '', 'view') || has_permission('freights', '', 'view_own')) {
+        $CI->app_menu->add_sidebar_menu_item('freights', [
+            'name' => "Freight Master",
+            'href' => admin_url('freights'),
+            'position' => 7,
+            'icon' => 'fa fa-truck',
+        ]);
+    }
+
     if (has_permission('contact_book', '', 'view') || has_permission('contact_book', '', 'view_own')) {
         $CI->app_menu->add_sidebar_menu_item('contact_book', [
             'name' => _l('contact_book'),
@@ -782,6 +792,12 @@ function app_init_admin_sidebar_menu_items()
                           'position' => 65,
                   ]);*/
     }
+
+    $CI->app_menu->add_setup_menu_item('freight-master', [
+        'href'     => admin_url('freight_master/manage'),
+        'name'     => 'Freight Master setting',
+        'position' => 199,
+    ]);
 
     if (has_permission('settings', '', 'view')) {
         $CI->app_menu->add_setup_menu_item('settings', [

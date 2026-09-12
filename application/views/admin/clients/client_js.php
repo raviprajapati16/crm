@@ -242,7 +242,7 @@
         $('.billing-same-as-customer').on('click', function(e) {
             e.preventDefault();
             $('input[name="billing_buyer"]').val($('input[name="company"]').val());
-            $('input[name="billing_mobile_number"]').val($('input[name="mobile_number"]').val());
+            $('input[name="billing_mobile_number"]').val($('input[name="phonenumber"]').val());
             $('input[name="billing_email"]').val($('input[name="email"]').val());
             $('input[name="billing_gst_number"]').val($('input[name="vat"]').val());
             $('textarea[name="billing_street"]').val($('textarea[name="address"]').val());

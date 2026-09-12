@@ -80,20 +80,52 @@ if ($invoice->status == Invoices_model::STATUS_DRAFT) { ?>
                                                    )); ?></h4>
          </div>
       <?php } ?>
+      <?php
+      $currencyData = get_currency($invoice->currency);
+      echo $currencyData->name;
+      ?>
       <div class="col-md-12 col-sm-12">
          <div class="row">
             <div class="col-md-12">
                <ul class="nav nav-tabs" role="tablist" id="invoice-nested-tabs">
+
                   <li role="presentation" class="active">
                      <a href="#nested_tab_tax_invoice" aria-controls="nested_tab_tax_invoice" role="tab" data-toggle="tab" onclick="invoice_preview('tax-invoice')">
-                        Tax Invoice
+                        GST Invoice
                      </a>
                   </li>
+                  <?php
+                  if ($currencyData->name != 'INR') {
+                  ?>
+                     <li role="presentation">
+                        <a href="#nested_tab_custom_invoice" aria-controls="nested_tab_custom_invoice" role="tab" data-toggle="tab" onclick="invoice_preview('custom-invoice')">
+                           Custom Invoice
+                        </a>
+                     </li>
+                  <?php
+                  }
+                  ?>
                   <li role="presentation">
                      <a href="#nested_tab_packing_list" aria-controls="nested_tab_packing_list" role="tab" data-toggle="tab" onclick="invoice_preview('packing-list')">
                         Packing / Weight List
                      </a>
                   </li>
+                  <?php
+                  if ($currencyData->name != 'INR') {
+                  ?>
+                     <li role="presentation">
+                        <a href="#nested_tab_commercial_invoice" aria-controls="nested_tab_commercial_invoice" role="tab" data-toggle="tab" onclick="invoice_preview('commercial-invoice')">
+                           Commercial Invoice
+                        </a>
+                     </li>
+                     <li role="presentation">
+                        <a href="#nested_tab_annexure_invoice" aria-controls="nested_tab_annexure_invoice" role="tab" data-toggle="tab" onclick="invoice_preview('annexure-invoice')">
+                           Annexure Invoice
+                        </a>
+                     </li>
+                  <?php
+                  }
+                  ?>
                </ul>
             </div>
          </div>
@@ -105,9 +137,30 @@ if ($invoice->status == Invoices_model::STATUS_DRAFT) { ?>
                   </div>
                </div>
             </div>
+            <div role="tabpanel" class="tab-pane" id="nested_tab_custom_invoice">
+               <div class="row">
+                  <div class="col-md-12" id="custom-invoice-preview">
+
+                  </div>
+               </div>
+            </div>
             <div role="tabpanel" class="tab-pane" id="nested_tab_packing_list">
                <div class="row">
                   <div class="col-md-12" id="packing-list-preview">
+
+                  </div>
+               </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="nested_tab_commercial_invoice">
+               <div class="row">
+                  <div class="col-md-12" id="commercial-invoice-preview">
+
+                  </div>
+               </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="nested_tab_annexure_invoice">
+               <div class="row">
+                  <div class="col-md-12" id="annexure-invoice-preview">
 
                   </div>
                </div>

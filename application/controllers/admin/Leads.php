@@ -848,6 +848,7 @@ class Leads extends AdminController
 
             $data['is_primary'] = 1;
             $data['is_target_market'] = 1;
+            $data['donotsendwelcomeemail'] = 1;
             $this->clients_model->is_target_market_mode = 1;
             $id = $this->clients_model->add($data, true);
             if ($id) {

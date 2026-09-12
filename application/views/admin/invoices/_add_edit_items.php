@@ -278,7 +278,7 @@
                         $table_row .= '<td><textarea name="' . $items_indicator . '[' . $i . '][long_description]" class="form-control" rows="5">' . clear_textarea_breaks($item['long_description']) . '</textarea></td>';
                         $table_row .= '<td><input type="text" placeholder="HSN Code" name="' . $items_indicator . '[' . $i . '][hsn_code]" class="form-control" value="' . $item['hsn_code'] . '"></td>';
                         $table_row .= render_custom_fields_items_table_in($item, $items_indicator . '[' . $i . ']');
-                        $table_row .= '<td><input type="number" min="0" onblur="calculate_total();" onchange="calculate_total();" data-quantity name="' . $items_indicator . '[' . $i . '][qty]" value="' . $item['qty'] . '" class="form-control">';
+                        $table_row .= '<td><input type="number" min="0" data-rule-min="0.000001" data-msg-min="Qty is required" required onblur="calculate_total();" onchange="calculate_total();" data-quantity name="' . $items_indicator . '[' . $i . '][qty]" value="' . $item['qty'] . '" class="form-control">';
                         $unit_placeholder = '';
                         if (!$item['unit']) {
                             $unit_placeholder = _l('unit');

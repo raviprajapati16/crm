@@ -846,7 +846,7 @@ class Invoices extends AdminController
         $invoice_number = format_invoice_number($invoice->id);
         try {
             $invoice->pdf_type = $this->input->get('type');
-            if ($invoice->pdf_type == 'tax-invoice' || $invoice->pdf_type == 'packing-list') {
+            if ($invoice->pdf_type == 'tax-invoice' || $invoice->pdf_type == 'packing-list' || $invoice->pdf_type == 'custom-invoice' || $invoice->pdf_type == 'commercial-invoice' || $invoice->pdf_type == 'annexure-invoice') {
                 $pdf = invoice_mpdf($invoice);
             } else {
                 set_alert('danger', 'Invalid PDF type');
@@ -907,7 +907,11 @@ class Invoices extends AdminController
         $type = $this->input->post('type');
         $invoice = $this->invoices_model->get($id);
         $invoice->pdf_type = $type;
-        $html = $this->load->view('themes/' . active_clients_theme() . '/mpdf/invoice/invoicepdf', [
+        $template = 'invoicepdf';
+        if ($type === 'annexure-invoice') {
+            $template = 'annexure_invoicepdf';
+        }
+        $html = $this->load->view('themes/' . active_clients_theme() . '/mpdf/invoice/' . $template, [
             'invoice' => $invoice,
         ], true);
         echo json_encode(['success' => true, 'html' => $html]);

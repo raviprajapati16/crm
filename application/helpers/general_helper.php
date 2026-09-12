@@ -944,7 +944,7 @@ function convertAmountToWordsIndianFormat($number)
     $amountInWords = implode('', array_reverse($str));
 
     if ($decimal > 0) {
-    $decimalInWords = " and " . ($words[floor($decimal / 10) * 10] . " " . $words[$decimal % 10]);
+        $decimalInWords = " and " . ($words[floor($decimal / 10) * 10] . " " . $words[$decimal % 10]);
         $currencyInWords = ($amountInWords ? $amountInWords . 'rupees ' : '') . $decimalInWords . ' paisa only.';
     } else {
         $currencyInWords = ($amountInWords ? $amountInWords . 'rupees ' : '') . 'and zero paisa only.';
@@ -2488,7 +2488,7 @@ function get_next_number($type, $prefix = '', $gst_number = '')
                 $CI->db->where('proposal_gst_number', $gst_number);
             }
             $result = $CI->db->get(db_prefix() . 'proposals')->row();
-        break;
+            break;
 
         case 'invoice':
             $CI->db->select('MAX(number) as max_number');
@@ -2497,19 +2497,19 @@ function get_next_number($type, $prefix = '', $gst_number = '')
                 $CI->db->where('gst_number', $gst_number);
             }
             $result = $CI->db->get(db_prefix() . 'invoices')->row();
-        break;
+            break;
 
         case 'purchase':
             $CI->db->select('MAX(purchase_number) as max_number');
             $CI->db->where('purchase_number_prefix', $prefix);
             $result = $CI->db->get(db_prefix() . 'purchase')->row();
-        break;
+            break;
 
         case 'contract':
             $CI->db->select('MAX(number) as max_number');
             $CI->db->where('prefix', $prefix);
             $result = $CI->db->get(db_prefix() . 'contracts')->row();
-        break;
+            break;
 
         default:
             return '001';
@@ -2530,9 +2530,9 @@ function get_contact_book_category_name($id)
     $CI = &get_instance();
     $CI->db->select('*');
     $CI->db->where('id', $id);
-    $query = $CI->db->get(db_prefix(). 'contact_book_category');
+    $query = $CI->db->get(db_prefix() . 'contact_book_category');
     $category = $query->row_array();
-    return (isset($category['name']))?  $category['name'] : "";
+    return (isset($category['name'])) ?  $category['name'] : "";
 }
 
 function get_contact_book_full_name($id)
@@ -2540,7 +2540,12 @@ function get_contact_book_full_name($id)
     $CI = &get_instance();
     $CI->db->select('*');
     $CI->db->where('id', $id);
-    $query = $CI->db->get(db_prefix(). 'contact_book');
+    $query = $CI->db->get(db_prefix() . 'contact_book');
     $user = $query->row_array();
-    return (isset($user['firstname']))?  $user['firstname'].' '.$user['lastname'] : "";
+    return (isset($user['firstname'])) ?  $user['firstname'] . ' ' . $user['lastname'] : "";
+}
+
+function convert_to_metric_tons($value)
+{
+    return round($value / 1000, 2);
 }

@@ -471,7 +471,7 @@
             });
         }
 
-        table_row += '<td><input type="number" min="0" onblur="calculate_total();" onchange="calculate_total();" data-quantity name="newitems[' + item_key + '][qty]" value="' + data.qty + '" class="form-control">';
+        table_row += '<td><input type="number" min="0" data-rule-min="0.000001" data-msg-min="Qty is required" required onblur="calculate_total();" onchange="calculate_total();" data-quantity name="newitems[' + item_key + '][qty]" value="' + data.qty + '" class="form-control">';
 
         if (!data.unit || typeof(data.unit) == 'undefined') {
             data.unit = '';

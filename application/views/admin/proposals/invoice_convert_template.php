@@ -32,7 +32,7 @@
 </div>
 <?php $this->load->view('admin/invoice_items/item'); ?>
 <script>
-    init_editor('textarea[name="terms"]');
+    // init_editor('textarea[name="terms"]');
     init_ajax_search('customer', '#clientid.ajax-search');
     init_ajax_search('items', '#item_select.ajax-search', undefined, admin_url + 'items/search');
     custom_fields_hyperlink();
@@ -53,7 +53,32 @@
     <?php } ?>
     $('input[name="adjustment"]').val('<?php echo $proposal->adjustment; ?>');
     $('input[name="show_quantity_as"][value="<?php echo $proposal->show_quantity_as; ?>"]').prop('checked', true).change();
+    <?php 
+    $proposal_tax = get_tax_by_relation($proposal->id, 'proposal');
+    if ($proposal_tax && isset($proposal_tax->taxrate)) { ?>
+        setTimeout(function(){
+            $('select[name="tax_id"] option').filter(function() {
+                return $(this).attr('data-taxrate') == '<?php echo $proposal_tax->taxrate; ?>';
+            }).prop('selected', true);
+            $('select[name="tax_id"]').selectpicker('refresh').change();
+        }, 100);
+    <?php } ?>
+    <?php if (isset($proposal->total_tax)) { ?>
+        $('input[name="total_tax"]').val('<?php echo $proposal->total_tax; ?>');
+    <?php } ?>
+
+    // Init location dropdown systems BEFORE triggering client change,
+    // so setInvoiceShippingLocationValues / setInvoiceLocationValues are defined
+    // when the AJAX done-callback runs.
+    if (typeof initInvoiceBillingLocationDropdowns === 'function') {
+        initInvoiceBillingLocationDropdowns();
+    }
+    if (typeof initInvoiceShippingLocationDropdowns === 'function') {
+        initInvoiceShippingLocationDropdowns();
+    }
+
     $('#convert_to_invoice #clientid').change();
+
 
     $('input[name="number"]').on('focusout', function() {
         check_invoice_number();

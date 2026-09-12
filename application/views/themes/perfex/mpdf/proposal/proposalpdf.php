@@ -282,9 +282,9 @@ $getTax = get_tax_by_relation($proposal->id, "proposal");
     <table class="product-table">
         <tr>
             <td class="product-header" style="width: 6%;">Sr. No.</td>
-            <td class="product-header" style="width: 30%;" colspan="2">Product
+            <td class="product-header" style="width: 28%;" colspan="2">Product
             </td>
-            <td class="product-header" style="width: 12%;">HSC</td>
+            <td class="product-header" style="width: 10%;">HSN</td>
             <td class="product-header" style="width: 10%;">Quantity<br>(<?= $qtyunit ?>)</td>
             <td class="product-header" style="width: 17%;">Amount/Unit<br>(In
                 <?= $currencyData->name ?>)</span></td>
@@ -393,7 +393,7 @@ $getTax = get_tax_by_relation($proposal->id, "proposal");
         <tr class="total-row">
             <td class="product-cell" colspan="4" style="text-align: left; font-weight: bold;">
                 <span class="">Amount In Word:</span>
-                <?= strtoupper(convertNumberToWords($proposal->total, $proposal->currency)) ?>
+                <?= ucwords(convertNumberToWords($proposal->total, $proposal->currency)) ?>
             </td>
             <td class="product-cell" style="font-weight: bold; font-size: 12px;"><?= (int) $totalQty; ?></td>
             <td class="product-cell" style="font-weight: bold; font-size: 12px;">Total Amount</td>
@@ -439,38 +439,38 @@ $getTax = get_tax_by_relation($proposal->id, "proposal");
         </tr>
         <!-- Banking and Registration Row 1 -->
         <tr>
-            <td class="info-cell" style="width: 20%;">Name</td>
-            <td class="info-cell" style="width: 30%;"><?= $proposal->bank_ac_name ?></td>
-            <td class="info-cell" style="width: 20%;">GSTIN</td>
-            <td class="info-cell" style="width: 30%;"><?= !empty($proposal->proposal_gst_number) ? $proposal->proposal_gst_number : get_option('company_vat') ?></td>
+            <td class="info-cell" style="width: 12%;">Name</td>
+            <td class="info-cell" style="width: 38%;"><?= $proposal->bank_ac_name ?></td>
+            <td class="info-cell" style="width: 12%;">GSTIN</td>
+            <td class="info-cell" style="width: 38%;"><?= !empty($proposal->proposal_gst_number) ? $proposal->proposal_gst_number : get_option('company_vat') ?></td>
         </tr>
         <!-- Row 2 -->
         <tr>
-            <td class="info-cell" style="width: 20%;">Account No.</td>
-            <td class="info-cell" style="width: 30%;"><?= $proposal->bank_ac_no ?></td>
-            <td class="info-cell" style="width: 20%;">CIN</td>
-            <td class="info-cell" style="width: 30%;"><?= get_option('company_cin_number') ?? '' ?></td>
+            <td class="info-cell" style="width: 12%;">Account No.</td>
+            <td class="info-cell" style="width: 38%;"><?= $proposal->bank_ac_no ?></td>
+            <td class="info-cell" style="width: 12%;">CIN</td>
+            <td class="info-cell" style="width: 38%;"><?= get_option('company_cin_number') ?? '' ?></td>
         </tr>
         <!-- Row 3 -->
         <tr>
-            <td class="info-cell" style="width: 20%;">Bank Name</td>
-            <td class="info-cell" style="width: 30%;"><?= $proposal->bank_name ?></td>
-            <td class="info-cell" style="width: 20%;">PAN</td>
-            <td class="info-cell" style="width: 30%;"><?= get_option('company_pan_number') ?? '' ?></td>
+            <td class="info-cell" style="width: 12%;">Bank Name</td>
+            <td class="info-cell" style="width: 38%;"><?= $proposal->bank_name ?></td>
+            <td class="info-cell" style="width: 12%;">PAN</td>
+            <td class="info-cell" style="width: 38%;"><?= get_option('company_pan_number') ?? '' ?></td>
         </tr>
         <!-- Row 4 -->
         <tr>
-            <td class="info-cell" style="width: 20%;">IFSC Code</td>
-            <td class="info-cell" style="width: 30%;"><?= $proposal->bank_ifsc_code ?></td>
-            <td class="info-cell" style="width: 20%;">IEC</td>
-            <td class="info-cell" style="width: 30%;"></td>
+            <td class="info-cell" style="width: 12%;">IFSC Code</td>
+            <td class="info-cell" style="width: 38%;"><?= $proposal->bank_ifsc_code ?></td>
+            <td class="info-cell" style="width: 12%;">IEC</td>
+            <td class="info-cell" style="width: 38%;"></td>
         </tr>
         <!-- Row 5 -->
         <tr>
-            <td class="info-cell" style="width: 20%;">Bank Swift Code</td>
-            <td class="info-cell" style="width: 30%;"><?= $proposal->bank_swift_code ?></td>
-            <td class="info-cell" style="width: 20%;">TAN</td>
-            <td class="info-cell" style="width: 30%;"><?= get_option('company_tan_number') ?? '' ?></td>
+            <td class="info-cell" style="width: 12%;">Swift Code</td>
+            <td class="info-cell" style="width: 38%;"><?= $proposal->bank_swift_code ?></td>
+            <td class="info-cell" style="width: 12%;">TAN</td>
+            <td class="info-cell" style="width: 38%;"><?= get_option('company_tan_number') ?? '' ?></td>
         </tr>
 
         <!-- Notes and Signatory Labels -->
@@ -538,10 +538,11 @@ $getTax = get_tax_by_relation($proposal->id, "proposal");
                 <strong>The Buyer:</strong><br>
                 For and On Behalf of:<br><br>
                 <?php
-                if (file_exists($customer_sign_path) && !empty($proposal->signature)) {
-                    $customer_sign_url = site_url('download/preview_image?path=' . protected_file_url_by_path(get_upload_path_by_type('proposal') . $proposal->id . '/' . $proposal->signature));
+                $customer_sign_path = site_url('download/preview_image?path=' . protected_file_url_by_path(get_upload_path_by_type('proposal') . $proposal->id . '/' . $proposal->signature));
+
+                if (!empty($proposal->signature)) {
                 ?>
-                    <img src="<?= $customer_sign_url ?>" alt="Company Signature" width="120" height="80">
+                    <img src="<?= $customer_sign_path ?>" alt="Company Signature" width="120" height="80">
                 <?php
                 } else {
                     echo "<br><br><br><br><br><br><br><br><br><br>";

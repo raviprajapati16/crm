@@ -286,6 +286,64 @@ function _info_format_custom_fields_check($custom_fields, $txt)
     return $txt;
 }
 
+if (!function_exists('get_client_address_info')) {
+    function get_client_address_info($client, $type = 'billing')
+    {
+        $parts = [];
+
+        // Determine name
+        if ($type === 'shipping') {
+            $name = !empty($client->shipping_notify_party) ? $client->shipping_notify_party
+                : (!empty($client->billing_buyer) ? $client->billing_buyer : $client->company);
+        } else {
+            $name = !empty($client->billing_buyer) ? $client->billing_buyer : $client->company;
+        }
+
+        // Line 1: Street, City, State, Zip, Country
+        $addr_parts = [];
+        $street_field = $type . '_street';
+        if (!empty($client->$street_field)) $addr_parts[] = trim(clear_textarea_breaks($client->$street_field));
+
+        $city_field  = $type . '_city';
+        $state_field = $type . '_state';
+        $zip_field   = $type . '_zip';
+        if (!empty($client->$city_field))  $addr_parts[] = $client->$city_field;
+        if (!empty($client->$state_field)) $addr_parts[] = $client->$state_field;
+        if (!empty($client->$zip_field))   $addr_parts[] = $client->$zip_field;
+
+        $country_field = $type . '_country';
+        if (!empty($client->$country_field) && $client->$country_field != 0) {
+            $country = get_country($client->$country_field);
+            if ($country) $addr_parts[] = $country->short_name;
+        }
+
+        if (!empty($addr_parts)) $parts[] = implode(', ', $addr_parts);
+
+        // Line 2: Contact, Email, GST (joined by " | ")
+        $contact_parts = [];
+        $mobile_field = $type . '_mobile_number';
+        if (!empty($client->$mobile_field)) $contact_parts[] = 'Contact No. - ' . $client->$mobile_field;
+
+        $email_field = $type . '_email';
+        if (!empty($client->$email_field)) $contact_parts[] = 'Email - ' . $client->$email_field;
+
+        $gst_field = $type . '_gst_number';
+        if (!empty($client->$gst_field)) $parts[] = 'GST IN - ' . $client->$gst_field;
+
+        if (!empty($contact_parts)) $parts[] = implode(' | ', $contact_parts);
+
+        // If shipping is completely empty, fallback to billing
+        if ($type === 'shipping' && empty($parts)) {
+            return get_client_address_info($client, 'billing');
+        }
+
+        return [
+            'name'    => $name,
+            'address' => implode('<br>', $parts),
+        ];
+    }
+}
+
 if (!function_exists('format_customer_info')) {
     /**
      * Format customer address info

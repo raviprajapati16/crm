@@ -63,11 +63,6 @@
                               </ul>
                            </div>
                         <?php } ?>
-                        <?php if (has_permission('customers', '', 'edit')) { ?>
-                           <a href="<?php echo admin_url('target_markets/convert_to_customer/' . $client->userid); ?>" class="btn btn-success btn-xs mleft10" style="font-size: 11px; padding: 2px 6px;" onclick="return confirm('Are you sure you want to convert this target market to a customer?');">
-                              Convert to Customer
-                           </a>
-                        <?php } ?>
 
                         <?php if (isset($client) && $client->leadid != NULL) { ?>
                            <br />

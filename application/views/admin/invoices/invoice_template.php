@@ -49,87 +49,87 @@
             $branch_rows_json = get_option('branch_rows');
             $branch_rows      = $branch_rows_json ? json_decode($branch_rows_json, true) : [];
             if (!is_array($branch_rows)) {
-                $branch_rows = [];
+               $branch_rows = [];
             }
 
             // On edit, identify which branch matches the invoice's prefix and gst_number
             $matched_branch_id = null;
             if (isset($invoice)) {
-                foreach ($branch_rows as $br) {
-                    $resolved_pref = replace_dynamic_prefix($br['invoice_prefix'] ?? '');
-                    $br_gst = trim($br['gst_number'] ?? '');
-                    $inv_gst = trim($invoice->gst_number ?? '');
-                    if ($resolved_pref === $invoice->prefix && $br_gst === $inv_gst) {
+               foreach ($branch_rows as $br) {
+                  $resolved_pref = replace_dynamic_prefix($br['invoice_prefix'] ?? '');
+                  $br_gst = trim($br['gst_number'] ?? '');
+                  $inv_gst = trim($invoice->gst_number ?? '');
+                  if ($resolved_pref === $invoice->prefix && $br_gst === $inv_gst) {
+                     $matched_branch_id = $br['id'] ?? null;
+                     break;
+                  }
+               }
+               // Fallback
+               if (empty($matched_branch_id)) {
+                  foreach ($branch_rows as $br) {
+                     $resolved_pref = replace_dynamic_prefix($br['invoice_prefix'] ?? '');
+                     if ($resolved_pref === $invoice->prefix) {
                         $matched_branch_id = $br['id'] ?? null;
                         break;
-                    }
-                }
-                // Fallback
-                if (empty($matched_branch_id)) {
-                    foreach ($branch_rows as $br) {
-                        $resolved_pref = replace_dynamic_prefix($br['invoice_prefix'] ?? '');
-                        if ($resolved_pref === $invoice->prefix) {
-                            $matched_branch_id = $br['id'] ?? null;
-                            break;
-                        }
-                    }
-                }
+                     }
+                  }
+               }
             }
 
             // Filter active branches, or the currently matched one if editing
             $active_branch_rows = [];
             foreach ($branch_rows as $br) {
-                $is_deleted = !empty($br['deleted']);
-                $is_matched = (isset($br['id']) && $matched_branch_id !== null && $br['id'] === $matched_branch_id);
-                if (!$is_deleted || $is_matched) {
-                    $active_branch_rows[] = $br;
-                }
+               $is_deleted = !empty($br['deleted']);
+               $is_matched = (isset($br['id']) && $matched_branch_id !== null && $br['id'] === $matched_branch_id);
+               if (!$is_deleted || $is_matched) {
+                  $active_branch_rows[] = $br;
+               }
             }
 
             if (empty($active_branch_rows)) {
-                // Fallback: build a single entry from the legacy option
-                $active_branch_rows = [[
-                    'id'             => '',
-                    'branch_name'    => 'Default',
-                    'invoice_prefix' => get_option('invoice_prefix') ?: 'INV-',
-                    'gst_number'     => '',
-                ]];
+               // Fallback: build a single entry from the legacy option
+               $active_branch_rows = [[
+                  'id'             => '',
+                  'branch_name'    => 'Default',
+                  'invoice_prefix' => get_option('invoice_prefix') ?: 'INV-',
+                  'gst_number'     => '',
+               ]];
             }
 
             // Resolve dynamic variables for each branch prefix (for matching on edit)
             $branch_rows_resolved = [];
             foreach ($active_branch_rows as $br) {
-                $br['resolved_prefix'] = replace_dynamic_prefix($br['invoice_prefix'] ?? '');
-                $branch_rows_resolved[] = $br;
+               $br['resolved_prefix'] = replace_dynamic_prefix($br['invoice_prefix'] ?? '');
+               $branch_rows_resolved[] = $br;
             }
 
             // On edit or conversion: find which branch index is currently selected
             $selected_branch_index = 0;
             if (isset($invoice)) {
-                $is_conversion = isset($invoice->proposal_number_prefix);
-                $search_prefix = $is_conversion ? $invoice->proposal_number_prefix : ($invoice->prefix ?? '');
-                $search_gst = $is_conversion ? ($invoice->proposal_gst_number ?? '') : ($invoice->gst_number ?? '');
+               $is_conversion = isset($invoice->proposal_number_prefix);
+               $search_prefix = $is_conversion ? $invoice->proposal_number_prefix : ($invoice->prefix ?? '');
+               $search_gst = $is_conversion ? ($invoice->proposal_gst_number ?? '') : ($invoice->gst_number ?? '');
 
-                foreach ($branch_rows_resolved as $bidx => $br) {
-                    $br_gst = trim($br['gst_number'] ?? '');
-                    $comp_gst = trim($search_gst);
-                    $br_pref = $is_conversion ? replace_dynamic_prefix($br['proposal_prefix'] ?? '') : $br['resolved_prefix'];
+               foreach ($branch_rows_resolved as $bidx => $br) {
+                  $br_gst = trim($br['gst_number'] ?? '');
+                  $comp_gst = trim($search_gst);
+                  $br_pref = $is_conversion ? replace_dynamic_prefix($br['proposal_prefix'] ?? '') : $br['resolved_prefix'];
 
-                    if ($br_pref === $search_prefix && $br_gst === $comp_gst) {
+                  if ($br_pref === $search_prefix && $br_gst === $comp_gst) {
+                     $selected_branch_index = $bidx;
+                     break;
+                  }
+               }
+               // Fallback if no exact match (e.g. legacy records with only prefix)
+               if ($selected_branch_index === 0) {
+                  foreach ($branch_rows_resolved as $bidx => $br) {
+                     $br_pref = $is_conversion ? replace_dynamic_prefix($br['proposal_prefix'] ?? '') : $br['resolved_prefix'];
+                     if ($br_pref === $search_prefix) {
                         $selected_branch_index = $bidx;
                         break;
-                    }
-                }
-                // Fallback if no exact match (e.g. legacy records with only prefix)
-                if ($selected_branch_index === 0) {
-                    foreach ($branch_rows_resolved as $bidx => $br) {
-                        $br_pref = $is_conversion ? replace_dynamic_prefix($br['proposal_prefix'] ?? '') : $br['resolved_prefix'];
-                        if ($br_pref === $search_prefix) {
-                            $selected_branch_index = $bidx;
-                            break;
-                        }
-                    }
-                }
+                     }
+                  }
+               }
             }
             $selected_branch = $branch_rows_resolved[$selected_branch_index];
             ?>
@@ -139,23 +139,23 @@
                <label for="branch_gst_select">Branch / GST</label>
                <select id="branch_gst_select" name="branch_gst_select" class="form-control" onchange="applyBranchGst(this.value)">
                   <?php foreach ($branch_rows_resolved as $bidx => $br): ?>
-                  <option value="<?= $bidx ?>"
-                     data-prefix="<?= htmlspecialchars($br['resolved_prefix']) ?>"
-                     data-gst="<?= htmlspecialchars($br['gst_number'] ?? '') ?>"
-                     data-raw-prefix="<?= htmlspecialchars($br['invoice_prefix'] ?? '') ?>"
-                     <?= ($bidx === $selected_branch_index) ? 'selected' : '' ?>>
-                     <?= htmlspecialchars($br['branch_name']) ?>
-                     <?php if (!empty($br['gst_number'])): ?>
-                        (<?= htmlspecialchars($br['gst_number']) ?>)
-                     <?php endif; ?>
-                  </option>
+                     <option value="<?= $bidx ?>"
+                        data-prefix="<?= htmlspecialchars($br['resolved_prefix']) ?>"
+                        data-gst="<?= htmlspecialchars($br['gst_number'] ?? '') ?>"
+                        data-raw-prefix="<?= htmlspecialchars($br['invoice_prefix'] ?? '') ?>"
+                        <?= ($bidx === $selected_branch_index) ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($br['branch_name']) ?>
+                        <?php if (!empty($br['gst_number'])): ?>
+                           (<?= htmlspecialchars($br['gst_number']) ?>)
+                        <?php endif; ?>
+                     </option>
                   <?php endforeach; ?>
                </select>
                <!-- Hidden: store selected GST number for form submission -->
                <input type="hidden" id="selected_gst_number" name="selected_gst_number"
-                      value="<?= htmlspecialchars($selected_branch['gst_number'] ?? '') ?>">
+                  value="<?= htmlspecialchars($selected_branch['gst_number'] ?? '') ?>">
                <input type="hidden" id="selected_branch_prefix_raw" name="selected_branch_prefix_raw"
-                      value="<?= htmlspecialchars($selected_branch['invoice_prefix'] ?? '') ?>">
+                  value="<?= htmlspecialchars($selected_branch['invoice_prefix'] ?? '') ?>">
             </div>
 
             <div class="form-group">
@@ -164,7 +164,7 @@
                <div class="input-group">
                   <span class="input-group-addon" id="invoice_prefix"><?= htmlspecialchars($selected_branch['resolved_prefix']) ?></span>
                   <input type="number" id="number" name="number" class="form-control"
-                         value="<?= (isset($invoice) && $invoice->number) ? $invoice->number : get_next_number('invoice', $selected_branch['resolved_prefix'], $selected_branch['gst_number'] ?? '') ?>">
+                     value="<?= (isset($invoice) && $invoice->number) ? $invoice->number : get_next_number('invoice', $selected_branch['resolved_prefix'], $selected_branch['gst_number'] ?? '') ?>">
                </div>
             </div>
 
@@ -172,11 +172,11 @@
                // Branch data baked in by PHP — keyed by option value (index)
                var _branchMap = {};
                <?php foreach ($branch_rows_resolved as $bidx => $br): ?>
-               _branchMap[<?= $bidx ?>] = {
-                  prefix    : <?= json_encode($br['resolved_prefix']) ?>,
-                  rawPrefix : <?= json_encode($br['invoice_prefix'] ?? '') ?>,
-                  gst       : <?= json_encode($br['gst_number'] ?? '') ?>
-               };
+                  _branchMap[<?= $bidx ?>] = {
+                     prefix: <?= json_encode($br['resolved_prefix']) ?>,
+                     rawPrefix: <?= json_encode($br['invoice_prefix'] ?? '') ?>,
+                     gst: <?= json_encode($br['gst_number'] ?? '') ?>
+                  };
                <?php endforeach; ?>
 
                var _isEdit = <?= (isset($invoice) && !isset($convert_invoice)) ? 'true' : 'false' ?>;
@@ -193,21 +193,23 @@
                   document.getElementById('invoice_prefix').textContent = branch.prefix;
 
                   // Update hidden inputs for form submission
-                  document.getElementById('selected_gst_number').value      = branch.gst;
+                  document.getElementById('selected_gst_number').value = branch.gst;
                   document.getElementById('selected_branch_prefix_raw').value = branch.rawPrefix;
 
                   // Auto-fill next invoice number
                   if (!_isEdit) {
                      $.post(
-                        '<?= admin_url('invoices/get_next_invoice_number_for_prefix') ?>',
-                        { prefix: branch.prefix, gst: branch.gst },
+                        '<?= admin_url('invoices/get_next_invoice_number_for_prefix') ?>', {
+                           prefix: branch.prefix,
+                           gst: branch.gst
+                        },
                         function(res) {
                            try {
                               var d = (typeof res === 'string') ? JSON.parse(res) : res;
                               if (d && d.next_number) {
                                  document.getElementById('number').value = d.next_number;
                               }
-                           } catch(e) {}
+                           } catch (e) {}
                         }
                      );
                   } else {
@@ -217,15 +219,17 @@
                      } else {
                         // Otherwise, fetch the next number for the new prefix to prevent duplicate number errors
                         $.post(
-                           '<?= admin_url('invoices/get_next_invoice_number_for_prefix') ?>',
-                           { prefix: branch.prefix, gst: branch.gst },
+                           '<?= admin_url('invoices/get_next_invoice_number_for_prefix') ?>', {
+                              prefix: branch.prefix,
+                              gst: branch.gst
+                           },
                            function(res) {
                               try {
                                  var d = (typeof res === 'string') ? JSON.parse(res) : res;
                                  if (d && d.next_number) {
                                     document.getElementById('number').value = d.next_number;
                                  }
-                              } catch(e) {}
+                              } catch (e) {}
                            }
                         );
                      }
@@ -242,62 +246,64 @@
 
             <div class="row">
                <div class="col-md-12">
-               <hr class="hr-10" />
+                  <hr class="hr-10" />
                   <a href="#" class="edit_shipping_billing_info" data-toggle="modal" data-target="#billing_and_shipping_details"><i class="fa fa-pencil-square-o"></i></a>
-                  <?php include_once(APPPATH .'views/admin/invoices/billing_and_shipping_template.php'); ?>
+                  <?php include_once(APPPATH . 'views/admin/invoices/billing_and_shipping_template.php'); ?>
                </div>
-               <div class="col-md-12">
+               <div class="col-md-6">
                   <p class="bold"><?php echo _l('invoice_bill_to'); ?></p>
                   <address>
                      <span class="billing_street" id="invoice_bill_to_street">
-                     <?php $billing_street = (isset($invoice) ? $invoice->billing_street : '--'); ?>
-                     <?php $billing_street = ($billing_street == '' ? '--' :$billing_street); ?>
-                     <?php echo $billing_street; ?></span><br>
+                        <?php $billing_street = (isset($invoice) ? $invoice->billing_street : '--'); ?>
+                        <?php $billing_street = ($billing_street == '' ? '--' : $billing_street); ?>
+                        <?php echo $billing_street; ?></span><br>
                      <span class="billing_city" id="invoice_bill_to_city">
-                     <?php $billing_city = (isset($invoice) ? $invoice->billing_city : '--'); ?>
-                     <?php $billing_city = ($billing_city == '' ? '--' :$billing_city); ?>
-                     <?php echo $billing_city; ?></span>,
+                        <?php $billing_city = (isset($invoice) ? $invoice->billing_city : '--'); ?>
+                        <?php $billing_city = ($billing_city == '' ? '--' : $billing_city); ?>
+                        <?php echo $billing_city; ?></span>,
                      <span class="billing_state" id="invoice_bill_to_state">
-                     <?php $billing_state = (isset($invoice) ? $invoice->billing_state : '--'); ?>
-                     <?php $billing_state = ($billing_state == '' ? '--' :$billing_state); ?>
-                     <?php echo $billing_state; ?></span>
-                     <br/>
+                        <?php $billing_state = (isset($invoice) ? $invoice->billing_state : '--'); ?>
+                        <?php $billing_state = ($billing_state == '' ? '--' : $billing_state); ?>
+                        <?php echo $billing_state; ?></span>
+                     <br />
                      <span class="billing_country" id="invoice_bill_to_country">
-                     <?php $billing_country = (isset($invoice) ? get_country_short_name($invoice->billing_country) : '--'); ?>
-                     <?php $billing_country = ($billing_country == '' ? '--' :$billing_country); ?>
-                     <?php echo $billing_country; ?></span>,
+                        <?php $billing_country = (isset($invoice) ? get_country_short_name($invoice->billing_country) : '--'); ?>
+                        <?php $billing_country = ($billing_country == '' ? '--' : $billing_country); ?>
+                        <?php echo $billing_country; ?></span>,
                      <span class="billing_zip" id="invoice_bill_to_zip">
-                     <?php $billing_zip = (isset($invoice) ? $invoice->billing_zip : '--'); ?>
-                     <?php $billing_zip = ($billing_zip == '' ? '--' :$billing_zip); ?>
-                     <?php echo $billing_zip; ?></span>
+                        <?php $billing_zip = (isset($invoice) ? $invoice->billing_zip : '--'); ?>
+                        <?php $billing_zip = ($billing_zip == '' ? '--' : $billing_zip); ?>
+                        <?php echo $billing_zip; ?></span>
                   </address>
                </div>
-               <!-- <div class="col-md-6">
+               <div class="col-md-6">
+                  <!-- <a href="#" class="edit_shipping_billing_info" data-toggle="modal" data-target="#billing_and_shipping_details"><i class="fa fa-pencil-square-o"></i></a> -->
+                  <?php include_once(APPPATH . 'views/admin/invoices/billing_and_shipping_template_shipping.php'); ?>
                   <p class="bold"><?php echo _l('ship_to'); ?></p>
                   <address>
-                     <span class="shipping_street">
-                     <?php $shipping_street = (isset($invoice) ? $invoice->shipping_street : '--'); ?>
-                     <?php $shipping_street = ($shipping_street == '' ? '--' :$shipping_street); ?>
-                     <?php echo $shipping_street; ?></span><br>
-                     <span class="shipping_city">
-                     <?php $shipping_city = (isset($invoice) ? $invoice->shipping_city : '--'); ?>
-                     <?php $shipping_city = ($shipping_city == '' ? '--' :$shipping_city); ?>
-                     <?php echo $shipping_city; ?></span>,
-                     <span class="shipping_state">
-                     <?php $shipping_state = (isset($invoice) ? $invoice->shipping_state : '--'); ?>
-                     <?php $shipping_state = ($shipping_state == '' ? '--' :$shipping_state); ?>
-                     <?php echo $shipping_state; ?></span>
-                     <br/>
-                     <span class="shipping_country">
-                     <?php $shipping_country = (isset($invoice) ? get_country_short_name($invoice->shipping_country) : '--'); ?>
-                     <?php $shipping_country = ($shipping_country == '' ? '--' :$shipping_country); ?>
-                     <?php echo $shipping_country; ?></span>,
-                     <span class="shipping_zip">
-                     <?php $shipping_zip = (isset($invoice) ? $invoice->shipping_zip : '--'); ?>
-                     <?php $shipping_zip = ($shipping_zip == '' ? '--' :$shipping_zip); ?>
-                     <?php echo $shipping_zip; ?></span>
+                     <span class="shipping_street" id="invoice_ship_to_street">
+                        <?php $shipping_street = (isset($invoice) ? $invoice->shipping_street : '--'); ?>
+                        <?php $shipping_street = ($shipping_street == '' ? '--' : $shipping_street); ?>
+                        <?php echo $shipping_street; ?></span><br>
+                     <span class="shipping_city" id="invoice_ship_to_city">
+                        <?php $shipping_city = (isset($invoice) ? $invoice->shipping_city : '--'); ?>
+                        <?php $shipping_city = ($shipping_city == '' ? '--' : $shipping_city); ?>
+                        <?php echo $shipping_city; ?></span>,
+                     <span class="shipping_state" id="invoice_ship_to_state">
+                        <?php $shipping_state = (isset($invoice) ? $invoice->shipping_state : '--'); ?>
+                        <?php $shipping_state = ($shipping_state == '' ? '--' : $shipping_state); ?>
+                        <?php echo $shipping_state; ?></span>
+                     <br />
+                     <span class="shipping_country" id="invoice_ship_to_country">
+                        <?php $shipping_country = (isset($invoice) ? get_country_short_name($invoice->shipping_country) : '--'); ?>
+                        <?php $shipping_country = ($shipping_country == '' ? '--' : $shipping_country); ?>
+                        <?php echo $shipping_country; ?></span>,
+                     <span class="shipping_zip" id="invoice_ship_to_zip">
+                        <?php $shipping_zip = (isset($invoice) ? $invoice->shipping_zip : '--'); ?>
+                        <?php $shipping_zip = ($shipping_zip == '' ? '--' : $shipping_zip); ?>
+                        <?php echo $shipping_zip; ?></span>
                   </address>
-               </div> -->
+               </div>
             </div>
             <div class="row">
                <div class="col-md-6">
@@ -457,15 +463,18 @@
                      ?>
                      <?php echo render_select('currency', $currencies, array('id', 'name', 'symbol'), 'invoice_add_edit_currency', $selected, $currency_attr); ?>
                   </div>
-                  <div class="col-md-4 non_inr_fields_wrapper hide">
-                     <?php $value = (isset($invoice) ? $invoice->exchange_rate : ''); ?>
-                     <?php echo render_input('exchange_rate', 'Exchange Rate', $value); ?>
-                     <a href="https://www.cbic.gov.in/entities/cbic-content-mst/MzEzMTg%3D" target="_blank" style="display:block; margin-top:-10px; margin-bottom:15px;"><small>(check exchange rate)</small></a>
-                  </div>
-                  <div class="col-md-4 non_inr_fields_wrapper hide">
-                     <?php $value = (isset($invoice) ? $invoice->notification_number : ''); ?>
-                     <?php echo render_input('notification_number', 'Notification Number', $value); ?>
-                  </div>
+                  <?php if (isset($invoice) && $invoice->currency != 3) { ?>
+                     <div class="col-md-4 non_inr_fields_wrapper">
+                        <?php $value = (isset($invoice) ? $invoice->exchange_rate : ''); ?>
+                        <?php echo render_input('exchange_rate', 'Exchange Rate', $value); ?>
+                        <a href="https://www.cbic.gov.in/entities/cbic-content-mst/MzEzMTg%3D" target="_blank" style="display:block; margin-top:-10px; margin-bottom:15px;"><small>(check exchange rate)</small></a>
+                     </div>
+                     <div class="col-md-4 non_inr_fields_wrapper">
+                        <?php $value = (isset($invoice) ? $invoice->notification_number : ''); ?>
+                        <?php echo render_input('notification_number', 'Notification Number', $value); ?>
+                     </div>
+                  <?php } ?>
+
                   <div class="col-md-6">
                      <?php
                      $i = 0;
@@ -542,8 +551,8 @@
                      </div>
                   </div>
                   <!-- <div class="recurring_custom <?php if ((isset($invoice) && $invoice->custom_recurring != 1) || (!isset($invoice))) {
-                                                   echo 'hide';
-                                                } ?>">
+                                                         echo 'hide';
+                                                      } ?>">
                      <div class="col-md-6">
                         <?php $value = (isset($invoice) && $invoice->custom_recurring == 1 ? $invoice->recurring : 1); ?>
                         <?php echo render_input('repeat_every_custom', '', $value, 'number', array('min' => 1)); ?>
@@ -566,8 +575,8 @@
                      </div>
                   </div> -->
                   <!-- <div id="cycles_wrapper" class="<?php if (!isset($invoice) || (isset($invoice) && $invoice->recurring == 0)) {
-                                                      echo ' hide';
-                                                   } ?>">
+                                                            echo ' hide';
+                                                         } ?>">
                      <div class="col-md-12">
                         <?php $value = (isset($invoice) ? $invoice->cycles : 0); ?>
                         <div class="form-group recurring-cycles">
@@ -668,6 +677,7 @@
    <div class="row">
       <div class="col-md-12 mtop15">
          <div class="panel-body bottom-transaction">
+            <!--
             <?php $value = (isset($invoice) ? $invoice->terms : get_option('invoice_terms_and_condition')); ?>
             <div class="form-group mtop15" app-field-wrapper="terms">
                <label for="terms" class="control-label">Terms & Conditions</label>
@@ -675,6 +685,84 @@
                   <?= $value ?>
                </textarea>
             </div>
+            -->
+
+            <div class="form-group mtop15">
+               <h4>Container & Shipping Details</h4>
+               <div class="table-responsive">
+                  <table class="table table-bordered invoice-containers-table" id="invoice-containers-table">
+                     <thead>
+                        <tr style="background-color: #f9f9f9; color: red;">
+                           <th>Container No.</th>
+                           <th>Stuffing Date</th>
+                           <th>Size</th>
+                           <th>Shipping Line Seal No.</th>
+                           <th>RFID Seal No.</th>
+                           <th>Total Packages</th>
+                           <th>Net Weight (in Kgs)</th>
+                           <th>Gross Weight (in Kgs)</th>
+                           <th>Action</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <?php
+                        $containers = isset($invoice->containers) ? $invoice->containers : [];
+                        if (empty($containers)) {
+                           // Add an empty default row
+                           $containers[] = ['container_no' => '', 'stuffing_date' => '', 'size' => '', 'shipping_line_seal_no' => '', 'rfid_seal_no' => '', 'total_packages' => '', 'net_weight' => '', 'gross_weight' => ''];
+                        }
+
+                        foreach ($containers as $c) {
+                        ?>
+                           <tr class="container-row">
+                              <td><input type="text" name="containers[container_no][]" class="form-control" value="<?= htmlspecialchars($c['container_no']) ?>"></td>
+                              <td>
+                                 <div class="input-group date">
+                                    <input type="text" name="containers[stuffing_date][]" class="form-control datepicker" value="<?= htmlspecialchars($c['stuffing_date']) ?>">
+                                    <div class="input-group-addon"><i class="fa fa-calendar calendar-icon"></i></div>
+                                 </div>
+                              </td>
+                              <td><input type="text" name="containers[size][]" class="form-control" value="<?= htmlspecialchars($c['size']) ?>"></td>
+                              <td><input type="text" name="containers[shipping_line_seal_no][]" class="form-control" value="<?= htmlspecialchars($c['shipping_line_seal_no']) ?>"></td>
+                              <td><input type="text" name="containers[rfid_seal_no][]" class="form-control" value="<?= htmlspecialchars($c['rfid_seal_no']) ?>"></td>
+                              <td><input type="number" name="containers[total_packages][]" class="form-control" value="<?= htmlspecialchars($c['total_packages']) ?>"></td>
+                              <td><input type="number" step="0.01" name="containers[net_weight][]" class="form-control" value="<?= htmlspecialchars($c['net_weight']) ?>"></td>
+                              <td><input type="number" step="0.01" name="containers[gross_weight][]" class="form-control" value="<?= htmlspecialchars($c['gross_weight']) ?>"></td>
+                              <td><button type="button" class="btn btn-danger btn-sm remove-container-btn"><i class="fa fa-times"></i></button></td>
+                           </tr>
+                        <?php } ?>
+                     </tbody>
+                  </table>
+                  <button type="button" class="btn btn-info btn-sm add-container-btn">Add More</button>
+               </div>
+            </div>
+
+            <script>
+               document.addEventListener('DOMContentLoaded', function() {
+                  $('.add-container-btn').on('click', function() {
+                     var $tbody = $('#invoice-containers-table tbody');
+                     var $firstRow = $tbody.find('tr:first').clone();
+                     $firstRow.find('input').val('');
+
+                     // Re-initialize datepicker for the cloned row if needed
+                     $firstRow.find('.datepicker').removeClass('hasDatepicker').removeAttr('id');
+
+                     $tbody.append($firstRow);
+
+                     if (typeof init_datepicker === 'function') {
+                        init_datepicker();
+                     }
+                  });
+
+                  $('#invoice-containers-table').on('click', '.remove-container-btn', function() {
+                     if ($('#invoice-containers-table tbody tr').length > 1) {
+                        $(this).closest('tr').remove();
+                     } else {
+                        alert_float('warning', 'At least one row is required.');
+                     }
+                  });
+               });
+            </script>
             <div class="btn-bottom-toolbar text-right">
                <?php if (!isset($invoice)) { ?>
                   <button class="btn-tr btn btn-default mleft10 text-right invoice-form-submit save-as-draft transaction-submit">
@@ -709,22 +797,22 @@
 </div>
 <script>
    var currencies_map = <?php echo json_encode($currencies); ?>;
-   
+
    document.addEventListener('DOMContentLoaded', function() {
       function toggle_non_inr_fields() {
          var currency_id = $('select[name="currency"]').val();
          var is_inr = false;
-         
-         if(currencies_map) {
-             for(var i = 0; i < currencies_map.length; i++) {
-                 if(currencies_map[i].id == currency_id && currencies_map[i].name.toUpperCase() === 'INR') {
-                     is_inr = true;
-                     break;
-                 }
-             }
+
+         if (currencies_map) {
+            for (var i = 0; i < currencies_map.length; i++) {
+               if (currencies_map[i].id == currency_id && currencies_map[i].name.toUpperCase() === 'INR') {
+                  is_inr = true;
+                  break;
+               }
+            }
          }
-         
-         if(is_inr) {
+
+         if (is_inr) {
             $('.non_inr_fields_wrapper').addClass('hide');
             $('#currency_field_wrapper').removeClass('col-md-4').addClass('col-md-6');
          } else {
@@ -734,9 +822,19 @@
       }
 
       $('select[name="currency"]').on('change', toggle_non_inr_fields);
-      
+
       setTimeout(function() {
          toggle_non_inr_fields();
       }, 500);
    });
+
+   // Initialise shipping location dropdowns (mirrors billing location init)
+   // $(function() {
+   if (typeof initInvoiceShippingLocationDropdowns === 'function') {
+      initInvoiceShippingLocationDropdowns();
+   }
+   if (typeof initInvoiceBillingLocationDropdowns === 'function') {
+      initInvoiceBillingLocationDropdowns();
+   }
+   // });
 </script>
