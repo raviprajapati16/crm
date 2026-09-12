@@ -56,7 +56,7 @@ foreach ($rResult as $aRow) {
     $row[] = !empty($aRow['contact_owner']) ? $aRow['contact_owner'] : '-';
 
 
-    $html = '';
+    $html = '<div style="white-space: nowrap;">';
     if (has_permission('contact_book', '', 'view') || has_permission('contact_book', '', 'view_own')) {
         $html .= '<a href="javascript:;" class="btn btn-primary btn-xs" onclick="viewContactDetails(' . $aRow['id'] . ')"><i class="fa fa-eye"></i></a>';
     }
@@ -66,6 +66,7 @@ foreach ($rResult as $aRow) {
     if (has_permission('contact_book', '', 'delete')) {
         $html .= '&nbsp;<a href="javascript:;" class="btn btn-danger btn-xs" onclick="deleteContact(' . $aRow['id'] . ')"><i class="fa fa-trash"></i></a>';
     }
+    $html .= '</div>';
     $row[] = $html;
     $output['aaData'][] = $row;
 }

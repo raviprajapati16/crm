@@ -88,6 +88,12 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-md-12">
+                                <?php echo render_textarea('notes', 'Notes', (isset($freight) ? $freight->notes : '')); ?>
+                            </div>
+                        </div>
+
                         <button type="submit" class="btn btn-info pull-right"><?php echo _l('submit'); ?></button>
                         
                         <?php echo form_close(); ?>

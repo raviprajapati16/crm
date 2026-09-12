@@ -12,6 +12,7 @@ $aColumns = [
     'carrier',
     'freight_cost',
     'transit_time',
+    'updated_at',
 ];
 
 // Fix for subqueries format for Codeigniter DataTables
@@ -25,6 +26,7 @@ $aColumns = [
     'carrier',
     'freight_cost',
     'transit_time',
+    'updated_at',
 ];
 
 $sIndexColumn = 'id';
@@ -40,6 +42,10 @@ $result = data_tables_init($aColumns, $sIndexColumn, $sTable, [], $where, ['id',
 $output  = $result['output'];
 $rResult = $result['rResult'];
 
+$ci = &get_instance();
+$start = intval($ci->input->post('start'));
+$sr_no = $start + 1;
+
 foreach ($rResult as $aRow) {
     $row = [];
 
@@ -48,7 +54,7 @@ foreach ($rResult as $aRow) {
     // Let's just show ID and From/To country for simplicity here, or we can fetch city names if needed.
 
     // ID + Options
-    $row[] = $aRow['id'];
+    $row[] = $sr_no++;
 
     $row[] = $aRow['from_city'];
     $row[] = $aRow['to_country_name'];
@@ -58,8 +64,10 @@ foreach ($rResult as $aRow) {
     $row[] = $aRow['carrier'];
     $row[] = $aRow['freight_cost'];
     $row[] = $aRow['transit_time'];
+    $row[] = ($aRow['updated_at'] ? _dt($aRow['updated_at']) : '-');
 
     $options = '';
+    $options = '<div style="white-space: nowrap;">';
     if (has_permission('freights', '', 'view') || has_permission('freights', '', 'view_own')) {
         $options .= '<a href="#" onclick="view_freight(' . $aRow['id'] . '); return false;" class="btn btn-info btn-icon"><i class="fa fa-eye"></i></a>';
     }
@@ -69,6 +77,7 @@ foreach ($rResult as $aRow) {
     if (has_permission('freights', '', 'delete')) {
         $options .= '<a href="' . admin_url('freights/delete/' . $aRow['id']) . '" class="btn btn-danger btn-icon _delete"><i class="fa fa-remove"></i></a>';
     }
+    $options .= '</div>';
     $row[] = $options;
 
     $output['aaData'][] = $row;

@@ -61,6 +61,8 @@ class Freights_model extends App_Model
     {
         $original = $this->get($id);
         
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        
         $this->db->where('id', $id);
         $this->db->update(db_prefix() . 'freights', $data);
         

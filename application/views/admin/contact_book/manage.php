@@ -278,7 +278,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="company">Company</label>
+                            <label for="company"><small class="req text-danger">* </small>Company</label>
                             <input type="text" name="company" id="company" class="form-control" maxlength="40"
                                 form="contactForm" />
                         </div>
@@ -290,7 +290,9 @@
                                 form="contactForm" />
                         </div>
                     </div>
+                </div>
 
+                <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="firstname">First Name</label>
@@ -305,43 +307,39 @@
                                 form="contactForm" />
                         </div>
                     </div>
-
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="phone">Phone</label><br>
+                            <label for="phone"><small class="req text-danger">* </small>Phone</label><br>
                             <input type="text" name="phone" id="phone" class="form-control" maxlength="25"
                                 form="contactForm" />
                         </div>
                     </div>
+                </div>
 
+                <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="city">City</label>
+                            <label for="city"><small class="req text-danger">* </small>City</label>
                             <input type="text" name="city" id="city" class="form-control" maxlength="25"
                                 form="contactForm" />
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="state">State</label>
+                            <label for="state"><small class="req text-danger">* </small>State</label>
                             <input type="text" name="state" id="state" class="form-control" maxlength="25"
                                 form="contactForm" />
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <!-- <div class="form-group">
-                            <label for="country">Country</label>
-                            <input type="text" name="country" id="country" class="form-control" maxlength="25"
-                                form="contactForm" />
-                        </div> -->
                         <?php
                         $countries = get_all_countries();
                         echo render_select('country', $countries, array('country_id', array('short_name')), 'Country', $selected, array('data-none-selected-text' => _l('dropdown_non_selected_tex'), "form" => "contactForm", "data-size" => "10"));
                         ?>
                     </div>
+                </div>
 
-
-
+                <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="address">Address</label>
@@ -356,6 +354,9 @@
                                 form="contactForm"></textarea>
                         </div>
                     </div>
+                </div>
+
+                <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="file-upload" class="control-label">Attachments</label>
@@ -515,16 +516,27 @@ $(function() {
     $('#contactForm').appFormValidator({
         rules: {
             category: 'required',
+            company: 'required',
+            city: 'required',
+            state: 'required',
             email: {
                 email: true,
             },
             phone: {
+                required: true,
                 phoneNumber: true
             }
         },
         errorPlacement: function(error, element) {
-            var formGroup = $(element).closest('.form-group');
-            formGroup.append(error);
+            if (element.parent().hasClass('input-group')) {
+                error.insertAfter(element.parent());
+            } else if (element.closest('.iti').length > 0) {
+                error.insertAfter(element.closest('.iti'));
+            } else if (element.is('select') && element.hasClass('selectpicker')) {
+                error.insertAfter(element.siblings('.bootstrap-select'));
+            } else {
+                error.insertAfter(element);
+            }
         },
         submitHandler: function(form) {
             var $submitBtn = $('button[type="submit"]');
@@ -593,6 +605,10 @@ $(function() {
         contactAttachmentsDropzone.removeAllFiles(true);
         contactCurrentAttachments = [];
         $('#contact-attachments-preview').empty();
+        
+        // Reset form validation
+        $('#contactForm').validate().resetForm();
+        $('#contactForm').find('.has-error').removeClass('has-error');
     });
 
     $.validator.addMethod("phoneNumber", function(value, element) {

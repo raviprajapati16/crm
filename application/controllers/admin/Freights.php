@@ -110,10 +110,21 @@ class Freights extends AdminController
                 return;
             }
 
+            $activity_log = $this->freights_model->get_activity_log($id);
+
             $from_country_name = get_country_short_name($freight->from_country);
             $to_country_name = get_country_short_name($freight->to_country);
 
-            $html = '<table class="table table-striped">';
+            $html = '<ul class="nav nav-tabs" role="tablist">';
+            $html .= '<li role="presentation" class="active"><a href="#freight_details" aria-controls="freight_details" role="tab" data-toggle="tab">Details</a></li>';
+            $html .= '<li role="presentation"><a href="#freight_activity" aria-controls="freight_activity" role="tab" data-toggle="tab">Activity Log</a></li>';
+            $html .= '</ul>';
+
+            $html .= '<div class="tab-content">';
+            
+            // Tab 1: Details
+            $html .= '<div role="tabpanel" class="tab-pane active" id="freight_details">';
+            $html .= '<table class="table table-striped">';
             $html .= '<tbody>';
 
             // FROM and TO headings
@@ -160,6 +171,29 @@ class Freights extends AdminController
 
             $html .= '</tbody>';
             $html .= '</table>';
+            $html .= '</div>'; // End Tab 1
+
+            // Tab 2: Activity Log
+            $html .= '<div role="tabpanel" class="tab-pane" id="freight_activity">';
+            $html .= '<div class="activity-feed">';
+            foreach ($activity_log as $log) {
+                $html .= '<div class="feed-item">';
+                $html .= '<div class="date"><span class="text-has-action" data-toggle="tooltip" data-title="' . _dt($log['date']) . '">' . time_ago($log['date']) . '</span></div>';
+                $html .= '<div class="text">';
+                if ($log['staffid'] != 0) {
+                    $html .= '<a href="' . admin_url('profile/' . $log['staffid']) . '">' . staff_profile_image($log['staffid'], ['staff-profile-xs-image pull-left mright5']) . '</a>';
+                }
+                $html .= $log['full_name'] . ' - ' . $log['description'];
+                if ($log['additional_data'] != '') {
+                    $html .= ' - ' . $log['additional_data'];
+                }
+                $html .= '</div>';
+                $html .= '</div>';
+            }
+            $html .= '</div>';
+            $html .= '</div>'; // End Tab 2
+
+            $html .= '</div>'; // End tab-content
 
             echo $html;
         }

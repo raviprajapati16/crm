@@ -17,7 +17,7 @@
                         <hr class="hr-panel-heading" />
                         <div class="clearfix"></div>
                         <?php render_datatable([
-                            'ID',
+                            'Sr. No.',
                             'From City/Port',
                             'To Country',
                             'To City/Port',
@@ -26,6 +26,7 @@
                             'Carrier',
                             'Freight',
                             'Transit Time',
+                            'Last Updated',
                             'Action',
                         ], 'freights'); ?>
                     </div>
@@ -56,7 +57,7 @@
 <?php init_tail(); ?>
 <script>
     $(function() {
-        initDataTable('.table-freights', window.location.href, [9], [9]);
+        initDataTable('.table-freights', window.location.href, [10], [10]);
     });
 
     function view_freight(id) {
