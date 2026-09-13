@@ -284,7 +284,7 @@
                             $unit_placeholder = _l('unit');
                             $item['unit'] = '';
                         }
-                        $table_row .= '<input type="text" placeholder="' . $unit_placeholder . '" name="' . $items_indicator . '[' . $i . '][unit]" class="form-control input-transparent text-right" value="' . $item['unit'] . '">';
+                        $table_row .= '<input type="text" required data-msg-required="Unit is required" placeholder="' . $unit_placeholder . '" name="' . $items_indicator . '[' . $i . '][unit]" class="form-control text-right" value="' . $item['unit'] . '">';
                         if ($is_invoice) {
                             $table_row .= '<td><input type="number" min="0" onblur="calculate_total();" onchange="calculate_total();" name="' . $items_indicator . '[' . $i . '][net_weight]" value="' . $item['net_weight'] . '" class="form-control net_weight"></td>';
                             $table_row .= '<td class="total-net-weight"></td>';
@@ -450,12 +450,12 @@
                         </div>
                     </td>
                 </tr>
-                <tr class="taxable-amount-tr <?= ($estimate->type == 1) ? 'hide' : ''  ?>">
+                <tr class="taxable-amount-tr">
                     <td class="bold">Taxable Amount</td>
                     <td class="taxable_amount"></td>
                     <input type="hidden" name="taxable_amount" value="" class="taxable_amount_input">
                 </tr>
-                <tr class="tax-amount-tr <?= ($estimate->type == 1) ? 'hide' : ''  ?>">
+                <tr class="tax-amount-tr">
                     <td>
                         <div class="row">
                             <div class="col-md-7">

@@ -493,14 +493,17 @@ class Invoices extends AdminController
                 $invoice_data['prefix'] = $invoice_number_prefix;
 
                 $success = $this->invoices_model->update($invoice_data, $id);
-                if ($success) {
-                    if (!empty($tax_id)) {
-                        $getTax = get_tax_by_id($tax_id);
-                        if (!empty($getTax)) {
-                            save_tax_by_relation($getTax->taxrate, $getTax->name, $id, "invoice");
-                        }
+                $tax_updated = false;
+                if (!empty($tax_id)) {
+                    $getTax = get_tax_by_id($tax_id);
+                    if (!empty($getTax)) {
+                        save_tax_by_relation($getTax->taxrate, $getTax->name, $id, "invoice");
+                        $tax_updated = true;
                     }
-                    save_dynamic_amount_fields("invoice", $id, $dynamic_amount_fields);
+                }
+                save_dynamic_amount_fields("invoice", $id, $dynamic_amount_fields);
+
+                if ($success || $tax_updated) {
                     set_alert('success', _l('updated_successfully', _l('invoice')));
                 }
                 redirect(admin_url('invoices/list_invoices/' . $id));

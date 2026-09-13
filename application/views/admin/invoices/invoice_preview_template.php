@@ -142,11 +142,6 @@
             <div class="row">
                 <div class="col-md-3">
                     <?php echo format_invoice_status($invoice->status, 'mtop5'); ?>
-                    <?php if ($invoice->status == Invoices_model::STATUS_PARTIALLY || $invoice->status == Invoices_model::STATUS_OVERDUE) {
-                        if ($invoice->duedate && date('Y-m-d') > date('Y-m-d', strtotime(to_sql_date($invoice->duedate)))) {
-                            echo '<p class="text-danger mtop15 no-mbot">' . _l('invoice_is_overdue', floor((abs(time() - strtotime(to_sql_date($invoice->duedate)))) / (60 * 60 * 24))) . '</p>';
-                        }
-                    } ?>
                 </div>
                 <div class="col-md-9 _buttons">
                     <div class="visible-xs">
@@ -165,86 +160,7 @@
                                 title="<?php echo _l('edit_invoice_tooltip'); ?>" class="btn btn-default btn-with-tooltip"
                                 data-placement="bottom"><i class="fa fa-pencil-square-o"></i></a>
                         <?php } ?>
-                        <div class="btn-group">
-                            <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">GST Invoice <span class="caret"></span></a>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                <li class="hidden-xs"><a
-                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=tax-invoice&output_type=I'); ?>"><?php echo _l('view_pdf'); ?></a>
-                                </li>
-                                <li class="hidden-xs"><a
-                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=tax-invoice&output_type=I'); ?>"
-                                        target="_blank"><?php echo _l('view_pdf_in_new_window'); ?></a></li>
-                                <li><a
-                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=tax-invoice'); ?>"><?php echo _l('download'); ?></a>
-                                </li>
-                                <li>
-                            </ul>
-                        </div>
-                        <div class="btn-group">
-                            <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">Custom Invoice <span class="caret"></span></a>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                <li class="hidden-xs"><a
-                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=custom-invoice&output_type=I'); ?>"><?php echo _l('view_pdf'); ?></a>
-                                </li>
-                                <li class="hidden-xs"><a
-                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=custom-invoice&output_type=I'); ?>"
-                                        target="_blank"><?php echo _l('view_pdf_in_new_window'); ?></a></li>
-                                <li><a
-                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=custom-invoice'); ?>"><?php echo _l('download'); ?></a>
-                                </li>
-                                <li>
-                            </ul>
-                        </div>
-                        <div class="btn-group">
-                            <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">Packing/Weight List <span
-                                    class="caret"></span></a>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                <li class="hidden-xs"><a
-                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=packing-list&output_type=I'); ?>"><?php echo _l('view_pdf'); ?></a>
-                                </li>
-                                <li class="hidden-xs"><a
-                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=packing-list&output_type=I'); ?>"
-                                        target="_blank"><?php echo _l('view_pdf_in_new_window'); ?></a></li>
-                                <li><a
-                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=packing-list'); ?>"><?php echo _l('download'); ?></a>
-                                </li>
-                                <li>
-                            </ul>
-                        </div>
-                        <div class="btn-group">
-                            <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">Commercial Invoice <span class="caret"></span></a>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                <li class="hidden-xs"><a
-                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=commercial-invoice&output_type=I'); ?>"><?php echo _l('view_pdf'); ?></a>
-                                </li>
-                                <li class="hidden-xs"><a
-                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=commercial-invoice&output_type=I'); ?>"
-                                        target="_blank"><?php echo _l('view_pdf_in_new_window'); ?></a></li>
-                                <li><a
-                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=commercial-invoice'); ?>"><?php echo _l('download'); ?></a>
-                                </li>
-                                <li>
-                            </ul>
-                        </div>
-                        <div class="btn-group">
-                            <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">Annexure Invoice <span class="caret"></span></a>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                <li class="hidden-xs"><a
-                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=annexure-invoice&output_type=I'); ?>"><?php echo _l('view_pdf'); ?></a>
-                                </li>
-                                <li class="hidden-xs"><a
-                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=annexure-invoice&output_type=I'); ?>"
-                                        target="_blank"><?php echo _l('view_pdf_in_new_window'); ?></a></li>
-                                <li><a
-                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=annexure-invoice'); ?>"><?php echo _l('download'); ?></a>
-                                </li>
-                            </ul>
-                        </div>
+
                         <?php if (!empty($invoice->clientid)) { ?>
                             <span<?php if ($invoice->status == Invoices_model::STATUS_CANCELLED) { ?> data-toggle="tooltip"
                                 data-title="<?php echo _l('invoice_cancelled_email_disabled'); ?>" <?php } ?>>
@@ -363,6 +279,101 @@
                                     <i class="fa fa-plus-square"></i> <?php echo _l('payment'); ?></a>
                             <?php } ?>
                     </div>
+                </div>
+            </div>
+            <?php
+            if ($invoice->status == Invoices_model::STATUS_PARTIALLY || $invoice->status == Invoices_model::STATUS_OVERDUE) {
+                if ($invoice->duedate && date('Y-m-d') > date('Y-m-d', strtotime(to_sql_date($invoice->duedate)))) {
+                    echo '<p class="text-danger mtop6 mbot10">' . _l('invoice_is_overdue', floor((abs(time() - strtotime(to_sql_date($invoice->duedate)))) / (60 * 60 * 24))) . '</p>';
+                }
+            }
+            ?>
+            <div class="row mtop10">
+                <div class="col-md-12 text-nowrap">
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">GST Invoice <span class="caret"></span></a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li class="hidden-xs"><a
+                                    href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=tax-invoice&output_type=I'); ?>"><?php echo _l('view_pdf'); ?></a>
+                            </li>
+                            <li class="hidden-xs"><a
+                                    href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=tax-invoice&output_type=I'); ?>"
+                                    target="_blank"><?php echo _l('view_pdf_in_new_window'); ?></a></li>
+                            <li><a
+                                    href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=tax-invoice'); ?>"><?php echo _l('download'); ?></a>
+                            </li>
+                            <li>
+                        </ul>
+                    </div>
+                    <?php if ($invoice->billing_country != 102) { ?>
+                        <div class="btn-group">
+                            <a href="#" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">Custom Invoice <span class="caret"></span></a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li class="hidden-xs"><a
+                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=custom-invoice&output_type=I'); ?>"><?php echo _l('view_pdf'); ?></a>
+                                </li>
+                                <li class="hidden-xs"><a
+                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=custom-invoice&output_type=I'); ?>"
+                                        target="_blank"><?php echo _l('view_pdf_in_new_window'); ?></a></li>
+                                <li><a
+                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=custom-invoice'); ?>"><?php echo _l('download'); ?></a>
+                                </li>
+                                <li>
+                            </ul>
+                        </div>
+                    <?php } ?>
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">Packing/Weight List <span
+                                class="caret"></span></a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li class="hidden-xs"><a
+                                    href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=packing-list&output_type=I'); ?>"><?php echo _l('view_pdf'); ?></a>
+                            </li>
+                            <li class="hidden-xs"><a
+                                    href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=packing-list&output_type=I'); ?>"
+                                    target="_blank"><?php echo _l('view_pdf_in_new_window'); ?></a></li>
+                            <li><a
+                                    href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=packing-list'); ?>"><?php echo _l('download'); ?></a>
+                            </li>
+                            <li>
+                        </ul>
+                    </div>
+                    <?php if ($invoice->billing_country != 102) { ?>
+                        <div class="btn-group">
+                            <a href="#" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">Commercial Invoice <span class="caret"></span></a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li class="hidden-xs"><a
+                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=commercial-invoice&output_type=I'); ?>"><?php echo _l('view_pdf'); ?></a>
+                                </li>
+                                <li class="hidden-xs"><a
+                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=commercial-invoice&output_type=I'); ?>"
+                                        target="_blank"><?php echo _l('view_pdf_in_new_window'); ?></a></li>
+                                <li><a
+                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=commercial-invoice'); ?>"><?php echo _l('download'); ?></a>
+                                </li>
+                                <li>
+                            </ul>
+                        </div>
+                        <div class="btn-group">
+                            <a href="#" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">Annexure <span class="caret"></span></a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li class="hidden-xs"><a
+                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=annexure-invoice&output_type=I'); ?>"><?php echo _l('view_pdf'); ?></a>
+                                </li>
+                                <li class="hidden-xs"><a
+                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=annexure-invoice&output_type=I'); ?>"
+                                        target="_blank"><?php echo _l('view_pdf_in_new_window'); ?></a></li>
+                                <li><a
+                                        href="<?php echo admin_url('invoices/pdf/' . $invoice->id . '?type=annexure-invoice'); ?>"><?php echo _l('download'); ?></a>
+                                </li>
+                            </ul>
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
             <div class="clearfix"></div>

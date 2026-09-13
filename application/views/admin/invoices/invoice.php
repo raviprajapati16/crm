@@ -38,14 +38,6 @@
 		})
 
 		$('input[type=radio][name="type"]').on('change', function() {
-			if ($('input[type=radio][name="type"]:checked').val() == '1') {
-				$('select[name="tax_id"] option:first').prop('selected', true);
-				$('select[name="tax_id"]').selectpicker('refresh');
-				$('input[name="total_tax"]').val('');
-				$('.tax-amount-tr,.taxable-amount-tr').addClass('hide');
-			} else {
-				$('.tax-amount-tr,.taxable-amount-tr').removeClass('hide');
-			}
 			change_type();
 			calculate_total();
 		})
@@ -188,7 +180,7 @@
 				data.unit = '';
 			}
 
-			table_row += '<input type="text" placeholder="' + app.lang.unit + '" name="newitems[' + item_key + '][unit]" class="form-control input-transparent text-right" value="' + data.unit + '">';
+			table_row += '<input type="text" required data-msg-required="Unit is required" placeholder="' + app.lang.unit + '" name="newitems[' + item_key + '][unit]" class="form-control text-right" value="' + data.unit + '">';
 
 			table_row += '</td>';
 

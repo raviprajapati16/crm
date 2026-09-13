@@ -477,7 +477,7 @@
             data.unit = '';
         }
 
-        table_row += '<input type="text" placeholder="' + app.lang.unit + '" name="newitems[' + item_key + '][unit]" class="form-control input-transparent text-right" value="' + data.unit + '">';
+        table_row += '<input type="text" required data-msg-required="Unit is required" placeholder="' + app.lang.unit + '" name="newitems[' + item_key + '][unit]" class="form-control text-right" value="' + data.unit + '">';
 
 
         if (is_invoice) {

@@ -11,7 +11,7 @@ if (!empty($applied_credits_data)) {
     }
 }
 $invoice_total = $invoice->total - $applied_credits;
-if ($invoice->type == "0" && ($invoice->pdf_type == "custom-invoice" || $invoice->pdf_type == "commercial-invoice")) {
+if ($invoice->pdf_type == "custom-invoice" || $invoice->pdf_type == "commercial-invoice") {
     $invoice_total -= $invoice->total_tax;
 }
 
@@ -282,8 +282,8 @@ if ($invoice->pdf_type == "tax-invoice" && isset($currencyData) && strtoupper($c
                 <td class="product-header" style="width: 10%;"><span class="">Kind of Packages</span></td>
                 <td class="product-header" style="width: 12%;"><span class="">HSN</span></td>
                 <td class="product-header" style="width: 10%;"><span class="">Quantity<br>(<?= $qtyunit ?>)</span></td>
-                <td class="product-header" style="width: 12%;"><span class="">Net Weight (in Kgs)</span></td>
-                <td class="product-header" style="width: 12%;"><span class="">Gross Weight (in Kgs)</span></td>
+                <td class="product-header" style="width: 12%;"><span class="">Net Weight <br>(in Kgs)</span></td>
+                <td class="product-header" style="width: 12%;"><span class="">Gross Weight <br>(in Kgs)</span></td>
             <?php } else { ?>
                 <td class="product-header" style="width: 28%;" colspan="2"><span class="">Product</span></td>
                 <td class="product-header" style="width: 12%;"><span class="">HSN</span></td>
@@ -369,7 +369,7 @@ if ($invoice->pdf_type == "tax-invoice" && isset($currencyData) && strtoupper($c
                 }
                 ?>
             <?php } ?>
-            <?php if ($invoice->type == "0" && $invoice->pdf_type != "custom-invoice" && $invoice->pdf_type != "commercial-invoice") { ?>
+            <?php if ($invoice->pdf_type != "custom-invoice" && $invoice->pdf_type != "commercial-invoice") { ?>
                 <?php if (!empty($getTax)) { ?>
                     <?php if ($getTax->taxrate != 0) { ?>
                         <tr class="amount-row">
