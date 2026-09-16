@@ -293,8 +293,7 @@ if (!function_exists('get_client_address_info')) {
 
         // Determine name
         if ($type === 'shipping') {
-            $name = !empty($client->shipping_notify_party) ? $client->shipping_notify_party
-                : (!empty($client->billing_buyer) ? $client->billing_buyer : $client->company);
+            $name = !empty($client->shipping_notify_party) ? $client->shipping_notify_party : "";
         } else {
             $name = !empty($client->billing_buyer) ? $client->billing_buyer : $client->company;
         }
@@ -333,9 +332,9 @@ if (!function_exists('get_client_address_info')) {
         if (!empty($contact_parts)) $parts[] = implode(' | ', $contact_parts);
 
         // If shipping is completely empty, fallback to billing
-        if ($type === 'shipping' && empty($parts)) {
-            return get_client_address_info($client, 'billing');
-        }
+        // if ($type === 'shipping' && empty($parts)) {
+        //     return get_client_address_info($client, 'billing');
+        // }
 
         return [
             'name'    => $name,

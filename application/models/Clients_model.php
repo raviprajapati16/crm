@@ -1145,7 +1145,7 @@ class Clients_model extends App_Model
      */
     public function get_customer_billing_and_shipping_details($id)
     {
-        $this->db->select('billing_street,billing_city,billing_state,billing_zip,billing_country,shipping_street,shipping_city,shipping_state,shipping_zip,shipping_country');
+        $this->db->select('billing_buyer,billing_street,billing_city,billing_state,billing_zip,billing_country,shipping_notify_party,shipping_street,shipping_city,shipping_state,shipping_zip,shipping_country');
         $this->db->from(db_prefix() . 'clients');
         $this->db->where('userid', $id);
 

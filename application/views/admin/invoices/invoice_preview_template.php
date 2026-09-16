@@ -306,7 +306,7 @@
                             <li>
                         </ul>
                     </div>
-                    <?php if ($invoice->billing_country != 102) { ?>
+                    <?php if ($invoice->client->country != 102) { ?>
                         <div class="btn-group">
                             <a href="#" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">Custom Invoice <span class="caret"></span></a>
@@ -341,7 +341,7 @@
                             <li>
                         </ul>
                     </div>
-                    <?php if ($invoice->billing_country != 102) { ?>
+                    <?php if ($invoice->client->country != 102) { ?>
                         <div class="btn-group">
                             <a href="#" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">Commercial Invoice <span class="caret"></span></a>

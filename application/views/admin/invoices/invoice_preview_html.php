@@ -94,7 +94,7 @@ if ($invoice->status == Invoices_model::STATUS_DRAFT) { ?>
                      </a>
                   </li>
                   <?php
-                  if ($invoice->billing_country != 102) {
+                  if ($invoice->client->country != 102) {
                   ?>
                      <li role="presentation">
                         <a href="#nested_tab_custom_invoice" aria-controls="nested_tab_custom_invoice" role="tab" data-toggle="tab" onclick="invoice_preview('custom-invoice')">
@@ -110,7 +110,7 @@ if ($invoice->status == Invoices_model::STATUS_DRAFT) { ?>
                      </a>
                   </li>
                   <?php
-                  if ($invoice->billing_country != 102) {
+                  if ($invoice->client->country != 102) {
                   ?>
                      <li role="presentation">
                         <a href="#nested_tab_commercial_invoice" aria-controls="nested_tab_commercial_invoice" role="tab" data-toggle="tab" onclick="invoice_preview('commercial-invoice')">

@@ -44,6 +44,8 @@
                     ?>
                     <div class="col-md-12">
                         <div id="billing_details">
+                            <?php $value = (isset($invoice) ? $invoice->billing_buyer : ''); ?>
+                            <?php echo render_input('billing_buyer', 'Buyer (Bill To)', $value); ?>
                             <?php $value = (isset($invoice) ? $invoice->billing_street : ''); ?>
                             <?php echo render_textarea('billing_street', 'billing_street', $value); ?>
                             <?php echo render_select('billing_country', $countries, ['country_id', ['short_name'], 'iso2'], 'billing_country', $selected_country, array_merge($location_select_attrs, [
@@ -94,6 +96,9 @@
                 </div>
             </div>
             <div class="modal-footer modal-not-full-width">
+                <a href="#" onclick="resetInvoiceBillingForm(); return false;" class="btn btn-default invoice-billing-reset" style="margin-right:6px;">
+                    <i class="fa fa-refresh"></i> <?php echo _l('reset'); ?>
+                </a>
                 <a href="#" class="btn btn-info save-shipping-billing invoice-billing-apply"><?php echo _l('apply'); ?></a>
             </div>
         </div>
@@ -105,6 +110,7 @@ window._invoiceApplyingBilling = false;
 
 window.getInvoiceBillToSpan = function(fieldName) {
     var map = {
+        billing_buyer: '#invoice_bill_to_buyer',
         billing_street: '#invoice_bill_to_street',
         billing_city: '#invoice_bill_to_city',
         billing_state: '#invoice_bill_to_state',
@@ -190,7 +196,7 @@ window.cacheInvoiceBillingField = function(fieldName, value) {
 };
 
 window.preserveInvoiceBillToSpanValues = function() {
-    ['billing_street', 'billing_city', 'billing_state', 'billing_country', 'billing_zip'].forEach(function(fieldName) {
+    ['billing_buyer', 'billing_street', 'billing_city', 'billing_state', 'billing_country', 'billing_zip'].forEach(function(fieldName) {
         var text = $.trim(getInvoiceBillToSpan(fieldName).text());
         if (text && text !== '--') {
             cacheInvoiceBillingField(fieldName, text);
@@ -206,6 +212,7 @@ window.snapshotInvoiceBillingPreviewFields = function() {
 
     preserveInvoiceBillToSpanValues();
 
+    cacheInvoiceBillingField('billing_buyer', $.trim($modal.find('input[name="billing_buyer"]').val() || ''));
     cacheInvoiceBillingField('billing_street', $.trim($modal.find('textarea[name="billing_street"]').val() || ''));
     cacheInvoiceBillingField('billing_zip', $.trim($modal.find('input[name="billing_zip"]').val() || ''));
 
@@ -228,12 +235,14 @@ window.snapshotInvoiceBillingPreviewFields = function() {
 
 window.renderInvoiceBillToAddress = function() {
     var cache = window._invoiceBillingPreviewCache;
+    var buyer = cache.billing_buyer || '--';
     var street = cache.billing_street || '--';
     var city = cache.billing_city || '--';
     var state = cache.billing_state || '--';
     var country = cache.billing_country || '--';
     var zip = cache.billing_zip || '--';
 
+    getInvoiceBillToSpan('billing_buyer').html(buyer !== '--' ? String(buyer).replace(/(?:\r\n|\r|\n)/g, '<br />') : '--');
     getInvoiceBillToSpan('billing_street').html(street !== '--' ? String(street).replace(/(?:\r\n|\r|\n)/g, '<br />') : '--');
     getInvoiceBillToSpan('billing_city').text(city);
     getInvoiceBillToSpan('billing_state').text(state);
@@ -542,5 +551,50 @@ window.initInvoiceBillingLocationDropdowns = function() {
     }
 
     toggleInvoiceLocationFields('invoice-billing');
+
+    // ── Reset billing form ────────────────────────────────────────────
+    $(document).off('click.invoiceBillingReset', '#billing_and_shipping_details .invoice-billing-reset');
+    $(document).on('click.invoiceBillingReset', '#billing_and_shipping_details .invoice-billing-reset', function(e) {
+        e.preventDefault();
+        resetInvoiceBillingForm();
+    });
+};
+
+window.resetInvoiceBillingForm = function() {
+    var $modal = $('#billing_and_shipping_details');
+    if (!$modal.length) { return; }
+
+    // Clear text / textarea fields
+    $modal.find('input[name="billing_buyer"]').val('');
+    $modal.find('textarea[name="billing_street"]').val('');
+    $modal.find('input[name="billing_zip"]').val('');
+
+    // Reset selectpicker dropdowns
+    $modal.find('select[name="billing_country"]').selectpicker('val', '');
+    $modal.find('select[name="billing_state"]').empty().append('<option value=""></option>').selectpicker('refresh');
+    $modal.find('select[name="billing_city"]').empty().append('<option value=""></option>').selectpicker('refresh');
+
+    // Hide dependent dropdowns
+    if (typeof toggleInvoiceLocationFields === 'function') {
+        toggleInvoiceLocationFields('invoice-billing');
+    }
+
+    // ── KEY FIX ────────────────────────────────────────────────────────
+    // Wipe the preview cache completely for billing fields so Apply does
+    // not find stale values.
+    ['billing_buyer','billing_street','billing_city','billing_state','billing_country','billing_zip'].forEach(function(f) {
+        window._invoiceBillingPreviewCache[f] = '';
+    });
+
+    // Immediately update the invoice-page span elements to empty / '--'.
+    // This is critical: applyInvoiceBillingAddress() calls
+    // preserveInvoiceBillToSpanValues() first, which reads the current
+    // span text and re-caches it — so we must blank the spans NOW so that
+    // subsequent Apply sees empty text and does not restore old data.
+    if (typeof getInvoiceBillToSpan === 'function') {
+        ['billing_buyer','billing_street','billing_city','billing_state','billing_country','billing_zip'].forEach(function(f) {
+            getInvoiceBillToSpan(f).html('--');
+        });
+    }
 };
 </script>

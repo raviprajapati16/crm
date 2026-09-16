@@ -253,6 +253,10 @@
                <div class="col-md-6">
                   <p class="bold"><?php echo _l('invoice_bill_to'); ?></p>
                   <address>
+                     <span class="billing_buyer" id="invoice_bill_to_buyer">
+                        <?php $billing_buyer = (isset($invoice) ? $invoice->billing_buyer : '--'); ?>
+                        <?php $billing_buyer = ($billing_buyer == '' ? '--' : $billing_buyer); ?>
+                        <?php echo $billing_buyer; ?></span><br>
                      <span class="billing_street" id="invoice_bill_to_street">
                         <?php $billing_street = (isset($invoice) ? $invoice->billing_street : '--'); ?>
                         <?php $billing_street = ($billing_street == '' ? '--' : $billing_street); ?>
@@ -277,10 +281,14 @@
                   </address>
                </div>
                <div class="col-md-6">
-                  <!-- <a href="#" class="edit_shipping_billing_info" data-toggle="modal" data-target="#billing_and_shipping_details"><i class="fa fa-pencil-square-o"></i></a> -->
+                  <a href="#" class="edit_shipping_info" data-toggle="modal" data-target="#shipping_details_modal"><i class="fa fa-pencil-square-o"></i></a>
                   <?php include_once(APPPATH . 'views/admin/invoices/billing_and_shipping_template_shipping.php'); ?>
                   <p class="bold"><?php echo _l('ship_to'); ?></p>
                   <address>
+                     <span class="shipping_notify_party" id="invoice_ship_to_notify_party">
+                        <?php $shipping_notify_party = (isset($invoice) ? $invoice->shipping_notify_party : '--'); ?>
+                        <?php $shipping_notify_party = ($shipping_notify_party == '' ? '--' : $shipping_notify_party); ?>
+                        <?php echo $shipping_notify_party; ?></span><br>
                      <span class="shipping_street" id="invoice_ship_to_street">
                         <?php $shipping_street = (isset($invoice) ? $invoice->shipping_street : '--'); ?>
                         <?php $shipping_street = ($shipping_street == '' ? '--' : $shipping_street); ?>
@@ -832,12 +840,60 @@
    });
 
    // Initialise shipping location dropdowns (mirrors billing location init)
-   // $(function() {
    if (typeof initInvoiceShippingLocationDropdowns === 'function') {
       initInvoiceShippingLocationDropdowns();
    }
    if (typeof initInvoiceBillingLocationDropdowns === 'function') {
       initInvoiceBillingLocationDropdowns();
    }
-   // });
+
+   $(document).ajaxComplete(function(event, xhr, settings) {
+      if (settings.url && settings.url.indexOf('invoices/client_change_data') !== -1) {
+         try {
+            var response = JSON.parse(xhr.responseText);
+            if (response && response.billing_shipping && response.billing_shipping.length > 0) {
+               var bs = response.billing_shipping[0];
+
+               function updateLocationSelect(name, value) {
+                  if (!value) return;
+                  var $select = $('select[name="' + name + '"]');
+                  if ($select.length) {
+                     if (typeof appendInvoiceLocationOption === 'function') {
+                        appendInvoiceLocationOption($select, value);
+                     } else {
+                        if ($select.find('option[value="' + value + '"]').length === 0) {
+                           $select.append(new Option(value, value));
+                        }
+                     }
+                     $select.selectpicker('val', value);
+                     $select.data('invoice-preview-value', value);
+                     
+                     if (name.indexOf('billing') !== -1 && window._invoiceBillingPreviewCache) {
+                        window._invoiceBillingPreviewCache[name] = value;
+                     }
+                     if (name.indexOf('shipping') !== -1 && window._invoiceShippingPreviewCache) {
+                        window._invoiceShippingPreviewCache[name] = value;
+                     }
+                  }
+               }
+
+               window._invoiceLocationSuppressChange = true;
+               
+               updateLocationSelect('billing_state', bs.billing_state);
+               updateLocationSelect('billing_city', bs.billing_city);
+               updateLocationSelect('shipping_state', bs.shipping_state);
+               updateLocationSelect('shipping_city', bs.shipping_city);
+
+               $('select[name="billing_state"], select[name="billing_city"], select[name="shipping_state"], select[name="shipping_city"]').selectpicker('refresh');
+               
+               setTimeout(function() {
+                  window._invoiceLocationSuppressChange = false;
+                  if (typeof updateInvoiceBillToAddress === 'function') updateInvoiceBillToAddress();
+                  if (typeof updateInvoiceShipToAddress === 'function') updateInvoiceShipToAddress();
+               }, 100);
+            }
+         } catch(e) {}
+      }
+   });
+
 </script>

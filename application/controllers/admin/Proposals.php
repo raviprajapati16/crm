@@ -170,7 +170,7 @@ class Proposals extends AdminController
     {
         if ($this->input->post()) {
             $proposal_data = $this->input->post();
-            
+
             // Extract selected prefix and GST number
             $selected_gst = isset($proposal_data['selected_proposal_gst_number']) ? $proposal_data['selected_proposal_gst_number'] : '';
             $selected_prefix_raw = isset($proposal_data['selected_proposal_branch_prefix_raw']) ? $proposal_data['selected_proposal_branch_prefix_raw'] : '';
@@ -204,7 +204,7 @@ class Proposals extends AdminController
                 if (!has_permission('proposals', '', 'create')) {
                     access_denied('proposals');
                 }
-                
+
                 // Use the branch prefix chosen from the dropdown, falling back to global default
                 $raw_prefix            = !empty($selected_prefix_raw) ? $selected_prefix_raw : get_option('proposal_number_prefix');
                 $proposal_number_prefix = replace_dynamic_prefix($raw_prefix);
@@ -245,7 +245,7 @@ class Proposals extends AdminController
                 }
 
                 $proposal = $this->proposals_model->get($id);
-                
+
                 // Determine new prefix if selected, else fall back to existing
                 $raw_prefix = !empty($selected_prefix_raw) ? $selected_prefix_raw : $proposal->proposal_number_prefix;
                 $proposal_number_prefix = replace_dynamic_prefix($raw_prefix);
@@ -470,9 +470,9 @@ class Proposals extends AdminController
             if (isset($data['notify_via_whatsapp'])) {
                 unset($data['notify_via_whatsapp']);
             }
-            
+
             $this->misc_model->add_note($data, 'proposal', $rel_id);
-            
+
             if ($notify_staff_id != '') {
                 $staff = $this->staff_model->get($notify_staff_id);
                 $proposal = $this->proposals_model->get($rel_id);
@@ -514,7 +514,7 @@ class Proposals extends AdminController
                     }
                 }
             }
-            
+
             echo $rel_id;
         }
     }
@@ -590,14 +590,14 @@ class Proposals extends AdminController
 
             // Use the branch prefix chosen from the dropdown; fall back to global default
             $raw_prefix            = !empty($post_data['selected_branch_prefix_raw'])
-                                     ? $post_data['selected_branch_prefix_raw']
-                                     : get_option('invoice_prefix');
+                ? $post_data['selected_branch_prefix_raw']
+                : get_option('invoice_prefix');
             $invoice_number_prefix = replace_dynamic_prefix($raw_prefix);
 
             // Map selected GST number to the DB column name
             $post_data['gst_number'] = isset($post_data['selected_gst_number'])
-                                          ? $post_data['selected_gst_number']
-                                          : '';
+                ? $post_data['selected_gst_number']
+                : '';
 
             // Clean up UI-only fields before saving
             unset(
@@ -688,6 +688,29 @@ class Proposals extends AdminController
             $data['customer_id'] = $this->db->get(db_prefix() . 'clients')->row()->userid;
         } else {
             $data['customer_id'] = $data['proposal']->rel_id;
+        }
+
+        if ($data['customer_id']) {
+            $this->load->model('clients_model');
+            $client = $this->clients_model->get($data['customer_id']);
+            if ($client) {
+                // Clone proposal object so we don't modify the original
+                $data['invoice'] = clone $data['proposal'];
+
+                $data['invoice']->billing_buyer = $client->billing_buyer;
+                $data['invoice']->billing_street = $client->billing_street;
+                $data['invoice']->billing_city = $client->billing_city;
+                $data['invoice']->billing_state = $client->billing_state;
+                $data['invoice']->billing_zip = $client->billing_zip;
+                $data['invoice']->billing_country = $client->billing_country;
+
+                $data['invoice']->shipping_notify_party = $client->shipping_notify_party;
+                $data['invoice']->shipping_street = $client->shipping_street;
+                $data['invoice']->shipping_city = $client->shipping_city;
+                $data['invoice']->shipping_state = $client->shipping_state;
+                $data['invoice']->shipping_zip = $client->shipping_zip;
+                $data['invoice']->shipping_country = $client->shipping_country;
+            }
         }
         $data['custom_fields_rel_transfer'] = [
             'belongs_to' => 'proposal',

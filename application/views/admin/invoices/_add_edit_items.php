@@ -344,14 +344,78 @@
         </div>
     <?php } ?>
     <div class="col-md-8 col-md-offset-4">
+        <?php
+        // Determine if billing country is India (server-side, no JS needed)
+        $india_country_id  = (int) get_india_country_id();
+        $selected_billing_country = isset($estimate->client->country) ? (int) $estimate->client->country : 0;
+        $is_india_billing = ($india_country_id > 0 && $selected_billing_country === $india_country_id);
+
+        // Build the tax select HTML once (reused in both layouts)
+        $rel_type = '';
+        if ($is_proposal) {
+            $rel_type = 'proposal';
+        } elseif ($is_invoice) {
+            $rel_type = 'invoice';
+        } elseif ($is_purchase) {
+            $rel_type = 'purchase';
+        }
+        $getTax = null;
+        if (!empty($rel_type) && isset($estimate->id)) {
+            $getTax = get_tax_by_relation($estimate->id, $rel_type);
+        }
+        ob_start();
+        foreach ($taxes as $tax) { ?>
+            <option value="<?php echo $tax['id']; ?>"
+                data-subtext="<?php echo $tax['name']; ?>"
+                data-taxrate="<?php echo $tax['taxrate']; ?>"
+                <?= ($getTax && $getTax->taxrate == $tax['taxrate']) ? 'selected' : '' ?>>
+                <?php echo $tax['taxrate']; ?>%</option>
+        <?php }
+        $tax_options_html = ob_get_clean();
+
+        // Shared HTML fragments
+        $taxable_amount_row = '
+        <tr class="taxable-amount-tr">
+            <td class="bold">Taxable Amount</td>
+            <td class="taxable_amount"></td>
+            <input type="hidden" name="taxable_amount" value="" class="taxable_amount_input">
+        </tr>';
+
+        $tax_row = '
+        <tr class="tax-amount-tr">
+            <td>
+                <div class="row">
+                    <div class="col-md-7"><span class="bold">Tax</span></div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <select class="selectpicker display-block" data-width="100%"
+                                name="tax_id" id="tax_id"
+                                data-none-selected-text="' . _l('no_tax') . '">'
+            . $tax_options_html .
+            '</select>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td class="total_tax"></td>
+            <input type="hidden" id="total_tax" name="total_tax"
+                value="' . (isset($estimate->total_tax) ? $estimate->total_tax : 0) . '" />
+        </tr>';
+        ?>
         <table class="table text-right">
             <tbody>
-                <tr id="subtotal">
-                    <td><span class="bold">Sub Total Amount :</span>
-                    </td>
-                    <td class="subtotal">
-                    </td>
-                </tr>
+                <?php if ($is_india_billing): ?>
+                    <!-- India: Sub Total at top -->
+                    <tr id="subtotal">
+                        <td><span class="bold">Sub Total Amount :</span></td>
+                        <td class="subtotal"></td>
+                    </tr>
+                <?php else: ?>
+                    <!-- Non-India: Taxable Amount and Tax first, Sub Total comes after Additional Charges -->
+                    <?php echo $taxable_amount_row; ?>
+                    <?php echo $tax_row; ?>
+                <?php endif; ?>
+
                 <tr id="discount_area">
                     <td>
                         <div class="row">
@@ -450,52 +514,19 @@
                         </div>
                     </td>
                 </tr>
-                <tr class="taxable-amount-tr">
-                    <td class="bold">Taxable Amount</td>
-                    <td class="taxable_amount"></td>
-                    <input type="hidden" name="taxable_amount" value="" class="taxable_amount_input">
-                </tr>
-                <tr class="tax-amount-tr">
-                    <td>
-                        <div class="row">
-                            <div class="col-md-7">
-                                <span class="bold">Tax</span>
-                            </div>
-                            <div class="col-md-5">
 
-                                <div class="form-group">
-                                    <select class="selectpicker display-block" data-width="100%" name="tax_id"
-                                        id="tax_id" data-none-selected-text="<?php echo _l('no_tax'); ?>">
-                                        <?php
-                                        $rel_type = "";
-                                        if ($is_proposal) {
-                                            $rel_type = "proposal";
-                                        } else if ($is_invoice) {
-                                            $rel_type = "invoice";
-                                        } else if ($is_purchase) {
-                                            $rel_type = "purchase";
-                                        }
-                                        foreach ($taxes as $tax) {
-                                            if (!empty($rel_type)) {
-                                                $getTax = get_tax_by_relation($estimate->id, $rel_type);
-                                            }
-                                        ?>
-                                            <option value="<?php echo $tax['id']; ?>"
-                                                data-subtext="<?php echo $tax['name']; ?>"
-                                                data-taxrate="<?php echo $tax['taxrate']; ?>"
-                                                <?= ($getTax && $getTax->taxrate == $tax['taxrate']) ? "selected" : "" ?>>
-                                                <?php echo $tax['taxrate']; ?>%</option>
-                                        <?php }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="total_tax"></td>
-                    <input type="hidden" id="total_tax" name="total_tax"
-                        value="<?= isset($estimate->total_tax) ? $estimate->total_tax : 0 ?>" />
-                </tr>
+                <?php if ($is_india_billing): ?>
+                    <!-- India: Taxable Amount and Tax AFTER Additional Charges/Deductions -->
+                    <?php echo $taxable_amount_row; ?>
+                    <?php echo $tax_row; ?>
+                <?php else: ?>
+                    <!-- Non-India: Sub Total (Taxable+GST-Discount+Additional) BEFORE Adjustment -->
+                    <tr id="subtotal">
+                        <td><span class="bold">Sub Total Amount :</span></td>
+                        <td class="subtotal"></td>
+                    </tr>
+                <?php endif; ?>
+
                 <tr>
                     <td>
                         <div class="row">

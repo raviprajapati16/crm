@@ -465,7 +465,7 @@ $getTax = get_tax_by_relation($proposal->id, "proposal");
             <td class="info-cell" style="width: 12%;">IFSC Code</td>
             <td class="info-cell" style="width: 38%;"><?= $proposal->bank_ifsc_code ?></td>
             <td class="info-cell" style="width: 12%;">IEC</td>
-            <td class="info-cell" style="width: 38%;"></td>
+            <td class="info-cell" style="width: 38%;"><?= get_option('company_iec_number') ?></td>
         </tr>
         <!-- Row 5 -->
         <tr>

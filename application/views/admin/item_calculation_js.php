@@ -158,58 +158,103 @@
         //     $('#tax_id_' + slugify(taxname)).html(total_tax);
         // });
 
-        total = (total + subtotal);
-
-        // Discount Before Tax
-        if ((discount_percent !== '' && discount_percent != 0) && discount_type == 'before_tax' && discount_total_type.hasClass('discount-type-percent')) {
-            total_discount_calculated = (subtotal * discount_percent) / 100;
-            total = total - total_discount_calculated;
-        } else if ((discount_fixed !== '' && discount_fixed != 0) && discount_type == 'before_tax' && discount_total_type.hasClass('discount-type-fixed')) {
-            total_discount_calculated = parseFloat(discount_fixed);
-            total = total - total_discount_calculated;
+        // Determine Customer Country
+        var country_id = $('select[name="billing_country"]').val();
+        if (typeof country_id === 'undefined' || country_id === null) {
+            country_id = $('select[name="country"]').val();
         }
+        var india_id = (typeof INDIA_COUNTRY_ID !== 'undefined') ? String(INDIA_COUNTRY_ID) : '102';
+        var is_non_india = country_id && String(country_id) !== india_id;
 
-
-        // dynamic amounts
-        if ($('.dynamic-amount').length > 0) {
-            $('.dynamic-amount').each(function() {
-                var label = $(this).closest('.dynamic-field-row').find('.dynamic-label').val();
-                if (label != '' && label != null) {
-                    var dynamic_amount = parseFloat($(this).val());
-                    if (!isNaN(dynamic_amount)) {
-                        total = total + dynamic_amount;
-                    }
-                }
-            });
-        }
-
-        //Taxable Amount
-        $('.taxable_amount').text(format_money(total));
-        $('input[name="taxable_amount"]').val(total);
-
-        // Calculate taxes
         var tax_amount = 0;
-        var tax_rate = parseFloat($('select[name="tax_id"] :selected').attr('data-taxrate'));
-        if (tax_rate != 0) {
-            tax_amount = parseFloat((total * tax_rate) / 100);
-            total += tax_amount;
+        var tax_rate   = parseFloat($('select[name="tax_id"] :selected').attr('data-taxrate'));
+        var gst_taxable_amount = 0;
+
+        if (is_non_india) {
+            // ── Non-India Formula ──────────────────────────────────────────────
+            // Taxable Amount = items subtotal ONLY (no dynamic fields, no discount)
+            gst_taxable_amount = subtotal;
+
+            // GST on taxable amount
+            if (!isNaN(tax_rate) && tax_rate > 0) {
+                tax_amount = parseFloat((gst_taxable_amount * tax_rate) / 100);
+            }
+
+            // Discount applies on (Taxable + GST)
+            var taxable_plus_gst = gst_taxable_amount + tax_amount;
+            if ((discount_percent !== '' && discount_percent != 0) && discount_total_type.hasClass('discount-type-percent')) {
+                total_discount_calculated = (taxable_plus_gst * discount_percent) / 100;
+            } else if ((discount_fixed !== '' && discount_fixed != 0) && discount_total_type.hasClass('discount-type-fixed')) {
+                total_discount_calculated = parseFloat(discount_fixed);
+            }
+
+            // Dynamic fields (additional charges/deductions) added after discount
+            var dynamic_total = 0;
+            if ($('.dynamic-amount').length > 0) {
+                $('.dynamic-amount').each(function() {
+                    var label = $(this).closest('.dynamic-field-row').find('.dynamic-label').val();
+                    if (label != '' && label != null) {
+                        var da = parseFloat($(this).val());
+                        if (!isNaN(da)) { dynamic_total += da; }
+                    }
+                });
+            }
+
+            total = gst_taxable_amount + tax_amount - total_discount_calculated + dynamic_total;
+
+        } else {
+            // ── India Formula (unchanged) ──────────────────────────────────────
+            total = (total + subtotal);
+
+            // Discount Before Tax
+            if ((discount_percent !== '' && discount_percent != 0) && discount_type == 'before_tax' && discount_total_type.hasClass('discount-type-percent')) {
+                total_discount_calculated = (subtotal * discount_percent) / 100;
+                total = total - total_discount_calculated;
+            } else if ((discount_fixed !== '' && discount_fixed != 0) && discount_type == 'before_tax' && discount_total_type.hasClass('discount-type-fixed')) {
+                total_discount_calculated = parseFloat(discount_fixed);
+                total = total - total_discount_calculated;
+            }
+
+            // Dynamic amounts (additional charges)
+            if ($('.dynamic-amount').length > 0) {
+                $('.dynamic-amount').each(function() {
+                    var label = $(this).closest('.dynamic-field-row').find('.dynamic-label').val();
+                    if (label != '' && label != null) {
+                        var dynamic_amount = parseFloat($(this).val());
+                        if (!isNaN(dynamic_amount)) { total = total + dynamic_amount; }
+                    }
+                });
+            }
+
+            // GST Taxable Amount for India = subtotal - discount + dynamic fields
+            gst_taxable_amount = total;
+
+            // Tax on taxable amount
+            if (!isNaN(tax_rate) && tax_rate > 0) {
+                tax_amount = parseFloat((gst_taxable_amount * tax_rate) / 100);
+                total += tax_amount;
+            }
+
+            // Discount After Tax (India only)
+            if ((discount_percent !== '' && discount_percent != 0) && discount_type == 'after_tax' && discount_total_type.hasClass('discount-type-percent')) {
+                total_discount_calculated = (total * discount_percent) / 100;
+                total = total - total_discount_calculated;
+            } else if ((discount_fixed !== '' && discount_fixed != 0) && discount_type == 'after_tax' && discount_total_type.hasClass('discount-type-fixed')) {
+                total_discount_calculated = parseFloat(discount_fixed);
+                total = total - total_discount_calculated;
+            }
         }
+
+        // Taxable Amount display
+        $('.taxable_amount').text(format_money(gst_taxable_amount));
+        $('input[name="taxable_amount"]').val(gst_taxable_amount);
+
+        // Tax Amount display
         $('.total_tax').text(format_money(tax_amount));
         $('input[name="total_tax"]').val(tax_amount);
 
-
-
-        // Discount After Tax
-        if ((discount_percent !== '' && discount_percent != 0) && discount_type == 'after_tax' && discount_total_type.hasClass('discount-type-percent')) {
-            total_discount_calculated = (total * discount_percent) / 100;
-            total = total - total_discount_calculated;
-        } else if ((discount_fixed !== '' && discount_fixed != 0) && discount_type == 'after_tax' && discount_total_type.hasClass('discount-type-fixed')) {
-            total_discount_calculated = discount_fixed;
-            total = total - total_discount_calculated;
-        }
+        // Adjustment
         adjustment = parseFloat(adjustment);
-
-        // Check if adjustment not empty
         if (!isNaN(adjustment)) {
             total = total + adjustment;
         }
@@ -220,7 +265,17 @@
         // Append, format to html and display
         $('.discount-total').html(discount_html);
         $('.adjustment').html(format_money(adjustment));
-        $('.subtotal').html(format_money(subtotal) + hidden_input('subtotal', accounting.toFixed(subtotal, app.options.decimal_places)));
+
+        if (is_non_india) {
+            // Non-India: Sub Total = Taxable + GST - Discount + Additional Charges (pre-adjustment)
+            // Store this calculated value in DB subtotal so PDF can use it directly
+            var subtotal_display = total - (isNaN(adjustment) ? 0 : parseFloat($('input[name="adjustment"]').val()));
+            $('.subtotal').html(format_money(subtotal_display) + hidden_input('subtotal', accounting.toFixed(subtotal_display, app.options.decimal_places)));
+        } else {
+            // India: Sub Total = raw items sum
+            $('.subtotal').html(format_money(subtotal) + hidden_input('subtotal', accounting.toFixed(subtotal, app.options.decimal_places)));
+        }
+
         $('.total').html(format_money(total) + hidden_input('total', accounting.toFixed(total, app.options.decimal_places)));
 
         // net weight

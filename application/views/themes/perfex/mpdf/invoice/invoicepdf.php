@@ -248,8 +248,11 @@ if ($invoice->pdf_type == "tax-invoice" && isset($currencyData) && strtoupper($c
 
         <!-- Buyer and Notify Party -->
         <?php
-        $billing_info  = get_client_address_info($invoice->client, 'billing');
-        $shipping_info = get_client_address_info($invoice->client, 'shipping');
+        if (!isset($invoice->company)) {
+            $invoice->company = isset($invoice->client->company) ? $invoice->client->company : '';
+        }
+        $billing_info  = get_client_address_info($invoice, 'billing');
+        $shipping_info = get_client_address_info($invoice, 'shipping');
         ?>
         <tr class="info-row">
             <td class="info-cell label" colspan="2" style="width: 50%;">Buyer (Bill To):</td>
@@ -333,45 +336,46 @@ if ($invoice->pdf_type == "tax-invoice" && isset($currencyData) && strtoupper($c
                 <td class="product-cell label"><?= $invoice->total_gross_weight; ?></td>
             </tr>
         <?php } else { ?>
-            <tr class="amount-row">
-                <td class="product-cell" colspan="6" style="text-align: right; font-weight: bold;">Sub Total Amount</td>
-                <td class="product-cell" style="font-weight: bold;"><?= number_format($invoice->subtotal, 2, '.', ''); ?>
-                </td>
-            </tr>
             <?php
-            if (is_sale_discount_applied($invoice) && $invoice->discount_type == 'before_tax') {
+            // Determine India vs Non-India billing country (same logic as the form)
+            $india_country_id_pdf    = (int) get_india_country_id();
+            $invoice_billing_country = (int) $invoice->client->country;
+            $is_india_pdf            = ($india_country_id_pdf > 0 && $invoice_billing_country === $india_country_id_pdf);
+
+            // Fetch dynamic amount fields for row display
+            $dynamicAmounts = get_dynamic_amount_fields("invoice", $invoice->id);
             ?>
+
+            <?php if ($is_india_pdf): ?>
+                <!-- ── INDIA LAYOUT (unchanged) ─────────────────────────────── -->
                 <tr class="amount-row">
-                    <td class="product-cell" colspan="6" style="text-align: right; font-weight: bold;">
-                        <?php echo _l('estimate_discount');
-                        if (is_sale_discount($invoice, 'percent')) {
-                            echo ' (' . app_format_number($invoice->discount_percent, true) . '%)';
-                        }
-                        ?>
-                    </td>
-                    <td class="product-cell" style="font-weight: bold;"> -
-                        <?= number_format($invoice->discount_total, 2, '.', ''); ?>
+                    <td class="product-cell" colspan="6" style="text-align: right; font-weight: bold;">Sub Total Amount</td>
+                    <td class="product-cell" style="font-weight: bold;"><?= number_format($invoice->subtotal, 2, '.', ''); ?>
                     </td>
                 </tr>
-            <?php
-            }
-            ?>
-            <?php
-            $dynamicAmounts = get_dynamic_amount_fields("invoice", $invoice->id);
-            if (!empty($dynamicAmounts)) {
-                foreach ($dynamicAmounts as $key => $item) {
-            ?>
+                <?php if (is_sale_discount_applied($invoice) && $invoice->discount_type == 'before_tax'): ?>
                     <tr class="amount-row">
-                        <td class="product-cell" colspan="6" style="text-align: right;"><?= $item['label'] ?></td>
-                        <td class="product-cell"><?= number_format($item['amount'] * $exchange_rate, 2, '.', ''); ?></td>
+                        <td class="product-cell" colspan="6" style="text-align: right; font-weight: bold;">
+                            <?php echo _l('estimate_discount');
+                            if (is_sale_discount($invoice, 'percent')) {
+                                echo ' (' . app_format_number($invoice->discount_percent, true) . '%)';
+                            } ?>
+                        </td>
+                        <td class="product-cell" style="font-weight: bold;"> -
+                            <?= number_format($invoice->discount_total, 2, '.', ''); ?>
+                        </td>
                     </tr>
-                <?php
-                }
-                ?>
-            <?php } ?>
-            <?php if ($invoice->pdf_type != "custom-invoice" && $invoice->pdf_type != "commercial-invoice") { ?>
-                <?php if (!empty($getTax)) { ?>
-                    <?php if ($getTax->taxrate != 0) { ?>
+                <?php endif; ?>
+                <?php if (!empty($dynamicAmounts)): ?>
+                    <?php foreach ($dynamicAmounts as $item): ?>
+                        <tr class="amount-row">
+                            <td class="product-cell" colspan="6" style="text-align: right;"><?= $item['label'] ?></td>
+                            <td class="product-cell"><?= number_format($item['amount'] * $exchange_rate, 2, '.', ''); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <?php if ($invoice->pdf_type != "custom-invoice" && $invoice->pdf_type != "commercial-invoice"): ?>
+                    <?php if (!empty($getTax) && $getTax->taxrate != 0): ?>
                         <tr class="amount-row">
                             <td class="product-cell" colspan="6" style="text-align: right;"><strong>Taxable Amount</strong></td>
                             <td class="product-cell"><?= number_format($invoice->taxable_amount, 2, '.', ''); ?></td>
@@ -381,40 +385,87 @@ if ($invoice->pdf_type == "tax-invoice" && isset($currencyData) && strtoupper($c
                                 (<?= $getTax->taxrate ?>%)</td>
                             <td class="product-cell"><?= number_format($invoice->total_tax, 2, '.', ''); ?></td>
                         </tr>
-                    <?php } ?>
-                <?php } ?>
-            <?php } ?>
-            <?php
-            if (is_sale_discount_applied($invoice) && $invoice->discount_type == 'after_tax') {
-            ?>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if (is_sale_discount_applied($invoice) && $invoice->discount_type == 'after_tax'): ?>
+                    <tr class="amount-row">
+                        <td class="product-cell" colspan="6" style="text-align: right; font-weight: bold;">
+                            <?php echo _l('estimate_discount');
+                            if (is_sale_discount($invoice, 'percent')) {
+                                echo ' (' . app_format_number($invoice->discount_percent, true) . '%)';
+                            } ?>
+                        </td>
+                        <td class="product-cell" style="font-weight: bold;"> -
+                            <?= number_format($invoice->discount_total, 2, '.', ''); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ($invoice->adjustment > 0): ?>
+                    <tr class="amount-row">
+                        <td class="product-cell" colspan="6" style="text-align: right;"><?= _l('estimate_adjustment') ?></td>
+                        <td class="product-cell"><?= number_format($invoice->adjustment, 2, '.', ''); ?></td>
+                    </tr>
+                <?php endif; ?>
+
+            <?php else: ?>
+                <!-- ── NON-INDIA LAYOUT ─────────────────────────────────────── -->
+                <?php if ($invoice->pdf_type != "custom-invoice" && $invoice->pdf_type != "commercial-invoice"): ?>
+                    <?php if (!empty($getTax) && $getTax->taxrate != 0): ?>
+                        <tr class="amount-row">
+                            <td class="product-cell" colspan="6" style="text-align: right;"><strong>Taxable Amount</strong></td>
+                            <td class="product-cell"><?= number_format($invoice->taxable_amount, 2, '.', ''); ?></td>
+                        </tr>
+                        <tr class="amount-row">
+                            <td class="product-cell" colspan="6" style="text-align: right;"><?= $getTax->taxname ?>
+                                (<?= $getTax->taxrate ?>%)</td>
+                            <td class="product-cell"><?= number_format($invoice->total_tax, 2, '.', ''); ?></td>
+                        </tr>
+                    <?php endif; ?>
+                <?php endif; ?>
+                <?php if (is_sale_discount_applied($invoice)): ?>
+                    <tr class="amount-row">
+                        <td class="product-cell" colspan="6" style="text-align: right; font-weight: bold;">
+                            <?php echo _l('estimate_discount');
+                            if (is_sale_discount($invoice, 'percent')) {
+                                echo ' (' . app_format_number($invoice->discount_percent, true) . '%)';
+                            } ?>
+                        </td>
+                        <td class="product-cell" style="font-weight: bold;"> -
+                            <?= number_format($invoice->discount_total, 2, '.', ''); ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php if (!empty($dynamicAmounts)): ?>
+                    <?php foreach ($dynamicAmounts as $item): ?>
+                        <tr class="amount-row">
+                            <td class="product-cell" colspan="6" style="text-align: right;"><?= $item['label'] ?></td>
+                            <td class="product-cell"><?= number_format($item['amount'] * $exchange_rate, 2, '.', ''); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <!-- Sub Total stored in DB = Taxable + GST − Discount + Additional Charges -->
                 <tr class="amount-row">
-                    <td class="product-cell" colspan="6" style="text-align: right; font-weight: bold;">
-                        <?php echo _l('estimate_discount');
-                        if (is_sale_discount($invoice, 'percent')) {
-                            echo ' (' . app_format_number($invoice->discount_percent, true) . '%)';
-                        }
-                        ?>
-                    </td>
-                    <td class="product-cell" style="font-weight: bold;"> -
-                        <?= number_format($invoice->discount_total, 2, '.', ''); ?>
+                    <td class="product-cell" colspan="6" style="text-align: right; font-weight: bold;">Sub Total Amount</td>
+                    <td class="product-cell" style="font-weight: bold;"><?= number_format($invoice->subtotal, 2, '.', ''); ?>
                     </td>
                 </tr>
-            <?php
-            }
+                <?php if ($invoice->adjustment > 0): ?>
+                    <tr class="amount-row">
+                        <td class="product-cell" colspan="6" style="text-align: right;"><?= _l('estimate_adjustment') ?></td>
+                        <td class="product-cell"><?= number_format($invoice->adjustment, 2, '.', ''); ?></td>
+                    </tr>
+                <?php endif; ?>
+
+            <?php endif; // end India / Non-India 
             ?>
-            <?php if ($invoice->adjustment > 0) { ?>
-                <tr class="amount-row">
-                    <td class="product-cell" colspan="6" style="text-align: right;"><?= _l('estimate_adjustment') ?></td>
-                    <td class="product-cell"><?= number_format($invoice->adjustment, 2, '.', ''); ?></td>
-                </tr>
-            <?php } ?>
-            <?php if ($applied_credits > 0) { ?>
+
+            <?php if ($applied_credits > 0): ?>
                 <tr class="amount-row">
                     <td class="product-cell" colspan="6" style="text-align: right; font-weight: bold;">Applied Credits</td>
                     <td class="product-cell" style="font-weight: bold;"> - <?= number_format($applied_credits, 2, '.', ''); ?>
                     </td>
                 </tr>
-            <?php } ?>
+            <?php endif; ?>
             <tr class="total-row">
                 <td class="product-cell" colspan="4" style="text-align: left; font-weight: bold;">
                     <span class="">Amount In Word:</span>
@@ -448,7 +499,7 @@ if ($invoice->pdf_type == "tax-invoice" && isset($currencyData) && strtoupper($c
             <td class="bank-cell" width="31%"><?= $invoice->vehicle_no ?></td>
         </tr>
         <tr>
-            <td class="bank-cell" width="19%">Total No. of Packages</td>
+            <td class="bank-cell" width="19%">Total Packages</td>
             <td class="bank-cell" width="31%"><?= $invoice->total_packages ?></td>
             <td class="bank-cell" width="19%">BL / LR No.</td>
             <td class="bank-cell" width="31%"><?= $invoice->lr_br_no ?></td>
