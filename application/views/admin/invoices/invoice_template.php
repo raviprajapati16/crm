@@ -471,20 +471,22 @@
                      ?>
                      <?php echo render_select('currency', $currencies, array('id', 'name', 'symbol'), 'invoice_add_edit_currency', $selected, $currency_attr); ?>
                   </div>
-                  <?php if (isset($invoice) && $invoice->currency != 3) { ?>
-                     <div class="col-md-4 non_inr_fields_wrapper">
-                        <?php $value = (isset($invoice) ? $invoice->exchange_rate : ''); ?>
-                        <?php echo render_input('exchange_rate', 'Exchange Rate', $value); ?>
-                        <?php $exchange_rate_url = get_option('exchange_rate_url');
-                        if (!empty($exchange_rate_url)) { ?>
-                           <a href="<?= htmlspecialchars($exchange_rate_url) ?>" target="_blank" style="display:block; margin-top:-10px; margin-bottom:15px;"><small>(check exchange rate)</small></a>
-                        <?php } ?>
-                     </div>
-                     <div class="col-md-4 non_inr_fields_wrapper">
-                        <?php $value = (isset($invoice) ? $invoice->notification_number : ''); ?>
-                        <?php echo render_input('notification_number', 'Notification Number', $value); ?>
-                     </div>
-                  <?php } ?>
+                  <?php //if (isset($invoice) && $invoice->currency != 3) { 
+                  ?>
+                  <div class="col-md-4 non_inr_fields_wrapper">
+                     <?php $value = (isset($invoice) ? $invoice->exchange_rate : ''); ?>
+                     <?php echo render_input('exchange_rate', 'Exchange Rate', $value); ?>
+                     <?php $exchange_rate_url = get_option('exchange_rate_url');
+                     if (!empty($exchange_rate_url)) { ?>
+                        <a href="<?= htmlspecialchars($exchange_rate_url) ?>" target="_blank" style="display:block; margin-top:-10px; margin-bottom:15px;"><small>(check exchange rate)</small></a>
+                     <?php } ?>
+                  </div>
+                  <div class="col-md-4 non_inr_fields_wrapper">
+                     <?php $value = (isset($invoice) ? $invoice->notification_number : ''); ?>
+                     <?php echo render_input('notification_number', 'Notification Number', $value); ?>
+                  </div>
+                  <?php // } 
+                  ?>
 
                   <div class="col-md-6">
                      <?php
@@ -822,7 +824,7 @@
                }
             }
          }
-
+         console.log(is_inr, "is_inr", currency_id, "currency_id");
          if (is_inr) {
             $('.non_inr_fields_wrapper').addClass('hide');
             $('#currency_field_wrapper').removeClass('col-md-4').addClass('col-md-6');
@@ -833,6 +835,9 @@
       }
 
       $('select[name="currency"]').on('change', toggle_non_inr_fields);
+      $(document).on('_after_invoice_client_change', function() {
+         toggle_non_inr_fields();
+      });
 
       setTimeout(function() {
          toggle_non_inr_fields();
@@ -867,7 +872,7 @@
                      }
                      $select.selectpicker('val', value);
                      $select.data('invoice-preview-value', value);
-                     
+
                      if (name.indexOf('billing') !== -1 && window._invoiceBillingPreviewCache) {
                         window._invoiceBillingPreviewCache[name] = value;
                      }
@@ -878,22 +883,21 @@
                }
 
                window._invoiceLocationSuppressChange = true;
-               
+
                updateLocationSelect('billing_state', bs.billing_state);
                updateLocationSelect('billing_city', bs.billing_city);
                updateLocationSelect('shipping_state', bs.shipping_state);
                updateLocationSelect('shipping_city', bs.shipping_city);
 
                $('select[name="billing_state"], select[name="billing_city"], select[name="shipping_state"], select[name="shipping_city"]').selectpicker('refresh');
-               
+
                setTimeout(function() {
                   window._invoiceLocationSuppressChange = false;
                   if (typeof updateInvoiceBillToAddress === 'function') updateInvoiceBillToAddress();
                   if (typeof updateInvoiceShipToAddress === 'function') updateInvoiceShipToAddress();
                }, 100);
             }
-         } catch(e) {}
+         } catch (e) {}
       }
    });
-
 </script>

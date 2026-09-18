@@ -29,12 +29,12 @@
     $tax_invoice_date = _d($invoice->date);
 
     // Buyer details (billing)
-    $billing_info      = get_client_address_info($invoice->client, 'billing');
+    $billing_info      = get_client_address_info($invoice, 'billing');
     $buyer_name        = $billing_info['name'];
     $buyer_address     = $billing_info['address'];
 
     // Notify Party (shipping)
-    $shipping_info         = get_client_address_info($invoice->client, 'shipping');
+    $shipping_info         = get_client_address_info($invoice, 'shipping');
     $notify_party_name     = $shipping_info['name'];
     $notify_party_address  = $shipping_info['address'];
 

@@ -420,6 +420,7 @@ if ($invoice->pdf_type == "tax-invoice" && isset($currencyData) && strtoupper($c
                                 (<?= $getTax->taxrate ?>%)</td>
                             <td class="product-cell"><?= number_format($invoice->total_tax, 2, '.', ''); ?></td>
                         </tr>
+
                     <?php endif; ?>
                 <?php endif; ?>
                 <?php if (is_sale_discount_applied($invoice)): ?>
@@ -443,12 +444,19 @@ if ($invoice->pdf_type == "tax-invoice" && isset($currencyData) && strtoupper($c
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
+
+                <?php
+                $subtotal = $invoice->subtotal;
+                if ($invoice->pdf_type == "custom-invoice" || $invoice->pdf_type == "commercial-invoice"):
+                    $subtotal = $invoice->subtotal - $invoice->total_tax;
+                endif;
+                ?>
                 <!-- Sub Total stored in DB = Taxable + GST − Discount + Additional Charges -->
-                <tr class="amount-row">
+                <!-- <tr class="amount-row">
                     <td class="product-cell" colspan="6" style="text-align: right; font-weight: bold;">Sub Total Amount</td>
-                    <td class="product-cell" style="font-weight: bold;"><?= number_format($invoice->subtotal, 2, '.', ''); ?>
+                    <td class="product-cell" style="font-weight: bold;"><?= number_format($subtotal, 2, '.', ''); ?>
                     </td>
-                </tr>
+                </tr> -->
                 <?php if ($invoice->adjustment > 0): ?>
                     <tr class="amount-row">
                         <td class="product-cell" colspan="6" style="text-align: right;"><?= _l('estimate_adjustment') ?></td>
@@ -523,20 +531,20 @@ if ($invoice->pdf_type == "tax-invoice" && isset($currencyData) && strtoupper($c
         <tr>
             <td class="bank-cell" style="width: 19%;">Bank Name</td>
             <td class="bank-cell" style="width: 31%;"><?= $invoice->bank_name ?></td>
-            <td class="bank-cell" style="width: 19%;">PAN</td>
+            <td class="bank-cell" style="width: 19%;">PAN/IEC</td>
             <td class="bank-cell" style="width: 31%;"><?= get_option('company_pan_number') ?></td>
         </tr>
         <tr>
             <td class="bank-cell" style="width: 19%;">IFSC Code</td>
             <td class="bank-cell" style="width: 31%;"><?= $invoice->bank_ifsc_code ?></td>
-            <td class="bank-cell" style="width: 19%;">IEC</td>
-            <td class="bank-cell" style="width: 31%;"><?= get_option('company_iec_number') ?></td>
+            <td class="bank-cell" style="width: 19%;">TAN</td>
+            <td class="bank-cell" style="width: 31%;"><?= get_option('company_tan_number') ?></td>
         </tr>
         <tr>
             <td class="bank-cell" style="width: 19%;">Swift Code</td>
             <td class="bank-cell" style="width: 31%;"><?= $invoice->bank_swift_code ?></td>
-            <td class="bank-cell" style="width: 19%;">TAN</td>
-            <td class="bank-cell" style="width: 31%;"><?= get_option('company_tan_number') ?></td>
+            <td class="bank-cell" style="width: 19%;">AEO No.</td>
+            <td class="bank-cell" style="width: 31%;"><?= get_option('company_aeo_number') ?></td>
         </tr>
         <tr>
             <td class="bank-cell label" colspan="2"><em>Notes:</em></td>
