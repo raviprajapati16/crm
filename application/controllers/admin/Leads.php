@@ -1026,7 +1026,7 @@ class Leads extends AdminController
 
                 log_activity('Created Lead Client Profile [LeadID: ' . $data['leadid'] . ', ClientID: ' . $id . ']');
                 hooks()->do_action('lead_converted_to_customer', ['lead_id' => $data['leadid'], 'customer_id' => $id]);
-                redirect(admin_url('target_markets/client/' . $id));
+                redirect(admin_url('target_markets'));
             }
         }
     }

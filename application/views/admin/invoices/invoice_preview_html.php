@@ -167,7 +167,8 @@ if ($invoice->status == Invoices_model::STATUS_DRAFT) { ?>
          </div>
       </div>
    </div>
-   <?php if (count($invoice->attachments) > 0) { ?>
+   <!-- 
+   <?php if (false && count($invoice->attachments) > 0) { ?>
       <div class="clearfix"></div>
       <hr />
       <p class="bold text-muted"><?php echo _l('invoice_files'); ?></p>
@@ -203,4 +204,5 @@ if ($invoice->status == Invoices_model::STATUS_DRAFT) { ?>
          </div>
       <?php } ?>
    <?php } ?>
+   -->
 </div>

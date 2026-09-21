@@ -87,8 +87,8 @@
         <?php if (!isset($payment->paymentid)) { ?>
             <div class="col-md-6">
                 <div class="checkbox checkbox-primary mtop15 inline-block">
-                    <input type="checkbox" name="do_not_send_email_template" id="do_not_send_email_template">
-                    <label for="do_not_send_email_template">Do not send invoice payment recorded email to customer contacts </label>
+                    <input type="checkbox" name="send_email_template" id="send_email_template">
+                    <label for="send_email_template">Send invoice payment recorded email to customer contacts</label>
                 </div>
             </div>
         <?php } ?>

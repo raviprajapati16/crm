@@ -1119,6 +1119,14 @@ class Proposals extends AdminController
             unset($data['contract_id']);
         }
         if ($data) {
+            // Reversing the email send logic for manual payment records
+            if (isset($data['send_email_template'])) {
+                unset($data['do_not_send_email_template']);
+            } else {
+                $data['do_not_send_email_template'] = 'on';
+            }
+            unset($data['send_email_template']);
+            
             if (!empty($data['id'])) {
                 $success = $this->payments_model->update($data, $data['id']);
                 if ($success) {

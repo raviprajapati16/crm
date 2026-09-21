@@ -231,12 +231,16 @@
 </div>
 <script>
    validate_lead_convert_to_client_form();
-   
+
    // Make phone number required
    setTimeout(function() {
-       if ($('#lead_to_client_form').length) {
-           $('input[name="phonenumber"]').rules('add', {required: true});
-       }
+      if ($('#lead_to_client_form').length) {
+         $('input[name="phonenumber"]').rules('add', {
+            required: true
+         });
+         // Remove required asterisk from email label
+         $('label[for="email"]').find('.req').remove();
+      }
    }, 100);
 
    init_selectpicker();

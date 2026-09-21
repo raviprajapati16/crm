@@ -199,9 +199,9 @@ class Invoices extends AdminController
             if (isset($data['notify_via_whatsapp'])) {
                 unset($data['notify_via_whatsapp']);
             }
-            
+
             $this->misc_model->add_note($data, 'invoice', $rel_id);
-            
+
             if ($notify_staff_id != '') {
                 $staff = $this->staff_model->get($notify_staff_id);
                 $invoice = $this->invoices_model->get($rel_id);
@@ -243,7 +243,7 @@ class Invoices extends AdminController
                     }
                 }
             }
-            
+
             echo $rel_id;
         }
     }
@@ -415,14 +415,14 @@ class Invoices extends AdminController
                 }
                 // Use the branch prefix chosen from the dropdown; fall back to global default
                 $raw_prefix            = !empty($invoice_data['selected_branch_prefix_raw'])
-                                         ? $invoice_data['selected_branch_prefix_raw']
-                                         : get_option('invoice_prefix');
+                    ? $invoice_data['selected_branch_prefix_raw']
+                    : get_option('invoice_prefix');
                 $invoice_number_prefix = replace_dynamic_prefix($raw_prefix);
 
                 // Map selected GST number to the DB column name
                 $invoice_data['gst_number'] = isset($invoice_data['selected_gst_number'])
-                                              ? $invoice_data['selected_gst_number']
-                                              : '';
+                    ? $invoice_data['selected_gst_number']
+                    : '';
 
                 // Clean up UI-only fields before saving
                 unset(
@@ -465,14 +465,14 @@ class Invoices extends AdminController
 
                 // Determine new prefix if selected, else fall back to existing
                 $raw_prefix = !empty($invoice_data['selected_branch_prefix_raw'])
-                              ? $invoice_data['selected_branch_prefix_raw']
-                              : $invoice->prefix;
+                    ? $invoice_data['selected_branch_prefix_raw']
+                    : $invoice->prefix;
                 $invoice_number_prefix = replace_dynamic_prefix($raw_prefix);
 
                 // Map selected GST number to the DB column name
                 $invoice_data['gst_number'] = isset($invoice_data['selected_gst_number'])
-                                              ? $invoice_data['selected_gst_number']
-                                              : '';
+                    ? $invoice_data['selected_gst_number']
+                    : '';
 
                 // Clean up UI-only fields before saving
                 unset(
@@ -689,6 +689,15 @@ class Invoices extends AdminController
         }
         if ($this->input->post()) {
             $data = $this->input->post();
+
+            // Reversing the email send logic for manual payment records
+            if (isset($data['send_email_template'])) {
+                unset($data['do_not_send_email_template']);
+            } else {
+                $data['do_not_send_email_template'] = 'on';
+            }
+            unset($data['send_email_template']);
+
             $data['proposal_id'] = get_proposal_id_by_invoice($data['invoiceid']);
             $this->load->model('payments_model');
             $id = $this->payments_model->process_payment($data, '');

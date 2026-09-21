@@ -4069,7 +4069,7 @@ function validate_lead_convert_to_client_form() {
         //     }
         // },
         email: {
-            required: true,
+            required: false,
             email: true,
             remote: {
                 url: site_url + "admin/misc/contact_email_exists",
