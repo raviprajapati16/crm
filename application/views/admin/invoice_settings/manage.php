@@ -350,14 +350,14 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="invoice_terms_and_condition">Terms and Conditions</label>
                                     <textarea class="form-control" id="invoice_terms_and_condition" name="invoice_terms_and_condition" rows="5" required placeholder="Enter terms and conditions"><?= get_option('invoice_terms_and_condition') ?></textarea>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="row">
                             <div class="col-md-12">
@@ -634,7 +634,7 @@
             // ── Form Validator ───────────────────────────────────────────
             $('#invoiceSettingForm').appFormValidator({
                 rules: {
-                    invoice_terms_and_condition: 'required'
+                    // invoice_terms_and_condition: 'required'
                 },
                 errorPlacement: function(error, element) {
                     $(element).closest('.form-group').append(error);

@@ -208,7 +208,7 @@
             state: 'required',
             country: 'required',
             email: {
-                required: true,
+                // required: true,
                 email: true
             },
             phonenumber: 'required',
@@ -290,9 +290,9 @@
 
     function toggleClientLocationFields(group) {
         var $country = $('select[data-location-group="' + group + '"][data-location-role="country"]');
-        var $state   = $('select[data-location-group="' + group + '"][data-location-role="state"]');
+        var $state = $('select[data-location-group="' + group + '"][data-location-role="state"]');
         var countryId = $country.val();
-        var stateVal  = $state.val();
+        var stateVal = $state.val();
 
         $('.client-location-state-wrapper.location-group-' + group).toggleClass('hide', !countryId);
 
@@ -304,15 +304,20 @@
         if (!value) {
             return;
         }
-        if ($select.find('option').filter(function() { return $(this).val() === value; }).length === 0) {
-            $select.append($('<option>', { value: value, text: value }));
+        if ($select.find('option').filter(function() {
+                return $(this).val() === value;
+            }).length === 0) {
+            $select.append($('<option>', {
+                value: value,
+                text: value
+            }));
         }
     }
 
     function refreshClientLocation(group, type, preselectState, preselectCity) {
         var $country = $('select[data-location-group="' + group + '"][data-location-role="country"]');
-        var $state   = $('select[data-location-group="' + group + '"][data-location-role="state"]');
-        var $city    = $('select[data-location-group="' + group + '"][data-location-role="city"]');
+        var $state = $('select[data-location-group="' + group + '"][data-location-role="state"]');
+        var $city = $('select[data-location-group="' + group + '"][data-location-role="city"]');
         var countryId = $country.val();
 
         if (type === 'state') {
@@ -365,8 +370,8 @@
             }
 
             var $target = (type === 'state') ? $state : $city;
-            var key     = (type === 'state') ? 'state' : 'city';
-            var pre     = (type === 'state') ? preselectState : preselectCity;
+            var key = (type === 'state') ? 'state' : 'city';
+            var pre = (type === 'state') ? preselectState : preselectCity;
 
             $.each(result.data, function(i, item) {
                 if (item[key]) {
@@ -407,8 +412,8 @@
     function copyClientLocationGroup(fromGroup, toGroup) {
         var values = getClientLocationValues(fromGroup);
         var $toCountry = $('select[data-location-group="' + toGroup + '"][data-location-role="country"]');
-        var $toState   = $('select[data-location-group="' + toGroup + '"][data-location-role="state"]');
-        var $toCity    = $('select[data-location-group="' + toGroup + '"][data-location-role="city"]');
+        var $toState = $('select[data-location-group="' + toGroup + '"][data-location-role="state"]');
+        var $toCity = $('select[data-location-group="' + toGroup + '"][data-location-role="city"]');
 
         if (!values.country) {
             _clientLocationSuppressChange = true;
@@ -644,7 +649,7 @@
             },
             email: {
                 <?php if (hooks()->apply_filters('contact_email_required', "true") === "true") { ?>
-                    required: true,
+                    // required: true,
                 <?php } ?>
                 email: true,
                 // Use this hook only if the contacts are not logging into the customers area and you are not using support tickets piping.

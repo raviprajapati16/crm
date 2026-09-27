@@ -14,7 +14,7 @@ $aColumns = [
     'firstname',
     // 'email',
     db_prefix() . 'clients.phonenumber as phonenumber',
-    db_prefix() . 'clients.active',
+    // db_prefix() . 'clients.active',
     '(SELECT GROUP_CONCAT(name SEPARATOR ",") FROM ' . db_prefix() . 'customer_groups JOIN ' . db_prefix() . 'customers_groups ON ' . db_prefix() . 'customer_groups.groupid = ' . db_prefix() . 'customers_groups.id WHERE customer_id = ' . db_prefix() . 'clients.userid ORDER by name ASC) as customerGroups',
     // db_prefix() . 'clients.datecreated as datecreated',
     '(SELECT short_name FROM ' . db_prefix() . 'countries
@@ -181,13 +181,16 @@ $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [
 $output = $result['output'];
 $rResult = $result['rResult'];
 
+$start = $this->ci->input->post('start') ? $this->ci->input->post('start') : 0;
+$sr_no = $start + 1;
+
 foreach ($rResult as $aRow) {
     $row = [];
 
     // Bulk actions
     $row[] = '<div class="checkbox"><input type="checkbox" value="' . $aRow['userid'] . '"><label></label></div>';
-    // User id
-    $row[] = $aRow['userid'];
+    // User id (now Sr No)
+    $row[] = $sr_no++;
     $country = ($aRow['country'] ? $aRow['country'] : '-');
     $countryUrl = admin_url('target_markets/client/' . $aRow['userid']);
     $countryLabel = '<a href="' . $countryUrl . '">' . $country . '</a>';
@@ -252,26 +255,26 @@ foreach ($rResult as $aRow) {
     $row[] = ($aRow['phonenumber'] ? '<a href="tel:' . $aRow['phonenumber'] . '">' . $aRow['phonenumber'] . '</a>' : '');
 
     // Toggle active/inactive customer
-    $toggleActive = '<div class="onoffswitch" data-toggle="tooltip" data-title="' . _l('customer_active_inactive_help') . '">
-    <input type="checkbox"' . ($aRow['registration_confirmed'] == 0 ? ' disabled' : '') . ' data-switch-url="' . admin_url() . 'clients/change_client_status" name="onoffswitch" class="onoffswitch-checkbox" id="' . $aRow['userid'] . '" data-id="' . $aRow['userid'] . '" ' . ($aRow[db_prefix() . 'clients.active'] == 1 ? 'checked' : '') . '>
-    <label class="onoffswitch-label" for="' . $aRow['userid'] . '"></label>
-    </div>';
+    // $toggleActive = '<div class="onoffswitch" data-toggle="tooltip" data-title="' . _l('customer_active_inactive_help') . '">
+    // <input type="checkbox"' . ($aRow['registration_confirmed'] == 0 ? ' disabled' : '') . ' data-switch-url="' . admin_url() . 'clients/change_client_status" name="onoffswitch" class="onoffswitch-checkbox" id="' . $aRow['userid'] . '" data-id="' . $aRow['userid'] . '" ' . ($aRow[db_prefix() . 'clients.active'] == 1 ? 'checked' : '') . '>
+    // <label class="onoffswitch-label" for="' . $aRow['userid'] . '"></label>
+    // </div>';
 
     // For exporting
-    $toggleActive .= '<span class="hide">' . ($aRow[db_prefix() . 'clients.active'] == 1 ? _l('is_active_export') : _l('is_not_active_export')) . '</span>';
+    // $toggleActive .= '<span class="hide">' . ($aRow[db_prefix() . 'clients.active'] == 1 ? _l('is_active_export') : _l('is_not_active_export')) . '</span>';
 
-    $row[] = $toggleActive;
+    // $row[] = $toggleActive;
 
     // Customer groups parsing
-    $groupsRow = '';
-    if ($aRow['customerGroups']) {
-        $groups = explode(',', $aRow['customerGroups']);
-        foreach ($groups as $group) {
-            $groupsRow .= '<span class="label label-default mleft5 inline-block customer-group-list pointer">' . $group . '</span>';
-        }
-    }
+    // $groupsRow = '';
+    // if ($aRow['customerGroups']) {
+    //     $groups = explode(',', $aRow['customerGroups']);
+    //     foreach ($groups as $group) {
+    //         $groupsRow .= '<span class="label label-default mleft5 inline-block customer-group-list pointer">' . $group . '</span>';
+    //     }
+    // }
 
-    $row[] = $groupsRow;
+    // $row[] = $groupsRow;
 
     // $row[] = _dt($aRow['datecreated']);
 

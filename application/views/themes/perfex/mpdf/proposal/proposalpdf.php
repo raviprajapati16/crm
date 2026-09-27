@@ -501,12 +501,55 @@ $getTax = get_tax_by_relation($proposal->id, "proposal");
 
     <!-- NEW PAGE SECTION -->
     <?php if (get_option('show_pdf_terms_and_conditions') == '1') { ?>
+
+        <table class="signature-section">
+            <tr>
+                <td class="signature-cell" style="width: 50%;">
+                    <strong>The Seller:</strong><br>
+                    For and On Behalf of:<br><br>
+                    <?php
+                    if (file_exists($company_signature_path) && !empty(get_option('signature_image'))) {
+                    ?>
+                        <?php if (file_exists($company_signature_path) && !empty(get_option('signature_image'))) { ?>
+                            <table style="width: 100%; border: none; margin: 0; padding: 0; border-collapse: collapse;">
+                                <tr>
+                                    <td style="text-align: center; border: none; padding: 0; margin: 0;">
+                                        <img src="<?= base_url('uploads/company/' . get_option('signature_image')) ?>"
+                                            width="140" height="130" alt="Company Signature">
+                                    </td>
+                                </tr>
+                            </table>
+                        <?php } else {
+                            echo str_repeat("<br>", 10);
+                        } ?>
+                    <?php
+                    } else {
+                        echo "<br><br><br><br><br><br><br><br><br><br>";
+                    }
+                    ?>
+                </td>
+                <td class="signature-cell" style="width: 50%;">
+                    <strong>The Buyer:</strong><br>
+                    For and On Behalf of:<br><br>
+                    <?php
+                    $customer_sign_path = site_url('download/preview_image?path=' . protected_file_url_by_path(get_upload_path_by_type('proposal') . $proposal->id . '/' . $proposal->signature));
+
+                    if (!empty($proposal->signature)) {
+                    ?>
+                        <img src="<?= $customer_sign_path ?>" alt="Company Signature" width="120" height="80">
+                    <?php
+                    } else {
+                        echo "<br><br><br><br><br><br><br><br><br><br>";
+                    }
+                    ?>
+                </td>
+            </tr>
+        </table>
+
+
         <div class="new-page">
             <div>
                 <?php echo $proposal->content ?>
-            </div>
-            <div>
-
             </div>
         </div>
     <?php } ?>

@@ -54,53 +54,24 @@
                <div class="col-md-4">
                   <?php
                   $countries                = get_all_countries();
-                  $customer_default_country = get_option('customer_default_country');
-                  $selected_country         = ($lead->country != 0 ? $lead->country : $customer_default_country);
+                  $selected_country         = '';
                   echo render_select('country', $countries, ['country_id', ['short_name']], 'clients_country', $selected_country, ['data-none-selected-text' => _l('dropdown_non_selected_tex')]);
                   ?>
                </div>
-               <div class="col-md-4">
+               <div class="col-md-4 convert-state-wrapper hide">
                   <?php
-                  $state_options = isset($initial_states) ? $initial_states : [];
-                  if (!empty($lead->state)) {
-                     $state_found = false;
-                     foreach ($state_options as $state_row) {
-                        if ($state_row['state'] === $lead->state) {
-                           $state_found = true;
-                           break;
-                        }
-                     }
-                     if (!$state_found) {
-                        $state_options[] = ['state' => $lead->state];
-                     }
-                  }
-                  $state_wrapper_class = !empty($selected_country) ? 'convert-state-wrapper' : 'convert-state-wrapper hide';
-                  echo render_select('state', $state_options, ['state', 'state'], 'client_state', $lead->state, ['data-none-selected-text' => _l('dropdown_non_selected_tex')], [], $state_wrapper_class);
+                  $state_options = [];
+                  echo render_select('state', $state_options, ['state', 'state'], 'client_state', '', ['data-none-selected-text' => _l('dropdown_non_selected_tex')], [], '');
                   ?>
                </div>
-            </div>
-            <div class="row">
-               <div class="col-md-4">
+               <div class="col-md-4 convert-city-wrapper hide">
                   <?php
-                  $city_options = isset($initial_cities) ? $initial_cities : [];
-                  if (!empty($lead->city)) {
-                     $city_found = false;
-                     foreach ($city_options as $city_row) {
-                        if ($city_row['city'] === $lead->city) {
-                           $city_found = true;
-                           break;
-                        }
-                     }
-                     if (!$city_found) {
-                        $city_options[] = ['city' => $lead->city];
-                     }
-                  }
-                  $city_wrapper_class = (!empty($selected_country) && !empty($lead->state) && country_uses_city_dropdown($selected_country)) ? 'convert-city-wrapper' : 'convert-city-wrapper hide';
-                  echo render_select('city', $city_options, ['city', 'city'], 'District', $lead->city, ['data-none-selected-text' => _l('dropdown_non_selected_tex')], [], $city_wrapper_class);
+                  $city_options = [];
+                  echo render_select('city', $city_options, ['city', 'city'], 'District', '', ['data-none-selected-text' => _l('dropdown_non_selected_tex')], [], '');
                   ?>
                </div>
                <div class="col-md-4">
-                  <?php echo render_input('zip', 'clients_zip', $lead->zip); ?>
+                  <?php echo render_input('zip', 'clients_zip', ''); ?>
                </div>
             </div>
             <div class="row">

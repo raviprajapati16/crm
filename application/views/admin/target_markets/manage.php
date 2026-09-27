@@ -276,18 +276,18 @@
                             <!-- /.modal-dialog -->
                         </div>
                         <!-- /.modal -->
-                        <div class="checkbox">
+                        <!-- <div class="checkbox">
                             <input type="checkbox" checked id="exclude_inactive" name="exclude_inactive">
                             <label for="exclude_inactive"><?php echo _l('exclude_inactive'); ?>
                                 <?php echo _l('target_markets'); ?></label>
-                        </div>
+                        </div> -->
                         <div class="clearfix mtop20"></div>
                         <?php
                         $table_data = array();
                         $_table_data = array(
                             '<span class="hide"> - </span><div class="checkbox mass_select_all_wrap"><input type="checkbox" id="mass_select_all" data-to-table="clients"><label></label></div>',
                             array(
-                                'name' => _l('the_number_sign'),
+                                'name' => 'Sr No',
                                 'th_attrs' => array('class' => 'toggleable', 'id' => 'th-number')
                             ),
                             array(
@@ -316,14 +316,14 @@
                                 'name' => _l('clients_list_phone'),
                                 'th_attrs' => array('class' => 'toggleable', 'id' => 'th-phone')
                             ),
-                            array(
-                                'name' => _l('customer_active'),
-                                'th_attrs' => array('class' => 'toggleable', 'id' => 'th-active')
-                            ),
-                            array(
-                                'name' => _l('customer_groups'),
-                                'th_attrs' => array('class' => 'toggleable', 'id' => 'th-groups')
-                            ),
+                            // array(
+                            //     'name' => _l('customer_active'),
+                            //     'th_attrs' => array('class' => 'toggleable', 'id' => 'th-active')
+                            // ),
+                            // array(
+                            //     'name' => _l('customer_groups'),
+                            //     'th_attrs' => array('class' => 'toggleable', 'id' => 'th-groups')
+                            // ),
                             // array(
                             //    'name' => _l('date_created'),
                             //    'th_attrs' => array('class' => 'toggleable', 'id' => 'th-date-created')

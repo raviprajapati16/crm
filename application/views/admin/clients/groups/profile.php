@@ -107,11 +107,11 @@
                      $value = (isset($client) ? $client->vat : '');
                      echo render_input('vat', 'client_vat_number', $value);
                   } ?>
-                  <?php 
+                  <?php
                   $value = '';
                   if (isset($client)) {
-                      $client_row = get_instance()->db->select('phonenumber')->where('userid', $client->userid)->get(db_prefix() . 'clients')->row();
-                      $value = $client_row ? $client_row->phonenumber : '';
+                     $client_row = get_instance()->db->select('phonenumber')->where('userid', $client->userid)->get(db_prefix() . 'clients')->row();
+                     $value = $client_row ? $client_row->phonenumber : '';
                   }
                   ?>
                   <?php echo render_input('phonenumber', 'client_phonenumber', $value); ?>
