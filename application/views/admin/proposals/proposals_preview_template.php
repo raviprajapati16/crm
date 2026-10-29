@@ -304,9 +304,9 @@
                            <div class="row mtop15">
                               <div class="col-md-12">
                                  <style>
-                                    #nested_tab_terms_conditions .tc-content, 
+                                    #nested_tab_terms_conditions .tc-content,
                                     #nested_tab_terms_conditions .tc-content *,
-                                    #proposal_content_area, 
+                                    #proposal_content_area,
                                     #proposal_content_area * {
                                        max-height: none !important;
                                        overflow: visible !important;
@@ -374,10 +374,10 @@
                            <input type="checkbox" name="notify_via_email" id="notify_via_email_prop" value="yes">
                            <label for="notify_via_email_prop">Email Notification</label>
                         </div>
-                        <div class="checkbox checkbox-primary">
+                        <!-- <div class="checkbox checkbox-primary">
                            <input type="checkbox" name="notify_via_whatsapp" id="notify_via_whatsapp_prop" value="yes">
                            <label for="notify_via_whatsapp_prop">WhatsApp Notification</label>
-                        </div>
+                        </div> -->
                      </div>
                      <div class="col-md-6 text-right">
                         <div class="pull-right" style="width: 250px; text-align: left;">

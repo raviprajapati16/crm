@@ -316,6 +316,10 @@
                                 'name' => _l('clients_list_phone'),
                                 'th_attrs' => array('class' => 'toggleable', 'id' => 'th-phone')
                             ),
+                            array(
+                                'name' => 'Last Contact',
+                                'th_attrs' => array('class' => 'toggleable', 'id' => 'th-last-contact')
+                            ),
                             // array(
                             //     'name' => _l('customer_active'),
                             //     'th_attrs' => array('class' => 'toggleable', 'id' => 'th-active')

@@ -33,10 +33,10 @@
                             <input type="checkbox" name="notify_via_email" id="notify_via_email_client" value="yes">
                             <label for="notify_via_email_client">Email Notification</label>
                         </div>
-                        <div class="checkbox checkbox-primary">
+                        <!-- <div class="checkbox checkbox-primary">
                             <input type="checkbox" name="notify_via_whatsapp" id="notify_via_whatsapp_client" value="yes">
                             <label for="notify_via_whatsapp_client">WhatsApp Notification</label>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

@@ -481,10 +481,10 @@
                                 <input type="checkbox" name="notify_via_email" id="notify_via_email_inv" value="yes">
                                 <label for="notify_via_email_inv">Email Notification</label>
                             </div>
-                            <div class="checkbox checkbox-primary">
+                            <!-- <div class="checkbox checkbox-primary">
                                 <input type="checkbox" name="notify_via_whatsapp" id="notify_via_whatsapp_inv" value="yes">
                                 <label for="notify_via_whatsapp_inv">WhatsApp Notification</label>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="col-md-6 text-right">
                             <div class="pull-right" style="width: 250px; text-align: left;">

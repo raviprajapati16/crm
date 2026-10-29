@@ -425,10 +425,10 @@
                            <input type="checkbox" name="notify_via_email" id="notify_via_email_lead" value="yes">
                            <label for="notify_via_email_lead">Email Notification</label>
                         </div>
-                        <div class="checkbox checkbox-primary">
+                        <!-- <div class="checkbox checkbox-primary">
                            <input type="checkbox" name="notify_via_whatsapp" id="notify_via_whatsapp_lead" value="yes">
                            <label for="notify_via_whatsapp_lead">WhatsApp Notification</label>
-                        </div>
+                        </div> -->
                      </div>
                      <div class="col-md-6">
                         <div class="pull-right" style="width: 250px;">

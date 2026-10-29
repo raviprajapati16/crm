@@ -10,8 +10,8 @@ $this->ci->db->query("SET sql_mode = ''");
 $aColumns = [
     '1',
     db_prefix() . 'clients.userid as userid',
-    'company',
-    'firstname',
+    db_prefix() . 'clients.company as company',
+    db_prefix() . 'contacts.firstname as firstname',
     // 'email',
     db_prefix() . 'clients.phonenumber as phonenumber',
     // db_prefix() . 'clients.active',
@@ -20,6 +20,7 @@ $aColumns = [
     '(SELECT short_name FROM ' . db_prefix() . 'countries
         WHERE country_id = ' . db_prefix() . 'clients.country LIMIT 1) as country',
     db_prefix() . 'clients.state as state',
+    db_prefix() . 'leads.lastcontact as lastcontact',
 ];
 
 $sIndexColumn = 'userid';
@@ -30,6 +31,7 @@ $filter = [];
 
 $join = [
     'LEFT JOIN ' . db_prefix() . 'contacts ON ' . db_prefix() . 'contacts.userid=' . db_prefix() . 'clients.userid AND ' . db_prefix() . 'contacts.is_primary=1',
+    'LEFT JOIN ' . db_prefix() . 'leads ON ' . db_prefix() . 'leads.id=' . db_prefix() . 'clients.leadid',
 ];
 
 foreach ($custom_fields as $key => $field) {
@@ -173,7 +175,7 @@ if (count($custom_fields) > 4) {
 array_push($where, 'AND ' . db_prefix() . 'clients.deleted_at IS NULL');
 $result = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, [
     db_prefix() . 'contacts.id as contact_id',
-    'lastname',
+    db_prefix() . 'contacts.lastname as lastname',
     db_prefix() . 'clients.zip as zip',
     'registration_confirmed',
 ]);
@@ -253,6 +255,9 @@ foreach ($rResult as $aRow) {
 
     // Primary contact phone
     $row[] = ($aRow['phonenumber'] ? '<a href="tel:' . $aRow['phonenumber'] . '">' . $aRow['phonenumber'] . '</a>' : '');
+
+    // Last Contact
+    $row[] = ($aRow['lastcontact'] == '0000-00-00 00:00:00' || !is_date($aRow['lastcontact']) ? '' : '<span data-toggle="tooltip" data-title="' . _dt($aRow['lastcontact']) . '" class="text-has-action is-date">' . time_ago($aRow['lastcontact']) . '</span>');
 
     // Toggle active/inactive customer
     // $toggleActive = '<div class="onoffswitch" data-toggle="tooltip" data-title="' . _l('customer_active_inactive_help') . '">
